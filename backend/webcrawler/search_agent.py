@@ -1,7 +1,14 @@
 import os
+import sys
 import requests
 from typing import List, Optional
-from website_context import markdown_fetcher
+
+try:
+    from ..website_context import markdown_fetcher
+
+except ImportError:
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from website_context import markdown_fetcher
 
 
 SEARCH_URL_DEFAULT = os.getenv(
@@ -127,3 +134,14 @@ def web_search_pipeline(
 
     texts = get_cleaned_texts(urls)
     return texts
+
+
+if __name__ == "__main__":
+    query = "elon musk"
+    results = web_search_pipeline(
+        query,
+        max_results=3,
+    )
+
+    for idx, result in enumerate(results):
+        print(f"Result {idx + 1}:\n{result}\n")
