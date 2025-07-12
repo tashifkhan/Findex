@@ -14,8 +14,6 @@ app = Flask(__name__)
 CORS(app)
 
 # env vars best practice yk
-
-# load .env varibles
 dotenv.load_dotenv()
 
 DEV_ENV = os.getenv("DEV_ENV", "development")
@@ -296,9 +294,7 @@ def clean_srt_text(raw: str) -> str:
 
 # 1) matches any timestamp arrow "00:00:02.470 --> 00:00:04.309"
 _TIMESTAMP_ARROW_RE = re.compile(
-    r"\d{2}:\d{2}:\d{2}\.\d{3}"  # start
-    r"\s*-->\s*"
-    r"\d{2}:\d{2}:\d{2}\.\d{3}"  # end
+    r"\d{2}:\d{2}:\d{2}\.\d{3}" r"\s*-->\s*" r"\d{2}:\d{2}:\d{2}\.\d{3}"
 )
 
 # 2) optional: strip inline cues like <00:00:02.879>
@@ -335,7 +331,23 @@ def remove_sentence_repeats(text: str) -> str:
     consecutively into a single instance.
     """
     lines = text.splitlines()
-    out_lines = [lines[i] for i in range(0, len(lines), 2)]
+
+    def is_repeated(idx: int, lines: list[str]) -> bool:
+        """Check if the line is a repeat of the previous one."""
+        try:
+            length_idx = len(lines[idx])
+            length_forword = len(lines[idx + 1])
+
+            if length_idx < length_forword:
+                if lines[idx] == lines[idx + 1][:length_idx]:
+                    return True
+
+        except IndexError:
+            return False
+
+        return False
+
+    out_lines = [lines[i] for i in range(len(lines)) if not is_repeated(i, lines)]
 
     return "\n".join(out_lines)
 
