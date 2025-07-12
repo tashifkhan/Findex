@@ -1,23 +1,9 @@
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "findex_backend"
 version = "0.1.0"
 description = "GenAI - langchain backend"
-readme = "README.md"
-requires-python = ">=3.13"
-authors = [
-    {name = "Your Name", email = "your.email@example.com"},
-]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.13",
-]
+requires-python = ">=3.12.1"
+
 dependencies = [
     "bs4>=0.0.2",
     "fastapi>=0.115.6",
@@ -31,24 +17,3 @@ dependencies = [
     "uvicorn>=0.34.0",
     "yt-dlp>=2025.6.30",
 ]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "black>=22.0.0",
-    "flake8>=5.0.0",
-    "mypy>=1.0.0",
-]
-
-[project.scripts]
-findex-backend = "main:main"
-
-[project.urls]
-Homepage = "https://github.com/yourusername/findex"
-Repository = "https://github.com/yourusername/findex"
-Issues = "https://github.com/yourusername/findex/issues"
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["*"]
-exclude = ["tests*", "__pycache__*"]
