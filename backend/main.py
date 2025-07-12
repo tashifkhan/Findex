@@ -523,7 +523,15 @@ def get_subtitles_handler():
             ):
                 status_code = 404
 
-            return jsonify({"error": subtitle_text_raw}), status_code
+            return (
+                jsonify(
+                    {
+                        "error": subtitle_text_raw,
+                    },
+                ),
+                status_code,
+            )
+
         else:
             cleaned_subtitle_text = remove_sentence_repeats(
                 clean_timestamps_and_dedupe(
@@ -614,7 +622,92 @@ def ask():
 
     except Exception as e:
         logger.error(f"Error processing request: {e}")
-        return jsonify({"error": "Internal server error"}), 500
+        return (
+            jsonify(
+                {
+                    "error": "Internal server error",
+                }
+            ),
+            500,
+        )
+
+
+@app.route("/video-info", methods=["POST"])
+def get_video_info_route():
+    try:
+        data = request.get_json()
+        if not data:
+            return (
+                jsonify(
+                    {
+                        "error": "No data provided",
+                    }
+                ),
+                400,
+            )
+
+        video_url = data.get("video_url")
+        if not video_url:
+            return (
+                jsonify(
+                    {
+                        "error": "video_url is required",
+                    }
+                ),
+                400,
+            )
+
+        logger.info(f"Getting video info for URL: {video_url}")
+
+        video_id = extract_video_id(video_url)
+        if not video_id:
+            return (
+                jsonify(
+                    {
+                        "error": "Invalid YouTube URL",
+                    }
+                ),
+                400,
+            )
+
+        video_info_obj = get_video_info(video_url)
+        if not video_info_obj:
+            return (
+                jsonify(
+                    {
+                        "error": "Could not fetch video information",
+                    }
+                ),
+                500,
+            )
+
+        video_info_dict = {
+            "title": video_info_obj.title,
+            "description": video_info_obj.description,
+            "duration": video_info_obj.duration,
+            "uploader": video_info_obj.uploader,
+            "upload_date": video_info_obj.upload_date,
+            "view_count": video_info_obj.view_count,
+            "like_count": video_info_obj.like_count,
+            "tags": video_info_obj.tags,
+            "categories": video_info_obj.categories,
+            "transcript": video_info_obj.transcript,
+            "url": video_url,
+            "videoId": video_id,
+        }
+
+        return jsonify(video_info_dict)
+
+    except Exception as e:
+        logger.error(f"Error getting video info: {e}")
+        return (
+            jsonify(
+                {
+                    "error": "Internal server error",
+                }
+            ),
+            500,
+        )
 
 
 @app.route("/health", methods=["GET"])
