@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Request
-from config import get_logger
+from core import get_logger
 from models import YTVideoInfo
 from youtube_utils import get_video_info, extract_video_id
 

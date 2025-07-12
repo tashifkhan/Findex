@@ -4,7 +4,7 @@ from routes.video_info import router as video_info_router
 from routes.subtitles import router as subtitles_router
 from routes.ask import router as ask_router
 from routes.health import router as health_router
-from config import get_logger, BACKEND_HOST, BACKEND_PORT
+from core import get_logger, BACKEND_HOST, BACKEND_PORT
 
 logger = get_logger(__name__)
 

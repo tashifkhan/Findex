@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from models.requests import SubtitlesRequest
 from models.response import SubtitlesResponse
-from config import get_logger
+from core import get_logger
 from youtube_utils import get_subtitle_content
 from youtube_utils.transcript_generator import processed_transcript
 
