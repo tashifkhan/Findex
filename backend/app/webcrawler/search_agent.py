@@ -3,7 +3,16 @@ import sys
 import requests
 from typing import List, Optional
 
-from app.website_context import markdown_fetcher
+try:
+    from app.website_context import markdown_fetcher
+
+except ImportError:
+    sys.path.append(
+        os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)),
+        ),
+    )
+    from website_context import markdown_fetcher
 
 
 SEARCH_URL_DEFAULT = os.getenv(
