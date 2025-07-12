@@ -1,7 +1,7 @@
 import os
 import requests
 from typing import List, Optional
-from website_context import html_md_convertor
+from website_context import markdown_fetcher
 
 
 SEARCH_URL_DEFAULT = os.getenv(
@@ -72,7 +72,7 @@ def html_to_markdown(html: str) -> str:
     Returns markdown as a string.
     """
     try:
-        return html_md_convertor(html)
+        return markdown_fetcher(html)
 
     except Exception as e:
         print(f"Error converting HTML to markdown: {e}")
