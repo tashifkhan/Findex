@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sidebar</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .test-container { max-width: 400px; margin: 0 auto; }
+        .test-button { padding: 10px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .test-button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Sidebar Test</h1>
+        <p>This page tests the sidebar functionality in isolation.</p>
+        <button class="test-button" onclick="openSidebar()">Open Sidebar</button>
+        <button class="test-button" onclick="closeSidebar()">Close Sidebar</button>
+    </div>
+    
+    <script>
+        function openSidebar() {
+            const sidebar = window.open('sidebar/sidebar.html', 'sidebar', 'width=400,height=600');
+        }
+        
+        function closeSidebar() {
+            // Close any open sidebar windows
+            window.close();
+        }
+    </script>
+</body>
+</html> 

@@ -316,6 +316,36 @@
             background-color: rgba(0, 0, 0, 0.05);
         }
         
+        /* Theme-specific dropdown button hover states */
+        .theme-neobrutal .theme-dropdown button:hover {
+            background-color: #FDE047;
+        }
+        
+        .theme-nintendo .theme-dropdown button:hover {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .theme-orange .theme-dropdown button:hover {
+            background-color: #FFEDD5;
+            color: #9A3412;
+        }
+        
+        .theme-orangeDark .theme-dropdown button:hover {
+            background-color: #9A3412;
+            color: #FED7AA;
+        }
+        
+        .theme-blueLight .theme-dropdown button:hover {
+            background-color: #DBEAFE;
+            color: #1E3A8A;
+        }
+        
+        .theme-blueDark .theme-dropdown button:hover {
+            background-color: #1E40AF;
+            color: #BFDBFE;
+        }
+        
         .theme-neobrutal .theme-dropdown {
             border: 2px solid black;
             box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
@@ -404,12 +434,17 @@
         <button id="themeButton" class="theme-button flex items-center justify-center" title="Change theme">
             <span class="material-icons text-xl">palette</span>
         </button>
-        <div id="themeDropdown" class="theme-dropdown bg-white border border-gray-200">
+        <div id="themeDropdown" class="theme-dropdown">
             <div class="p-2 space-y-1">
                 <!-- Theme options will be populated by JavaScript -->
             </div>
         </div>
     </div>
+    
+    <!-- Windows XP Theme Button -->
+    <button id="xpThemeButton" class="theme-button flex items-center justify-center" title="Windows XP Theme">
+        <span class="material-icons text-xl">window</span>
+    </button>
     
     <!-- Search Button -->
     <button id="searchButton" class="theme-button flex items-center justify-center" title="Search in transcript (Ctrl+F)">

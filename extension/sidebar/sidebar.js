@@ -195,11 +195,11 @@ const getWelcomeMessageClasses = (theme) => {
     case "neobrutal":
       return "bg-yellow-200 border-2 border-black"
     case "nintendo":
-      return "bg-red-100"
+      return "bg-red-300 text-black font-bold font-sans"
     case "orange":
-      return "bg-orange-100"
+      return "bg-black font-bold"
     case "orangeDark":
-      return "bg-orange-800"
+      return "bg-gray-800 text-orange-100 font-bold"
     case "blueLight":
       return "bg-blue-50"
     case "blueDark":
@@ -232,7 +232,27 @@ const getThemeDropdownClasses = (theme) => {
 const getThemeDropdownButtonClasses = (theme, isSelected) => {
   const base = "w-full text-left px-3 py-2 rounded-md transition-colors text-sm"
   if (isSelected) {
-    return `${base} theme-dropdown-button selected` // Use a specific class for selected state
+    // Theme-specific selected states matching React version
+    switch (theme) {
+      case "neobrutal":
+        return `${base} bg-black text-yellow-300`
+      case "nintendo":
+        return `${base} bg-red-600 text-white`
+      case "orange":
+        return `${base} bg-orange-600 text-white`
+      case "orangeDark":
+        return `${base} bg-orange-600 text-white`
+      case "blueLight":
+        return `${base} bg-blue-500 text-white`
+      case "blueDark":
+        return `${base} bg-blue-600 text-white`
+      case "xp":
+        return `${base} bg-blue-800 text-white`
+      case "macos":
+        return `${base} bg-gray-600 text-white`
+      default:
+        return `${base} bg-blue-500 text-white`
+    }
   }
   return `${base} theme-dropdown-button` // Use a base class for non-selected state
 }
@@ -255,6 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeButton = document.getElementById("themeButton");
     const themeDropdown = document.getElementById("themeDropdown");
     const themeDropdownContainer = document.getElementById("theme-dropdown-container");
+    const xpThemeButton = document.getElementById("xpThemeButton");
     const minimizeButton = document.getElementById("minimizeButton");
     const closeButton = document.getElementById("closeButton");
     const welcomeMessage = document.getElementById("welcome-message");
@@ -268,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const transcriptLength = document.getElementById("transcript-length")
     const statusText = document.getElementById("status-text")
     const headerContent = document.getElementById("header-content")
-    const themeDropdownWrapper = document.getElementById("theme-dropdown-wrapper")
     const sendButton = chatForm.querySelector('button[type="submit"]')
 
     // State
@@ -337,8 +357,39 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(theme)}`
       }
 
+      // Update welcome message content based on context
+      const welcomeTitle = welcomeMessage.querySelector("h3")
+      const welcomeDescription = welcomeMessage.querySelector("p")
+      const welcomeExamples = welcomeMessage.querySelector("ul")
+
+      if (welcomeTitle && welcomeDescription && welcomeExamples) {
+        if (isDevelopment && !isOnYouTube) {
+          welcomeTitle.textContent = "Demo Mode"
+          welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+          welcomeExamples.innerHTML = `
+            <li>• "How does this extension work?"</li>
+            <li>• "What features are available?"</li>
+            <li>• "Tell me about the search functionality"</li>
+          `
+        } else {
+          welcomeTitle.textContent = "Ask about this video"
+          welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
+          welcomeExamples.innerHTML = `
+            <li>• "What is this video about?"</li>
+            <li>• "Summarize the main points"</li>
+            <li>• "What does the speaker say about..."</li>
+          `
+        }
+      }
+
       // Update theme dropdown appearance
-      themeDropdown.className = `${getThemeDropdownClasses(theme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+      const wasVisible = themeDropdown.classList.contains("show")
+      themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(theme)} ${wasVisible ? "show" : ""}`
+      if (wasVisible) {
+        themeDropdown.style.display = "block"
+      } else {
+        themeDropdown.style.display = "none"
+      }
       populateThemeDropdown() // Re-populate to update selected state and button styles
     }
 
@@ -487,7 +538,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Hide/show elements based on minimized state
       headerContent.style.display = isMinimized ? "none" : "flex"
-      themeDropdownWrapper.style.display = isMinimized ? "none" : "block"
+      themeDropdownContainer.style.display = isMinimized ? "none" : "block"
+      xpThemeButton.style.display = isMinimized ? "none" : "block"
       searchButton.style.display = isMinimized ? "none" : "block"
       videoInfo.style.display = isMinimized ? "none" : videoData ? "block" : "none" // Re-evaluate video info visibility
       messages.style.display = isMinimized ? "none" : "block"
@@ -501,14 +553,32 @@ document.addEventListener("DOMContentLoaded", () => {
     // Theme dropdown handling - TOGGLE FUNCTIONALITY
     themeButton.addEventListener("click", (e) => {
       e.stopPropagation() // Prevent document click from immediately closing it
-      themeDropdown.classList.toggle("show")
-      themeDropdown.className = `${getThemeDropdownClasses(currentTheme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+      const isVisible = themeDropdown.classList.contains("show")
+      
+      if (isVisible) {
+        themeDropdown.classList.remove("show")
+        themeDropdown.style.display = "none"
+      } else {
+        themeDropdown.classList.add("show")
+        themeDropdown.style.display = "block"
+      }
+      
+      // Update dropdown styling based on current theme
+      themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+    })
+
+    // Windows XP Theme Button
+    xpThemeButton.addEventListener("click", () => {
+      setTheme("xp")
     })
 
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!themeDropdownContainer.contains(e.target)) {
             themeDropdown.classList.remove('show');
+            themeDropdown.style.display = "none"
+            // Update dropdown styling after hiding
+            themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
         }
     });
 
@@ -542,6 +612,9 @@ document.addEventListener("DOMContentLoaded", () => {
         button.onclick = () => {
           setTheme(key)
           themeDropdown.classList.remove("show")
+          themeDropdown.style.display = "none"
+          // Update dropdown styling after hiding
+          themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
         }
         themeContent.appendChild(button)
       })
@@ -568,10 +641,34 @@ document.addEventListener("DOMContentLoaded", () => {
           updateVideoInfo(null)
           if (welcomeMessage) {
             messages.appendChild(welcomeMessage)
-            // Re-apply welcome message specific classes
+            // Re-apply welcome message specific classes and content
             const welcomeMessageDiv = welcomeMessage.querySelector("div")
             if (welcomeMessageDiv) {
               welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(currentTheme)}`
+            }
+            // Update welcome message content
+            const welcomeTitle = welcomeMessage.querySelector("h3")
+            const welcomeDescription = welcomeMessage.querySelector("p")
+            const welcomeExamples = welcomeMessage.querySelector("ul")
+
+            if (welcomeTitle && welcomeDescription && welcomeExamples) {
+              if (isDevelopment && !isOnYouTube) {
+                welcomeTitle.textContent = "Demo Mode"
+                welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+                welcomeExamples.innerHTML = `
+                  <li>• "How does this extension work?"</li>
+                  <li>• "What features are available?"</li>
+                  <li>• "Tell me about the search functionality"</li>
+                `
+              } else {
+                welcomeTitle.textContent = "Ask about this video"
+                welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
+                welcomeExamples.innerHTML = `
+                  <li>• "What is this video about?"</li>
+                  <li>• "Summarize the main points"</li>
+                  <li>• "What does the speaker say about..."</li>
+                `
+              }
             }
           }
           break
@@ -580,7 +677,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize
     updateContextStatus()
+    
+    // Ensure theme dropdown starts hidden and properly styled
+    themeDropdown.classList.remove("show")
+    themeDropdown.style.display = "none"
+    themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
+    
     populateThemeDropdown() // Populate dropdown on initial load
+
+    // Update welcome message content on initial load
+    const welcomeTitle = welcomeMessage.querySelector("h3")
+    const welcomeDescription = welcomeMessage.querySelector("p")
+    const welcomeExamples = welcomeMessage.querySelector("ul")
+
+    if (welcomeTitle && welcomeDescription && welcomeExamples) {
+      if (isDevelopment && !isOnYouTube) {
+        welcomeTitle.textContent = "Demo Mode"
+        welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+        welcomeExamples.innerHTML = `
+          <li>• "How does this extension work?"</li>
+          <li>• "What features are available?"</li>
+          <li>• "Tell me about the search functionality"</li>
+        `
+      }
+    }
 
     // Load saved theme
     const chrome = window.chrome // Declare chrome variable
