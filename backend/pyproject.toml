@@ -1,6 +1,10 @@
 [project]
-name = "Findex Backend"
+name = "findex_backend"
 version = "0.1.0"
 description = "GenAI - langchain backend"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "flask>=3.1.1",
+    "flask-cors>=6.0.1",
+    "yt-dlp>=2025.6.30",
+]
