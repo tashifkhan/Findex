@@ -402,15 +402,15 @@ def generate_answer(video_info: YTVideoInfo, question: str) -> str:
         ", ".join(video_info.categories) if video_info.categories else "None"
     )
 
-    context = f"""
-        Video Title: {video_info.title}
-        Channel: {video_info.uploader}
-        Description: {desc_for_context}...
-        Duration: {video_info.duration} seconds
-        Tags: {tags_for_context}
-        Categories: {categories_for_context}
-        Transcript: {video_info.transcript[:200] if video_info.transcript else "Not available"}... 
-    """
+    context = (
+        f"Title: {video_info.title}\n"
+        f"Channel: {video_info.uploader}\n"
+        f"Description: {desc_for_context}...\n"
+        f"Duration: {video_info.duration} seconds\n"
+        f"Tags: {tags_for_context}\n"
+        f"Categories: {categories_for_context}\n"
+        f"Transcript: {video_info.transcript[:200] if video_info.transcript else 'Not available'}...\n"
+    )
 
     question_lower = question.lower()
 
@@ -424,18 +424,18 @@ def generate_answer(video_info: YTVideoInfo, question: str) -> str:
         else "No transcript is available for this video."
     )
 
-    return f"""
-        I can help you with questions about this video: "{video_info.title}" by {video_info.uploader}.
-        {answer_detail}
-        Some information I can provide:
-        - Video duration: {video_info.duration // 60} minutes
-        - Views: {video_info.view_count:,}
-        - Upload date: {display_upload_date}
-
-        For more specific answers, try asking about the video's title, channel, duration, views, or topic.
-        Context used:
-        {context}
-    """
+    return (
+        f'I can help you with questions about this video: "{video_info.title}" by {video_info.uploader}.\n'
+        f"{answer_detail}\n"
+        f"Some information I can provide:\n"
+        f"  - Video duration: {video_info.duration // 60} minutes\n"
+        f"  - Views: {video_info.view_count:,}\n"
+        f"  - Upload date: {display_upload_date}\n"
+        f"\n"
+        f"For more specific answers, try asking about the video's title, channel, duration, views, or topic.\n"
+        f"Context used:\n"
+        f"{''.join(context)}\n"
+    )
 
 
 # ROutes
