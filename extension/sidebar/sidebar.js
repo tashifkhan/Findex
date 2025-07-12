@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let messageHistory = []
     let isLoading = false
     let videoData = null
-
+    
     // Development mode check
     const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     const isOnYouTube = window.location.hostname === "www.youtube.com"
@@ -391,6 +391,11 @@ document.addEventListener("DOMContentLoaded", () => {
         themeDropdown.style.display = "none"
       }
       populateThemeDropdown() // Re-populate to update selected state and button styles
+
+      // Update search overlay theme if it's open
+      // if (isSearchOverlayOpen) { // This line is removed as per the edit hint
+      //   updateSearchOverlayTheme(theme)
+      // }
     }
 
     const updateVideoInfoStyle = (theme) => {
@@ -417,6 +422,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update transcript badge style
       transcriptBadge.className = `mt-2 text-xs px-2 py-1 rounded ${getTranscriptBadgeClasses(theme)} ${videoData && videoData.transcript ? "" : "hidden"}`
     }
+
+    // const updateSearchOverlayTheme = (theme) => { // This function is removed as per the edit hint
+    //   // The CSS classes will handle most of the theming
+    //   // This function can be used for any additional theme-specific logic
+    //   if (searchInput) {
+    //     // Focus the input after theme change to maintain user experience
+    //     searchInput.focus()
+    //   }
+    // }
 
     // Message handling
     const addMessage = (content, type = "assistant") => {
@@ -598,8 +612,58 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     searchButton.addEventListener("click", () => {
-      window.parent.postMessage({ type: "search" }, "*")
+      // Open find-in-page toolbar in the current page
+      if (window.findInPage) {
+        window.findInPage.show();
+      } else {
+        // If findInPage is not available, inject it
+        const script = document.createElement('script');
+        script.src = '../find-in-page/find-in-page.js';
+        script.onload = () => {
+          if (window.findInPage) {
+            window.findInPage.show();
+          }
+        };
+        document.head.appendChild(script);
+      }
     })
+
+    // Search Overlay Event Handlers
+    // searchOverlayClose.addEventListener("click", () => { // This line is removed as per the edit hint
+    //   closeSearchOverlay()
+    // })
+
+    // searchInput.addEventListener("input", (e) => { // This line is removed as per the edit hint
+    //   performSearch(e.target.value)
+    // })
+
+    // searchInput.addEventListener("keydown", (e) => { // This line is removed as per the edit hint
+    //   if (e.key === "Enter" && !e.shiftKey) {
+    //     e.preventDefault()
+    //     goToNextResult()
+    //   } else if (e.key === "Enter" && e.shiftKey) {
+    //     e.preventDefault()
+    //     goToPrevResult()
+    //   } else if (e.key === "Escape") {
+    //     e.preventDefault()
+    //     closeSearchOverlay()
+    //   }
+    // })
+
+    // searchNextButton.addEventListener("click", () => { // This line is removed as per the edit hint
+    //   goToNextResult()
+    // })
+
+    // searchPrevButton.addEventListener("click", () => { // This line is removed as per the edit hint
+    //   goToPrevResult()
+    // })
+
+    // Close search overlay when clicking outside
+    // searchOverlay.addEventListener("click", (e) => { // This line is removed as per the edit hint
+    //   if (e.target === searchOverlay) {
+    //     closeSearchOverlay()
+    //   }
+    // })
 
     // Populate theme dropdown
     const populateThemeDropdown = () => {
@@ -627,6 +691,10 @@ document.addEventListener("DOMContentLoaded", () => {
       switch (type) {
         case "setVideoData":
           updateVideoInfo(data)
+          // Refresh search results if overlay is open
+          // if (isSearchOverlayOpen && searchTerm) { // This line is removed as per the edit hint
+          //   performSearch(searchTerm)
+          // }
           break
         case "addMessage":
           addMessage(data.content, data.type)
@@ -672,6 +740,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           }
           break
+        case "openSearch":
+          // openSearchOverlay() // This line is removed as per the edit hint
+          break
       }
     })
 
@@ -716,6 +787,80 @@ document.addEventListener("DOMContentLoaded", () => {
       // Fallback for environments without chrome.storage (e.g., local browser preview)
       updateUIForTheme(currentTheme)
     }
+
+    // Search functionality
+    // const openSearchOverlay = () => { // This function is removed as per the edit hint
+    //   isSearchOverlayOpen = true
+    //   searchOverlay.classList.remove("hidden")
+    //   searchInput.focus()
+    //   searchInput.value = searchTerm
+    //   updateSearchResults()
+    //   updateSearchOverlayTheme(currentTheme)
+    // }
+
+    // const closeSearchOverlay = () => { // This function is removed as per the edit hint
+    //   isSearchOverlayOpen = false
+    //   searchOverlay.classList.add("hidden")
+    //   searchInput.blur()
+    // }
+
+    // const performSearch = (term) => { // This function is removed as per the edit hint
+    //   searchTerm = term
+    //   if (!term.trim() || !videoData?.transcript) {
+    //     searchResults = []
+    //     currentSearchIndex = 0
+    //     updateSearchResults()
+    //     return
+    //   }
+
+    //   const transcript = videoData.transcript.toLowerCase()
+    //   const searchLower = term.toLowerCase()
+    //   const results = []
+    //   let index = 0
+
+    //   while ((index = transcript.indexOf(searchLower, index)) !== -1) {
+    //     results.push(index)
+    //     index += 1
+    //   }
+
+    //   searchResults = results
+    //   currentSearchIndex = results.length > 0 ? 0 : -1
+    //   updateSearchResults()
+    // }
+
+    // const updateSearchResults = () => { // This function is removed as per the edit hint
+    //   if (searchResults.length === 0) {
+    //     searchResultsInfo.classList.add("hidden")
+    //     searchResultsCount.textContent = "No results found"
+    //     return
+    //   }
+
+    //   searchResultsInfo.classList.remove("hidden")
+    //   searchResultsCount.textContent = `${currentSearchIndex + 1} of ${searchResults.length} results`
+      
+    //   // Highlight current result in transcript
+    //   if (currentSearchIndex >= 0 && currentSearchIndex < searchResults.length) {
+    //     const position = searchResults[currentSearchIndex]
+    //     // Send message to parent to highlight search result
+    //     window.parent.postMessage({
+    //       type: "highlightSearchResult",
+    //       position: position,
+    //       searchTerm: searchTerm
+    //     }, "*")
+    //   }
+    // }
+
+    // const goToNextResult = () => { // This function is removed as per the edit hint
+    //   if (searchResults.length === 0) return
+    //   currentSearchIndex = (currentSearchIndex + 1) % searchResults.length
+    //   updateSearchResults()
+    // }
+
+    // const goToPrevResult = () => { // This function is removed as per the edit hint
+    //   if (searchResults.length === 0) return
+    //   currentSearchIndex = currentSearchIndex === 0 ? searchResults.length - 1 : currentSearchIndex - 1
+    //   updateSearchResults()
+    // }
 })
 
 // Base classes for the sidebar container itself, used by updateUIForTheme

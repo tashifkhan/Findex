@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Find Tool Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #2563eb;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        ul {
+            color: #666;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .demo-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Fixed Find Tool Test Page</h1>
+        
+        <div class="info-box">
+            <strong>Instructions:</strong> Press <kbd>Ctrl+Shift+F</kbd> to open the fixed find tool in the top right corner. 
+            You can search through all text content and HTML attributes on this page.
+        </div>
+
+        <h2>Test Content</h2>
+        <p class="demo-text">
+            This is a demonstration page for the Fixed Find Tool. You can search for any text on this page, 
+            including words like <span class="highlight">JavaScript</span>, <span class="highlight">HTML</span>, 
+            and <span class="highlight">CSS</span>. The tool will highlight all matches and allow you to navigate between them.
+        </p>
+
+        <div class="test-section">
+            <h3>Sample Code</h3>
+            <div class="code-block">
+                &lt;div class="example" data-test="searchable"&gt;
+                    &lt;p&gt;This is some sample HTML code&lt;/p&gt;
+                    &lt;button onclick="alert('Hello World')"&gt;Click me&lt;/button&gt;
+                &lt;/div&gt;
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Interactive Elements</h3>
+            <button class="button" onclick="alert('Button clicked!')" data-action="test">Test Button</button>
+            <button class="button" data-category="demo" data-value="example">Demo Button</button>
+            <input type="text" placeholder="Search input field" value="sample text" />
+        </div>
+
+        <div class="test-section">
+            <h3>More Content to Search</h3>
+            <p>
+                Here's some additional content with various words you can search for:
+                <strong>bold text</strong>, <em>italic text</em>, and <u>underlined text</u>.
+                You can also search for numbers like 123, 456, and 789.
+            </p>
+            <ul>
+                <li>First list item with <span class="highlight">special</span> content</li>
+                <li>Second list item containing <code>code snippets</code></li>
+                <li>Third list item with <a href="#" data-link="test">link text</a></li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>Note:</strong> The fixed find tool searches through:
+            <ul>
+                <li>All visible text content</li>
+                <li>HTML attributes (when "Search in HTML" is enabled)</li>
+                <li>Hidden elements and attributes</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <strong>Features:</strong>
+            <ul>
+                <li>Case-sensitive and whole word search options</li>
+                <li>Navigate between matches with arrow buttons or Enter/Shift+Enter</li>
+                <li>Clear highlights to remove all search results</li>
+                <li>Responsive design that works on mobile devices</li>
+            </ul>
+        </div>
+
+        <h2>Technical Details</h2>
+        <p>
+            The Fixed Find Tool is implemented as a vanilla JavaScript class that can be injected into any webpage. 
+            It uses the <code>TreeWalker</code> API to traverse the DOM and find text matches. The tool creates 
+            temporary highlight elements to mark search results and provides navigation controls.
+        </p>
+
+        <div class="code-block">
+            // Example usage:
+            // Press Ctrl+Shift+F to open the tool
+            // Type your search term
+            // Use Enter/Shift+Enter to navigate
+            // Press Esc to close
+        </div>
+
+        <h2>Test Cases</h2>
+        <p>Try searching for these terms to test different features:</p>
+        <ul>
+            <li><strong>"button"</strong> - Find all button elements and their text</li>
+            <li><strong>"data-"</strong> - Find all data attributes (with HTML search enabled)</li>
+            <li><strong>"test"</strong> - Find the word "test" in various contexts</li>
+            <li><strong>"123"</strong> - Find numeric content</li>
+            <li><strong>"HTML"</strong> - Find capitalized text (test case sensitivity)</li>
+        </ul>
+
+        <div class="test-section">
+            <h3>Hidden Content</h3>
+            <div style="display: none;">
+                <p>This content is hidden but still searchable: <span data-hidden="true">secret text</span></p>
+            </div>
+            <p><small>Some content is hidden but can still be found by the search tool.</small></p>
+        </div>
+
+        <footer style="margin-top: 40px; text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>Fixed Find Tool Demo - Press <kbd>Ctrl+Shift+F</kbd> to test!</p>
+        </footer>
+    </div>
+
+    <!-- The fixed find tool will be injected by the content script -->
+    <script>
+        // Add some dynamic content for testing
+        setTimeout(() => {
+            const dynamicSection = document.createElement('div');
+            dynamicSection.className = 'test-section';
+            dynamicSection.innerHTML = `
+                <h3>Dynamically Added Content</h3>
+                <p>This content was added dynamically after page load. You can search for "dynamic" to find it.</p>
+                <button class="button" data-dynamic="true">Dynamic Button</button>
+            `;
+            document.querySelector('.container').insertBefore(dynamicSection, document.querySelector('footer'));
+        }, 2000);
+    </script>
+</body>
+</html> 

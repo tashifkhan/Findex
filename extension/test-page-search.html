@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Search Demo - React Architecture Compatible</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+        
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #030303;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 40px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: #1c62b9;
+        }
+        
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .video-section {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .video-info {
+            padding: 20px;
+        }
+        
+        .video-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #030303;
+            margin-bottom: 12px;
+        }
+        
+        .video-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #606060;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .video-description {
+            color: #030303;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            color: #030303;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .comment {
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 0;
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: #030303;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .comment-text {
+            color: #030303;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .demo-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .demo-info h2 {
+            color: #1976d2;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        
+        .demo-info ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .demo-info li {
+            margin: 6px 0;
+            color: #1565c0;
+        }
+        
+        .keyword {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .keyword:hover {
+            background: #ffeaa7;
+        }
+        
+        .demo-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.2s;
+        }
+        
+        .demo-button:hover {
+            background: #2563eb;
+        }
+        
+        .demo-button.secondary {
+            background: #6b7280;
+        }
+        
+        .demo-button.secondary:hover {
+            background: #4b5563;
+        }
+        
+        .react-simulator {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        
+        .react-simulator h3 {
+            color: #0369a1;
+            margin-top: 0;
+        }
+        
+        .react-button {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        
+        .react-button:hover {
+            background: #0284c7;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                margin: 0 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-info">
+        <h2>🔍 Page Search Demo - React Architecture Compatible</h2>
+        <p>This page demonstrates the AI-powered search functionality that works with your React extension architecture.</p>
+        <ul>
+            <li><strong>Ctrl+Shift+F</strong> - Open the search box (top-right corner)</li>
+            <li><strong>Enter</strong> - Go to next match</li>
+            <li><strong>Shift+Enter</strong> - Go to previous match</li>
+            <li><strong>🤖 AI Button</strong> - Get AI insights about search results</li>
+            <li><strong>Escape</strong> - Close the search box</li>
+            <li><strong>React Integration</strong> - Compatible with your existing hooks and components</li>
+        </ul>
+        <p>Try searching for words like <span class="keyword">JavaScript</span>, <span class="keyword">programming</span>, <span class="keyword">web development</span>, or any other text on this page.</p>
+    </div>
+
+    <div class="react-simulator">
+        <h3>React Extension Simulator</h3>
+        <p>This simulates your React extension components that can trigger the page search:</p>
+        <button class="react-button" onclick="simulateReactTrigger()">🔍 Trigger Page Search (React)</button>
+        <button class="react-button" onclick="simulateReactTriggerWithTerm('JavaScript')">🔍 Search "JavaScript"</button>
+        <button class="react-button" onclick="simulateReactTriggerWithTerm('programming')">🔍 Search "programming"</button>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+        <button class="demo-button" onclick="window.pageSearch.show()">Open Find Toolbar (Direct)</button>
+        <button class="demo-button secondary" onclick="window.pageSearch.hide()">Close Find Toolbar</button>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">YouTube</div>
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search YouTube">
+            </div>
+            <div style="width: 80px;"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="video-section">
+            <div class="video-player">
+                Video Player - "Advanced JavaScript Programming Techniques"
+            </div>
+            <div class="video-info">
+                <div class="video-title">Advanced JavaScript Programming Techniques for Modern Web Development</div>
+                <div class="video-stats">
+                    <span>1.2M views</span>
+                    <span>• 2 years ago</span>
+                    <span>• 45K likes</span>
+                </div>
+                <div class="video-description">
+                    In this comprehensive tutorial, we explore advanced JavaScript programming techniques that every modern web developer should know. We'll cover topics like:
+
+                    • Asynchronous programming with async/await
+                    • Modern ES6+ features and best practices
+                    • Functional programming concepts
+                    • Object-oriented programming patterns
+                    • Performance optimization techniques
+                    • Debugging and testing strategies
+
+                    This video is perfect for developers who want to take their JavaScript skills to the next level. We'll build real-world examples and discuss practical applications of these concepts.
+
+                    Chapters:
+                    00:00 - Introduction
+                    02:15 - Async/Await Deep Dive
+                    15:30 - ES6+ Features
+                    28:45 - Functional Programming
+                    42:10 - OOP Patterns
+                    55:20 - Performance Tips
+                    1:08:35 - Debugging Strategies
+                    1:20:15 - Q&A Session
+
+                    Don't forget to like, subscribe, and hit the notification bell for more programming content!
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h3>Comments (1.2K)</h3>
+            
+            <div class="comment">
+                <div class="comment-author">Sarah Johnson</div>
+                <div class="comment-text">This is exactly what I needed! The async/await section was particularly helpful. I've been struggling with JavaScript promises for months, and this finally made it click.</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-author">Mike Chen</div>
+                <div class="comment-text">Great tutorial! I especially liked the functional programming examples. The way you explained higher-order functions was crystal clear.</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-author">Alex Rodriguez</div>
+                <div class="comment-text">The performance optimization tips were gold. I've already implemented some of these techniques in my current project and seen a significant improvement in load times.</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-author">Emily Davis</div>
+                <div class="comment-text">Could you do a follow-up video on TypeScript? I'd love to see how these JavaScript concepts translate to TypeScript programming.</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-author">David Wilson</div>
+                <div class="comment-text">The debugging strategies section was incredibly useful. I've been using console.log for everything, but now I understand how to use the browser's developer tools properly.</div>
+            </div>
+            
+            <div class="comment">
+                <div class="comment-author">Lisa Thompson</div>
+                <div class="comment-text">This video helped me prepare for my JavaScript programming interview! The OOP patterns section was particularly relevant for the technical questions I encountered.</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Additional content for testing -->
+    <div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
+        <h3>Additional Content for Testing</h3>
+        <p>This section contains more JavaScript programming content to test the search functionality thoroughly. You can search for terms like:</p>
+        <ul>
+            <li>JavaScript frameworks (React, Vue, Angular)</li>
+            <li>Programming concepts (closures, prototypes, modules)</li>
+            <li>Web development tools (Webpack, Babel, ESLint)</li>
+            <li>Database technologies (MongoDB, PostgreSQL, Redis)</li>
+        </ul>
+        <p>The search functionality should be able to find all instances of these terms and provide intelligent AI responses when content is not found.</p>
+    </div>
+
+    <!-- Load the Page Search Content Script -->
+    <script src="content-scripts/page-search.js"></script>
+    
+    <script>
+        // Additional demo functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page Search Demo loaded!');
+            console.log('Press Ctrl+Shift+F to open the search box');
+            
+            // Add some interactive elements
+            const keywords = document.querySelectorAll('.keyword');
+            keywords.forEach(keyword => {
+                keyword.addEventListener('click', function() {
+                    const text = this.textContent;
+                    window.pageSearch.show();
+                    setTimeout(() => {
+                        window.pageSearch.searchInput.value = text;
+                        window.pageSearch.highlightText(text);
+                    }, 100);
+                });
+            });
+            
+            // Simulate React extension message handling
+            window.addEventListener('message', function(event) {
+                if (event.source === window && event.data.type === 'OPEN_PAGE_SEARCH') {
+                    console.log('Received OPEN_PAGE_SEARCH message from React component');
+                    window.pageSearch.show();
+                }
+            });
+        });
+        
+        // Simulate React component triggering page search
+        function simulateReactTrigger() {
+            console.log('Simulating React component triggering page search');
+            window.postMessage({
+                type: 'OPEN_PAGE_SEARCH'
+            }, '*');
+        }
+        
+        function simulateReactTriggerWithTerm(term) {
+            console.log('Simulating React component triggering page search with term:', term);
+            window.postMessage({
+                type: 'OPEN_PAGE_SEARCH'
+            }, '*');
+            
+            setTimeout(() => {
+                window.pageSearch.searchInput.value = term;
+                window.pageSearch.highlightText(term);
+            }, 200);
+        }
+    </script>
+</body>
+</html> 
