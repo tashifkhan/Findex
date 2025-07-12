@@ -6,6 +6,24 @@ import dotenv
 import re
 from urllib.parse import urlparse, parse_qs
 import logging
+from typing import Optional
+from pydantic import BaseModel, Field
+
+
+# custoom models/types
+class YTVideoInfo(BaseModel):
+    title: str = Field(default="Unknown")
+    description: str = Field(default="")
+    duration: int = Field(default=0)
+    uploader: str = Field(default="Unknown")
+    upload_date: str = Field(default="")
+    view_count: int = Field(default=0)
+    like_count: int = Field(default=0)
+    tags: list[str] = Field(default_factory=list)
+    categories: list[str] = Field(default_factory=list)
+    captions: Optional[str] = None
+    transcript: Optional[str] = None
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,7 +39,7 @@ DEBUG = os.getenv("DEBUG", True if DEV_ENV == "development" else False)
 BACKEND_HOST = os.getenv("BACKEND_HOST", "0.0.0.0")
 BACKEND_PORT = int(os.getenv("BACKEND_PORT", 5000))
 
-#  Regex patterns for cleaning subtitles
+# regex patterns for cleaning subtitles
 TIMESTAMP_LINE_PATTERN = re.compile(
     r"^(?:\\d{2}:)?\\d{2}:\\d{2}[.,]\\d{3} --> (?:\\d{2}:)?\\d{2}:\\d{2}[.,]\\d{3}.*$"
 )
@@ -36,7 +54,7 @@ CUE_TAG_PATTERN = re.compile(r"</?c.*?>")
 SPEAKER_TAG_PATTERN = re.compile(r"<v\\s+[^>]+>.*?</v>")
 
 
-def extract_video_id(url):
+def extract_video_id(url: str) -> Optional[str]:
     """Extract YouTube video ID from URL"""
     try:
         parsed_url = urlparse(url)
@@ -103,7 +121,7 @@ def clean_transcript(text: str) -> str:
     return "\\n\\n".join(paragraphs).strip()
 
 
-def get_video_info(video_url):
+def get_video_info(video_url: str) -> Optional[YTVideoInfo]:
     """Get video information using yt-dlp"""
     try:
         ydl_opts = {
@@ -133,28 +151,51 @@ def get_video_info(video_url):
                 "like_count": info.get("like_count", 0),
                 "tags": info.get("tags", []),
                 "categories": info.get("categories", []),
+                "transcript": None,
             }
 
-            subtitles = info.get("subtitles", {})
-            auto_captions = info.get("automatic_captions", {})
+            raw_transcript = get_subtitle_content(video_url, lang="en")
 
-            captions_text = ""
+            known_error_messages = [
+                "Video unavailable.",
+                "Subtitles not available for the specified language.",
+                "Subtitles were requested but could not be retrieved from file.",
+                "Subtitles not available for the specified language or download failed.",
+            ]
+            known_error_prefixes = [
+                "Error downloading subtitles:",
+                "An unexpected error occurred while fetching subtitles:",
+            ]
 
-            if "en" in subtitles:
-                captions_text = extract_subtitle_text(subtitles["en"])
-            elif "en" in auto_captions:
-                captions_text = extract_subtitle_text(auto_captions["en"])
+            is_actual_error = False
+            if raw_transcript in known_error_messages:
+                is_actual_error = True
+            else:
+                for prefix in known_error_prefixes:
+                    if raw_transcript and raw_transcript.startswith(prefix):
+                        is_actual_error = True
+                        break
 
-            video_info["captions"] = captions_text
+            if raw_transcript and not is_actual_error:
+                cleaned_transcript = remove_sentence_repeats(
+                    clean_timestamps_and_dedupe(
+                        clean_srt_text(clean_transcript(raw_transcript))
+                    )
+                )
+                video_info["transcript"] = cleaned_transcript
+            else:
+                logger.info(
+                    f"No transcript available or error fetching for {video_url}: {raw_transcript}"
+                )
 
-            return video_info
+            return YTVideoInfo(**video_info)
 
     except Exception as e:
         logger.error(f"Error getting video info: {e}")
         return None
 
 
-def get_subtitle_content(video_url, lang="en"):
+def get_subtitle_content(video_url: str, lang: str = "en") -> str:
     """Downloads and extracts subtitle content for a given video URL and language."""
 
     temp_dir = os.path.join(
@@ -265,7 +306,7 @@ def get_subtitle_content(video_url, lang="en"):
 
 
 def clean_srt_text(raw: str) -> str:
-    # remove full timestamp lines (with align:… and the literal "\n\n")
+    """remove full timestamp lines (with align:… and the literal "\n\n")"""
     full_ts_re = re.compile(
         r"^\d{2}:\d{2}:\d{2}\.\d{3}"
         r"\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}"  # the --> timestamp
@@ -326,10 +367,7 @@ def clean_timestamps_and_dedupe(text: str) -> str:
 
 
 def remove_sentence_repeats(text: str) -> str:
-    """
-    Collapse any sentence (or quoted phrase) that is repeated
-    consecutively into a single instance.
-    """
+    """Collapse any sentence that is repeated consecutively into a single instance."""
     lines = text.splitlines()
 
     def is_repeated(idx: int, lines: list[str]) -> bool:
@@ -352,68 +390,52 @@ def remove_sentence_repeats(text: str) -> str:
     return "\n".join(out_lines)
 
 
-def extract_subtitle_text(subtitle_list):
-    """Extract text from subtitle entries"""
-    try:
-        # find the best subtitle format (prefer VTT or SRT)
-        best_subtitle = None
-        for subtitle in subtitle_list:
-            if subtitle.get("ext") in ["vtt", "srt"]:
-                best_subtitle = subtitle
-                break
-
-        if not best_subtitle:
-            best_subtitle = subtitle_list[0] if subtitle_list else None
-
-        if best_subtitle:
-            # placeholder
-            # requires additional handling
-            return "Subtitles available but not extracted in this demo"
-
-    except Exception as e:
-        logger.error(f"Error extracting subtitle text: {e}")
-
-    return ""
-
-
-# TODO: change this abhi ke liye placeholder info
-def generate_answer(video_info, question):
+# change this valla abhi ke liye placeholder with info
+def generate_answer(video_info: YTVideoInfo, question: str) -> str:
     """Generate answer using video information"""
 
-    context = (
-        f"Video Title: {video_info.get('title', 'Unknown')}\n"
-        f"Channel: {video_info.get('uploader', 'Unknown')}\n"
-        f"Description: {video_info.get('description', 'No description available')[:500]}...\n"
-        f"Duration: {video_info.get('duration', 0)} seconds\n"
-        f"Tags: {', '.join(video_info.get('tags', [])[:10])}\n"
-        f"Categories: {', '.join(video_info.get('categories', []))}"
+    desc_for_context = (
+        video_info.description if video_info.description else "No description available"
+    )[:500]
+    tags_for_context = ", ".join(video_info.tags[:10]) if video_info.tags else "None"
+    categories_for_context = (
+        ", ".join(video_info.categories) if video_info.categories else "None"
     )
+
+    context = f"""
+        Video Title: {video_info.title}
+        Channel: {video_info.uploader}
+        Description: {desc_for_context}...
+        Duration: {video_info.duration} seconds
+        Tags: {tags_for_context}
+        Categories: {categories_for_context}
+        Transcript: {video_info.transcript[:200] if video_info.transcript else "Not available"}... 
+    """
 
     question_lower = question.lower()
 
-    if "duration" in question_lower:
-        return f"The video is {video_info.get('duration', 0)} seconds long."
-
-    if "title" in question_lower:
-        return f"The title of the video is '{video_info.get('title', 'Unknown')}'."
-
-    if "channel" in question_lower or "uploader" in question_lower:
-        return f"The video was uploaded by '{video_info.get('uploader', 'Unknown')}'."
-
-    if "view" in question_lower:
-        return f"The video has {video_info.get('view_count', 0):,} views."
-
-    if "date" in question_lower:
-        return f"The video was uploaded on {video_info.get('upload_date', 'Unknown')}."
-
-    return (
-        f"I can help with questions about '{video_info.get('title', 'Unknown')}'.\n"
-        f"Here's some info:\n"
-        f"- Channel: {video_info.get('uploader', 'Unknown')}\n"
-        f"- Duration: {video_info.get('duration', 0)} seconds\n"
-        f"- Views: {video_info.get('view_count', 0):,}\n"
-        f"You can ask about the title, channel, duration, views, or topic."
+    display_upload_date = (
+        video_info.upload_date if video_info.upload_date else "Unknown"
     )
+
+    answer_detail = (
+        f"The transcript is available with {len(video_info.transcript)} characters."
+        if video_info.transcript
+        else "No transcript is available for this video."
+    )
+
+    return f"""
+        I can help you with questions about this video: "{video_info.title}" by {video_info.uploader}.
+        {answer_detail}
+        Some information I can provide:
+        - Video duration: {video_info.duration // 60} minutes
+        - Views: {video_info.view_count:,}
+        - Upload date: {display_upload_date}
+
+        For more specific answers, try asking about the video's title, channel, duration, views, or topic.
+        Context used:
+        {context}
+    """
 
 
 # ROutes
@@ -501,15 +523,7 @@ def get_subtitles_handler():
             ):
                 status_code = 404
 
-            return (
-                jsonify(
-                    {
-                        "error": subtitle_text_raw,
-                    }
-                ),
-                status_code,
-            )
-
+            return jsonify({"error": subtitle_text_raw}), status_code
         else:
             cleaned_subtitle_text = remove_sentence_repeats(
                 clean_timestamps_and_dedupe(
@@ -521,7 +535,7 @@ def get_subtitles_handler():
                 return (
                     jsonify(
                         {
-                            "error": "Subtitles became empty after cleaning. Original may have only contained timestamps/metadata."
+                            "error": "Subtitles became empty after cleaning. Original may have only contained timestamps/metadata.",
                         }
                     ),
                     404,
@@ -576,8 +590,8 @@ def ask():
             )
 
         # info using yt-dlp
-        video_info = get_video_info(video_url)
-        if not video_info:
+        video_info_obj = get_video_info(video_url)
+        if not video_info_obj:
             return (
                 jsonify(
                     {
@@ -588,13 +602,13 @@ def ask():
             )
 
         # answer
-        answer = generate_answer(video_info, question)
+        answer = generate_answer(video_info_obj, question)
 
         return jsonify(
             {
                 "answer": answer,
-                "video_title": video_info.get("title"),
-                "video_channel": video_info.get("uploader"),
+                "video_title": video_info_obj.title,
+                "video_channel": video_info_obj.uploader,
             }
         )
 
