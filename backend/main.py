@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import yt_dlp
+import os
+import dotenv
 from urllib.parse import urlparse, parse_qs
 import logging
 
@@ -9,6 +11,16 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)
+
+# env vars best practice yk
+
+# load .env varibles
+dotenv.load_dotenv()
+
+DEV_ENV = os.getenv("DEV_ENV", "development")
+DEBUG = os.getenv("DEBUG", True if DEV_ENV == "development" else False)
+BACKEND_HOST = os.getenv("BACKEND_HOST", "0.0.0.0")
+BACKEND_PORT = int(os.getenv("BACKEND_PORT", 5000))
 
 
 def extract_video_id(url):
@@ -200,9 +212,13 @@ def health():
 
 # server start
 if __name__ == "__main__":
-    print("http://localhost:5454")
+
+    print(
+        f"http://{"localhost" if BACKEND_HOST=="0.0.0.0" else BACKEND_HOST}:{BACKEND_PORT}"
+    )
+
     app.run(
-        debug=True,
-        host="0.0.0.0",
-        port=5454,
+        debug=True if DEBUG else False,
+        host=BACKEND_HOST,
+        port=BACKEND_PORT,
     )
