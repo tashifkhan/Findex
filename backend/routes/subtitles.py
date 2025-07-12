@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 @router.post("/", response_model=SubtitlesResponse)
-def get_subtitles_handler(request: SubtitlesRequest):
+async def get_subtitles_handler(request: SubtitlesRequest):
     url = request.url
     lang = request.lang or "en"
 

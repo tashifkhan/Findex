@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=HealthResponse)
-def health_handler():
+async def health_handler():
     return HealthResponse(
         status="healthy",
         message="YouTube Q&A Backend is running",

@@ -53,7 +53,7 @@ def generate_answer(video_info, question: str) -> str:
 
 
 @router.post("/", response_model=AskResponse)
-def ask_handler(request: AskRequest):
+async def ask_handler(request: AskRequest):
     url = request.url
     question = request.question
 
