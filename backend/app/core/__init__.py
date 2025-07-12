@@ -1,11 +1,11 @@
 """configuration for the backend core module"""
 
-from core.config import (
+from app.core.config import (
     get_logger,
     BACKEND_HOST,
     BACKEND_PORT,
 )
-import core.config as config
+from . import config
 
 __all__ = [
     "config",

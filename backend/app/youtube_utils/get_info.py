@@ -1,5 +1,5 @@
-from models import YTVideoInfo
-from core import get_logger
+from app.models import YTVideoInfo
+from app.core import get_logger
 from app.youtube_utils.get_subs import get_subtitle_content
 from app.youtube_utils.transcript_generator import processed_transcript
 import yt_dlp
