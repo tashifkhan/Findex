@@ -1,14 +1,13 @@
-from fastapi import APIRouter, HTTPException, status
-from models.requests import AskRequest
-from models.response import AskResponse
+from fastapi import APIRouter, HTTPException, Request
 from config import get_logger
-from youtube_utils import extract_video_id, get_video_info
+from models import YTVideoInfo
+from youtube_utils import get_video_info, extract_video_id
 
 router = APIRouter()
 logger = get_logger(__name__)
 
 
-def generate_answer(video_info, question: str) -> str:
+async def generate_answer(video_info: YTVideoInfo, question: str) -> str:
     """Generate answer using video information"""
     desc_for_context = (
         video_info.description if video_info.description else "No description available"
@@ -19,14 +18,16 @@ def generate_answer(video_info, question: str) -> str:
     )
 
     context = (
-        f"Title: {video_info.title}\n"
-        f"Channel: {video_info.uploader}\n"
-        f"Description: {desc_for_context}...\n"
-        f"Duration: {video_info.duration} seconds\n"
-        f"Tags: {tags_for_context}\n"
-        f"Categories: {categories_for_context}\n"
-        f"Transcript: {video_info.transcript[:200] if video_info.transcript else 'Not available'}...\n"
+        f"  Title: {video_info.title}\n"
+        f"  Channel: {video_info.uploader}\n"
+        f"  Description: {desc_for_context}...\n"
+        f"  Duration: {video_info.duration} seconds\n"
+        f"  Tags: {tags_for_context}\n"
+        f"  Categories: {categories_for_context}\n"
+        f"  Transcript: {video_info.transcript[:200] if video_info.transcript else 'Not available'}...\n"
     )
+
+    question_lower = question.lower()
 
     display_upload_date = (
         video_info.upload_date if video_info.upload_date else "Unknown"
@@ -48,38 +49,49 @@ def generate_answer(video_info, question: str) -> str:
         f"\n"
         f"For more specific answers, try asking about the video's title, channel, duration, views, or topic.\n"
         f"Context used:\n"
-        f"{context}\n"
+        f"{''.join(context)}\n"
     )
 
 
-@router.post("/", response_model=AskResponse)
-async def ask_handler(request: AskRequest):
-    url = request.url
-    question = request.question
-
-    logger.info(f"Processing question: '{question}' for URL: {url}")
-
+# route
+@router.post("/", response_model=dict)
+async def ask(request: Request):
     try:
-        video_id = extract_video_id(url)
-        if not video_id:
+        data = await request.json()
+        if not data:
+            raise HTTPException(status_code=400, detail="No data provided")
+
+        url = data.get("url")
+        question = data.get("question")
+
+        if not url or not question:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid YouTube URL"
+                status_code=400,
+                detail="url and question are required",
             )
 
+        logger.info(f"Processing question: '{question}' for URL: {url}")
+
+        video_id = extract_video_id(url)
+        if not video_id:
+            raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+
+        # info using yt-dlp
         video_info_obj = get_video_info(url)
         if not video_info_obj:
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=500,
                 detail="Could not fetch video information",
             )
 
-        answer = generate_answer(video_info_obj, question)
+        # answer
+        answer = await generate_answer(video_info_obj, question)
 
-        return AskResponse(
-            answer=answer,
-            video_title=video_info_obj.title,
-            video_channel=video_info_obj.uploader,
-        )
+        return {
+            "answer": answer,
+            "video_title": video_info_obj.title,
+            "video_channel": video_info_obj.uploader,
+        }
 
     except HTTPException:
         raise
@@ -87,6 +99,6 @@ async def ask_handler(request: AskRequest):
     except Exception as e:
         logger.error(f"Error processing request: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error",
+            status_code=500,
+            detail=f"Internal server error \n{str(e)}",
         )
