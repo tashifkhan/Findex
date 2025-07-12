@@ -9,7 +9,22 @@ import {
 	Eye,
 	ThumbsUp,
 	User,
+	Palette,
+	ChevronDown,
 } from "lucide-react";
+
+const THEMES = {
+	default: { name: "Default", colors: "bg-white text-gray-900" },
+	xp: { name: "Windows XP", colors: "bg-gradient-to-b from-blue-100 to-blue-200 text-gray-900" },
+	glass: { name: "Liquid Glass", colors: "bg-white/20 backdrop-blur-lg text-gray-900" },
+	macos: { name: "macOS Classic", colors: "bg-gray-100 text-gray-900" },
+	neobrutal: { name: "Neobrutal", colors: "bg-yellow-300 text-black" },
+	nintendo: { name: "Nintendo", colors: "bg-red-500 text-white" },
+	orange: { name: "Orange Bright", colors: "bg-orange-500 text-white" },
+	orangeDark: { name: "Orange Dark", colors: "bg-orange-900 text-orange-100" },
+	blueLight: { name: "Cute Blue Light", colors: "bg-blue-100 text-blue-900" },
+	blueDark: { name: "Cute Blue Dark", colors: "bg-blue-900 text-blue-100" },
+};
 
 const ChatSidebar = ({
 	messages,
@@ -22,8 +37,11 @@ const ChatSidebar = ({
 }) => {
 	const [inputValue, setInputValue] = useState("");
 	const [isMinimized, setIsMinimized] = useState(false);
+	const [currentTheme, setCurrentTheme] = useState('default');
+	const [showThemeDropdown, setShowThemeDropdown] = useState(false);
 	const messagesEndRef = useRef(null);
 	const inputRef = useRef(null);
+	const themeDropdownRef = useRef(null);
 
 	// Check if we're in development mode
 	const isDevelopment =
@@ -42,6 +60,20 @@ const ChatSidebar = ({
 			inputRef.current.focus();
 		}
 	}, [isMinimized]);
+
+	// Close theme dropdown when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (themeDropdownRef.current && !themeDropdownRef.current.contains(event.target)) {
+				setShowThemeDropdown(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+
+	// Don't apply theme to document body to avoid interfering with main page
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -63,26 +95,163 @@ const ChatSidebar = ({
 		return count?.toLocaleString() || "0";
 	};
 
+	const getThemeClasses = (theme) => {
+		const baseClasses = "fixed right-0 top-0 h-full shadow-2xl border-l z-40 flex flex-col transition-all duration-300";
+		
+		switch (theme) {
+			case 'xp':
+				return `${baseClasses} bg-gradient-to-b from-blue-100 to-blue-200 border-blue-300 text-gray-900`;
+			case 'glass':
+				return `${baseClasses} bg-white/90 backdrop-blur-xl border-white/30 text-gray-900`;
+			case 'macos':
+				return `${baseClasses} bg-gray-100 border-gray-300 text-gray-900`;
+			case 'neobrutal':
+				return `${baseClasses} bg-yellow-300 border-4 border-black text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]`;
+			case 'nintendo':
+				return `${baseClasses} bg-red-500 border-red-700 text-white pixel-font`;
+			case 'orange':
+				return `${baseClasses} bg-orange-500 border-orange-600 text-white`;
+			case 'orangeDark':
+				return `${baseClasses} bg-orange-900 border-orange-800 text-orange-100`;
+			case 'blueLight':
+				return `${baseClasses} bg-blue-100 border-blue-200 text-blue-900`;
+			case 'blueDark':
+				return `${baseClasses} bg-blue-900 border-blue-800 text-blue-100`;
+			default:
+				return `${baseClasses} bg-white border-gray-200 text-gray-900`;
+		}
+	};
+
+	// Remove the getThemeBodyClass function since we're not using it anymore
+
+	const getHeaderClasses = (theme) => {
+		switch (theme) {
+			case 'xp':
+				return 'flex items-center justify-between p-4 border-b border-blue-300 bg-gradient-to-r from-blue-200 to-blue-300';
+			case 'glass':
+				return 'flex items-center justify-between p-4 border-b border-white/30 bg-white/10 backdrop-blur-sm';
+			case 'macos':
+				return 'flex items-center justify-between p-4 border-b border-gray-300 bg-gray-200';
+			case 'neobrutal':
+				return 'flex items-center justify-between p-4 border-b-4 border-black bg-yellow-400';
+			case 'nintendo':
+				return 'flex items-center justify-between p-4 border-b border-red-700 bg-red-600 pixel-font';
+			case 'orange':
+				return 'flex items-center justify-between p-4 border-b border-orange-600 bg-orange-600';
+			case 'orangeDark':
+				return 'flex items-center justify-between p-4 border-b border-orange-800 bg-orange-800';
+			case 'blueLight':
+				return 'flex items-center justify-between p-4 border-b border-blue-200 bg-blue-200';
+			case 'blueDark':
+				return 'flex items-center justify-between p-4 border-b border-blue-800 bg-blue-800';
+			default:
+				return 'flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50';
+		}
+	};
+
+	const getButtonClasses = (theme, variant = 'default') => {
+		const baseClasses = 'p-2 rounded-lg transition-all duration-150';
+		
+		switch (theme) {
+			case 'xp':
+				return `${baseClasses} hover:bg-blue-300 border border-blue-400`;
+			case 'glass':
+				return `${baseClasses} hover:bg-white/20 border border-white/30`;
+			case 'macos':
+				return `${baseClasses} hover:bg-gray-300 border border-gray-400`;
+			case 'neobrutal':
+				return `${baseClasses} hover:bg-yellow-200 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]`;
+			case 'nintendo':
+				return `${baseClasses} hover:bg-red-400 border border-red-300 pixel-font text-xs`;
+			case 'orange':
+				return `${baseClasses} hover:bg-orange-400 border border-orange-300`;
+			case 'orangeDark':
+				return `${baseClasses} hover:bg-orange-800 border border-orange-700`;
+			case 'blueLight':
+				return `${baseClasses} hover:bg-blue-200 border border-blue-300`;
+			case 'blueDark':
+				return `${baseClasses} hover:bg-blue-800 border border-blue-700`;
+			default:
+				return `${baseClasses} hover:bg-blue-100`;
+		}
+	};
+
+	const getChatBubbleClasses = (theme, isUser = false) => {
+		const baseClasses = 'max-w-xs lg:max-w-md px-4 py-2 rounded-lg shadow-sm';
+		
+		if (isUser) {
+			switch (theme) {
+				case 'xp':
+					return `${baseClasses} bg-blue-500 text-white border border-blue-600`;
+				case 'glass':
+					return `${baseClasses} bg-white/30 backdrop-blur-sm text-gray-900 border border-white/50`;
+				case 'macos':
+					return `${baseClasses} bg-blue-500 text-white border border-blue-600`;
+				case 'neobrutal':
+					return `${baseClasses} bg-black text-yellow-300 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`;
+				case 'nintendo':
+					return `${baseClasses} bg-white text-red-600 border border-red-300`;
+				case 'orange':
+					return `${baseClasses} bg-white text-orange-600 border border-orange-300`;
+				case 'orangeDark':
+					return `${baseClasses} bg-orange-600 text-white border border-orange-500`;
+				case 'blueLight':
+					return `${baseClasses} bg-blue-500 text-white border border-blue-600`;
+				case 'blueDark':
+					return `${baseClasses} bg-blue-600 text-white border border-blue-500`;
+				default:
+					return `${baseClasses} bg-blue-500 text-white`;
+			}
+		} else {
+			switch (theme) {
+				case 'xp':
+					return `${baseClasses} bg-white text-gray-900 border border-gray-300`;
+				case 'glass':
+					return `${baseClasses} bg-white/20 backdrop-blur-sm text-gray-900 border border-white/40`;
+				case 'macos':
+					return `${baseClasses} bg-white text-gray-900 border border-gray-300`;
+				case 'neobrutal':
+					return `${baseClasses} bg-white text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`;
+				case 'nintendo':
+					return `${baseClasses} bg-red-100 text-red-900 border border-red-200`;
+				case 'orange':
+					return `${baseClasses} bg-orange-100 text-orange-900 border border-orange-200`;
+				case 'orangeDark':
+					return `${baseClasses} bg-orange-800 text-orange-100 border border-orange-700`;
+				case 'blueLight':
+					return `${baseClasses} bg-white text-blue-900 border border-blue-200`;
+				case 'blueDark':
+					return `${baseClasses} bg-blue-800 text-blue-100 border border-blue-700`;
+				default:
+					return `${baseClasses} bg-gray-100 text-gray-900`;
+			}
+		}
+	};
+
 	return (
 		<motion.div
-			className={`fixed right-0 top-0 h-full bg-white shadow-2xl border-l border-gray-200 z-40 flex flex-col ${
-				isMinimized ? "w-16 transition-all transform ease-in-out duration-200" : "w-96 transition-all transform ease-in-out duration-200"
+			className={`${getThemeClasses(currentTheme)} ${
+				isMinimized ? "w-16" : "w-96"
 			}`}
 			initial={{ x: "100%" }}
 			animate={{ x: 0 }}
 			exit={{ x: "100%" }}
 			transition={{ type: "spring", stiffness: 300, damping: 30 }}
+			style={{
+				fontFamily: currentTheme === 'nintendo' ? 'monospace' : 'inherit',
+				imageRendering: currentTheme === 'nintendo' ? 'pixelated' : 'auto',
+			}}
 		>
 			{/* Header */}
-			<div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50">
+			<div className={getHeaderClasses(currentTheme)}>
 				{!isMinimized && (
 					<div className="flex items-center space-x-2">
 						<div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
 							<Video size={16} className="text-white" />
 						</div>
 						<div>
-							<h3 className="font-semibold text-gray-900">YouTube Q&A</h3>
-							<p className="text-xs text-gray-500">
+							<h3 className="font-semibold">YouTube Q&A</h3>
+							<p className="text-xs opacity-75">
 								{isOnYouTube
 									? "Ready to help"
 									: isDevelopment
@@ -95,31 +264,100 @@ const ChatSidebar = ({
 
 				<div className="flex items-center space-x-1">
 					{!isMinimized && (
-						<button
-							onClick={onSearchMode}
-							className="p-2 hover:bg-blue-100 rounded-lg transition-colors"
-							title="Search in transcript (Ctrl+F)"
-						>
-							<Search size={16} className="text-gray-600" />
-						</button>
+						<>
+							{/* Theme Dropdown */}
+							<div className="relative" ref={themeDropdownRef}>
+								<button
+									onClick={() => setShowThemeDropdown(!showThemeDropdown)}
+									className={getButtonClasses(currentTheme)}
+									title="Change theme"
+								>
+									<Palette size={16} />
+								</button>
+								
+								{showThemeDropdown && (
+									<motion.div
+										className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg border z-50 ${
+											currentTheme === 'glass' 
+												? 'bg-white/90 backdrop-blur-lg border-white/30' 
+												: currentTheme === 'neobrutal'
+												? 'bg-yellow-300 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+												: currentTheme === 'nintendo'
+												? 'bg-red-100 border-red-300'
+												: currentTheme === 'orange'
+												? 'bg-orange-100 border-orange-300'
+												: currentTheme === 'orangeDark'
+												? 'bg-orange-800 border-orange-700'
+												: currentTheme === 'blueLight'
+												? 'bg-blue-50 border-blue-200'
+												: currentTheme === 'blueDark'
+												? 'bg-blue-800 border-blue-700'
+												: 'bg-white border-gray-200'
+										}`}
+										initial={{ opacity: 0, y: -10 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0, y: -10 }}
+									>
+										<div className="p-2">
+											{Object.entries(THEMES).map(([key, theme]) => (
+												<button
+													key={key}
+													onClick={() => {
+														setCurrentTheme(key);
+														setShowThemeDropdown(false);
+													}}
+													className={`w-full text-left px-3 py-2 rounded-md transition-colors text-sm ${
+														currentTheme === key 
+															? 'bg-blue-500 text-white' 
+															: currentTheme === 'neobrutal'
+															? 'hover:bg-yellow-200 text-black'
+															: currentTheme === 'nintendo'
+															? 'hover:bg-red-200 text-red-900'
+															: currentTheme === 'orange'
+															? 'hover:bg-orange-200 text-orange-900'
+															: currentTheme === 'orangeDark'
+															? 'hover:bg-orange-700 text-orange-100'
+															: currentTheme === 'blueLight'
+															? 'hover:bg-blue-100 text-blue-900'
+															: currentTheme === 'blueDark'
+															? 'hover:bg-blue-700 text-blue-100'
+															: 'hover:bg-gray-100 text-gray-900'
+													}`}
+												>
+													{theme.name}
+												</button>
+											))}
+										</div>
+									</motion.div>
+								)}
+							</div>
+
+							<button
+								onClick={onSearchMode}
+								className={getButtonClasses(currentTheme)}
+								title="Search in transcript (Ctrl+F)"
+							>
+								<Search size={16} />
+							</button>
+						</>
 					)}
 
 					<button
 						onClick={() => setIsMinimized(!isMinimized)}
-						className="p-2 hover:bg-blue-100 rounded-lg transition-colors"
+						className={getButtonClasses(currentTheme)}
 					>
 						<div
-							className={`w-4 h-4 border-2 border-gray-600 rounded transition-transform ${
+							className={`w-4 h-4 border-2 rounded transition-transform ${
 								isMinimized ? "rotate-45" : ""
-							}`}
+							} ${currentTheme === 'neobrutal' ? 'border-black' : 'border-current'}`}
 						/>
 					</button>
 
 					<button
 						onClick={onClose}
-						className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+						className={getButtonClasses(currentTheme)}
 					>
-						<X size={16} className="text-gray-600" />
+						<X size={16} />
 					</button>
 				</div>
 			</div>
@@ -129,14 +367,34 @@ const ChatSidebar = ({
 					{/* Video Info */}
 					{videoData && (
 						<motion.div
-							className="p-4 bg-gray-50 border-b border-gray-200"
+							className={`p-4 border-b ${
+								currentTheme === 'xp' 
+									? 'bg-blue-50 border-blue-300'
+									: currentTheme === 'glass'
+									? 'bg-white/5 border-white/20'
+									: currentTheme === 'macos'
+									? 'bg-gray-50 border-gray-300'
+									: currentTheme === 'neobrutal'
+									? 'bg-yellow-200 border-b-4 border-black'
+									: currentTheme === 'nintendo'
+									? 'bg-red-100 border-red-300'
+									: currentTheme === 'orange'
+									? 'bg-orange-100 border-orange-300'
+									: currentTheme === 'orangeDark'
+									? 'bg-orange-800 border-orange-700'
+									: currentTheme === 'blueLight'
+									? 'bg-blue-50 border-blue-200'
+									: currentTheme === 'blueDark'
+									? 'bg-blue-800 border-blue-700'
+									: 'bg-gray-50 border-gray-200'
+							}`}
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
 						>
-							<h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2">
+							<h4 className="font-medium text-sm mb-2 line-clamp-2">
 								{videoData.title}
 							</h4>
-							<div className="flex items-center space-x-4 text-xs text-gray-600">
+							<div className="flex items-center space-x-4 text-xs opacity-75">
 								<div className="flex items-center space-x-1">
 									<User size={12} />
 									<span>{videoData.uploader}</span>
@@ -155,7 +413,11 @@ const ChatSidebar = ({
 								)}
 							</div>
 							{videoData.transcript && (
-								<div className="mt-2 text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+								<div className={`mt-2 text-xs px-2 py-1 rounded ${
+									currentTheme === 'neobrutal'
+										? 'text-black bg-green-300 border border-black'
+										: 'text-green-600 bg-green-50'
+								}`}>
 									✓ Transcript available ({videoData.transcript.length} chars)
 								</div>
 							)}
@@ -165,8 +427,8 @@ const ChatSidebar = ({
 					{/* Messages */}
 					<div className="flex-1 overflow-y-auto p-4 space-y-4">
 						{messages.length === 0 && (
-							<div className="text-center text-gray-500 mt-8">
-								<Video size={48} className="mx-auto mb-4 text-gray-300" />
+							<div className="text-center mt-8 opacity-75">
+								<Video size={48} className="mx-auto mb-4 opacity-50" />
 								<h3 className="font-medium mb-2">
 									{isDevelopment && !isOnYouTube
 										? "Demo Mode"
@@ -177,9 +439,25 @@ const ChatSidebar = ({
 										? "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
 										: "I can help you understand the content, find specific topics, or answer questions about what's discussed."}
 								</p>
-								<div className="mt-4 space-y-2 text-xs text-left bg-blue-50 p-3 rounded-lg">
-									<p className="font-medium text-blue-900">Try asking:</p>
-									<ul className="space-y-1 text-blue-700">
+								<div className={`mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${
+									currentTheme === 'glass'
+										? 'bg-white/10 backdrop-blur-sm'
+										: currentTheme === 'neobrutal'
+										? 'bg-yellow-200 border-2 border-black'
+										: currentTheme === 'nintendo'
+										? 'bg-red-100'
+										: currentTheme === 'orange'
+										? 'bg-orange-100'
+										: currentTheme === 'orangeDark'
+										? 'bg-orange-800'
+										: currentTheme === 'blueLight'
+										? 'bg-blue-50'
+										: currentTheme === 'blueDark'
+										? 'bg-blue-800'
+										: 'bg-blue-50'
+								}`}>
+									<p className="font-medium">Try asking:</p>
+									<ul className="space-y-1">
 										{isDevelopment && !isOnYouTube ? (
 											<>
 												<li>• "How does this extension work?"</li>
@@ -208,13 +486,7 @@ const ChatSidebar = ({
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: index * 0.1 }}
 							>
-								<div
-									className={`chat-bubble ${
-										message.type === "user"
-											? "chat-bubble-user"
-											: "chat-bubble-ai"
-									}`}
-								>
+								<div className={getChatBubbleClasses(currentTheme, message.type === "user")}>
 									<p className="whitespace-pre-wrap">{message.content}</p>
 								</div>
 							</motion.div>
@@ -226,20 +498,20 @@ const ChatSidebar = ({
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 							>
-								<div className="chat-bubble chat-bubble-ai">
+								<div className={getChatBubbleClasses(currentTheme, false)}>
 									<div className="flex items-center space-x-2">
 										<div className="flex space-x-1">
-											<div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+											<div className="w-2 h-2 bg-current rounded-full animate-bounce opacity-50" />
 											<div
-												className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+												className="w-2 h-2 bg-current rounded-full animate-bounce opacity-50"
 												style={{ animationDelay: "0.1s" }}
 											/>
 											<div
-												className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+												className="w-2 h-2 bg-current rounded-full animate-bounce opacity-50"
 												style={{ animationDelay: "0.2s" }}
 											/>
 										</div>
-										<span className="text-gray-500 text-xs">Thinking...</span>
+										<span className="opacity-75 text-xs">Thinking...</span>
 									</div>
 								</div>
 							</motion.div>
@@ -248,7 +520,27 @@ const ChatSidebar = ({
 					</div>
 
 					{/* Input */}
-					<div className="p-4 border-t border-gray-200 bg-white">
+					<div className={`p-4 border-t ${
+						currentTheme === 'xp' 
+							? 'border-blue-300 bg-blue-50'
+							: currentTheme === 'glass'
+							? 'border-white/20 bg-white/5'
+							: currentTheme === 'macos'
+							? 'border-gray-300 bg-gray-50'
+							: currentTheme === 'neobrutal'
+							? 'border-t-4 border-black bg-yellow-200'
+							: currentTheme === 'nintendo'
+							? 'border-red-300 bg-red-100'
+							: currentTheme === 'orange'
+							? 'border-orange-300 bg-orange-100'
+							: currentTheme === 'orangeDark'
+							? 'border-orange-700 bg-orange-800'
+							: currentTheme === 'blueLight'
+							? 'border-blue-200 bg-blue-50'
+							: currentTheme === 'blueDark'
+							? 'border-blue-700 bg-blue-800'
+							: 'border-gray-200 bg-white'
+					}`}>
 						<form onSubmit={handleSubmit} className="flex space-x-2">
 							<input
 								ref={inputRef}
@@ -263,12 +555,44 @@ const ChatSidebar = ({
 										: "Navigate to a YouTube video first"
 								}
 								disabled={!canInteract || isLoading}
-								className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+								className={`flex-1 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed text-sm ${
+									currentTheme === 'glass'
+										? 'bg-white/20 backdrop-blur-sm border border-white/30 text-gray-900 placeholder-gray-600'
+										: currentTheme === 'neobrutal'
+										? 'bg-white border-2 border-black text-black placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+										: currentTheme === 'nintendo'
+										? 'bg-white border border-red-300 text-red-900 placeholder-red-500'
+										: currentTheme === 'orange'
+										? 'bg-white border border-orange-300 text-orange-900 placeholder-orange-500'
+										: currentTheme === 'orangeDark'
+										? 'bg-orange-700 border border-orange-600 text-orange-100 placeholder-orange-300'
+										: currentTheme === 'blueLight'
+										? 'bg-white border border-blue-300 text-blue-900 placeholder-blue-500'
+										: currentTheme === 'blueDark'
+										? 'bg-blue-700 border border-blue-600 text-blue-100 placeholder-blue-300'
+										: 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500 disabled:bg-gray-100'
+								}`}
 							/>
 							<button
 								type="submit"
 								disabled={!inputValue.trim() || !canInteract || isLoading}
-								className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+								className={`px-4 py-2 rounded-lg disabled:cursor-not-allowed flex items-center space-x-2 ${
+									currentTheme === 'glass'
+										? 'bg-white/30 backdrop-blur-sm text-gray-900 hover:bg-white/40 disabled:bg-white/10 border border-white/30 transition-all duration-150'
+										: currentTheme === 'neobrutal'
+										? 'bg-black text-yellow-300 hover:bg-gray-800 disabled:bg-gray-400 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150'
+										: currentTheme === 'nintendo'
+										? 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300 border border-red-700 pixel-font text-xs transition-all duration-150'
+										: currentTheme === 'orange'
+										? 'bg-orange-600 text-white hover:bg-orange-700 disabled:bg-orange-300 border border-orange-700 transition-all duration-150'
+										: currentTheme === 'orangeDark'
+										? 'bg-orange-600 text-white hover:bg-orange-500 disabled:bg-orange-800 border border-orange-500 transition-all duration-150'
+										: currentTheme === 'blueLight'
+										? 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 border border-blue-600 transition-all duration-150'
+										: currentTheme === 'blueDark'
+										? 'bg-blue-600 text-white hover:bg-blue-500 disabled:bg-blue-800 border border-blue-500 transition-all duration-150'
+										: 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 transition-all duration-150'
+								}`}
 							>
 								<Send size={16} />
 							</button>
