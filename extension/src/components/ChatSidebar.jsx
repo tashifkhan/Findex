@@ -17,7 +17,6 @@ import {
 const THEMES = {
 	default: { name: "Default", colors: "bg-white text-gray-900" },
 	xp: { name: "Windows XP", colors: "bg-gradient-to-b from-blue-100 to-blue-200 text-gray-900" },
-	glass: { name: "Liquid Glass", colors: "bg-white/20 backdrop-blur-lg text-gray-900" },
 	macos: { name: "macOS Classic", colors: "bg-gray-100 text-gray-900" },
 	neobrutal: { name: "Neobrutal", colors: "bg-yellow-300 text-black" },
 	nintendo: { name: "Nintendo", colors: "bg-red-500 text-white" },
@@ -102,8 +101,6 @@ const ChatSidebar = ({
 		switch (theme) {
 			case 'xp':
 				return `${baseClasses} bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black text-black`;
-			case 'glass':
-				return `${baseClasses} bg-white/90 backdrop-blur-xl border-white/30 text-gray-900`;
 			case 'macos':
 				return `${baseClasses} bg-gray-100 border-gray-300 text-gray-900`;
 			case 'neobrutal':
@@ -129,8 +126,6 @@ const ChatSidebar = ({
 		switch (theme) {
 			case 'xp':
 				return 'flex items-center justify-between p-1 border-b-2 border-black bg-blue-800 text-white';
-			case 'glass':
-				return 'flex items-center justify-between p-4 border-b border-white/30 bg-white/10 backdrop-blur-sm';
 			case 'macos':
 				return 'flex items-center justify-between p-4 border-b border-gray-300 bg-gray-200';
 			case 'neobrutal':
@@ -156,8 +151,6 @@ const ChatSidebar = ({
 		switch (theme) {
 			case 'xp':
 				return `p-1 rounded-none bg-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100`;
-			case 'glass':
-				return `${baseClasses} hover:bg-white/20 border border-white/30`;
 			case 'macos':
 				return `${baseClasses} hover:bg-gray-300 border border-gray-400`;
 			case 'neobrutal':
@@ -184,8 +177,6 @@ const ChatSidebar = ({
 			switch (theme) {
 				case 'xp':
 					return `${baseClasses} bg-white text-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black`;
-				case 'glass':
-					return `${baseClasses} bg-white/30 backdrop-blur-sm text-gray-900 border border-white/50`;
 				case 'macos':
 					return `${baseClasses} bg-blue-500 text-white border border-blue-600`;
 				case 'neobrutal':
@@ -207,8 +198,6 @@ const ChatSidebar = ({
 			switch (theme) {
 				case 'xp':
 					return `${baseClasses} bg-white text-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black`;
-				case 'glass':
-					return `${baseClasses} bg-white/20 backdrop-blur-sm text-gray-900 border border-white/40`;
 				case 'macos':
 					return `${baseClasses} bg-white text-gray-900 border border-gray-300`;
 				case 'neobrutal':
@@ -277,21 +266,19 @@ const ChatSidebar = ({
 
 								{showThemeDropdown && (
 									<motion.div
-										className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg border z-50 ${currentTheme === 'glass'
-											? 'bg-white/90 backdrop-blur-lg border-white/30'
-											: currentTheme === 'neobrutal'
-												? 'bg-yellow-300 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-												: currentTheme === 'nintendo'
-													? 'bg-red-100 border-red-300'
-													: currentTheme === 'orange'
-														? 'bg-orange-100 border-orange-300'
-														: currentTheme === 'orangeDark'
-															? 'bg-orange-800 border-orange-700'
-															: currentTheme === 'blueLight'
-																? 'bg-blue-50 border-blue-200'
-																: currentTheme === 'blueDark'
-																	? 'bg-blue-800 border-blue-700'
-																	: 'bg-white border-gray-200'
+										className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-lg border z-50 ${currentTheme === 'neobrutal'
+											? 'bg-yellow-300 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+											: currentTheme === 'nintendo'
+												? 'bg-red-100 border-red-300'
+												: currentTheme === 'orange'
+													? 'bg-orange-100 border-orange-300'
+													: currentTheme === 'orangeDark'
+														? 'bg-orange-800 border-orange-700'
+														: currentTheme === 'blueLight'
+															? 'bg-blue-50 border-blue-200'
+															: currentTheme === 'blueDark'
+																? 'bg-blue-800 border-blue-700'
+																: 'bg-white border-gray-200'
 											}`}
 										initial={{ opacity: 0, y: -10 }}
 										animate={{ opacity: 1, y: 0 }}
@@ -373,23 +360,21 @@ const ChatSidebar = ({
 						<motion.div
 							className={`p-4 border-b ${currentTheme === 'xp'
 								? 'bg-blue-50 border-blue-300'
-								: currentTheme === 'glass'
-									? 'bg-white/5 border-white/20'
-									: currentTheme === 'macos'
-										? 'bg-gray-50 border-gray-300'
-										: currentTheme === 'neobrutal'
-											? 'bg-yellow-200 border-b-4 border-black'
-											: currentTheme === 'nintendo'
-												? 'bg-red-100 border-red-300'
-												: currentTheme === 'orange'
-													? 'bg-orange-100 border-orange-300'
-													: currentTheme === 'orangeDark'
-														? 'bg-orange-800 border-orange-700'
-														: currentTheme === 'blueLight'
-															? 'bg-blue-50 border-blue-200'
-															: currentTheme === 'blueDark'
-																? 'bg-blue-800 border-blue-700'
-																: 'bg-gray-50 border-gray-200'
+								: currentTheme === 'macos'
+									? 'bg-gray-50 border-gray-300'
+									: currentTheme === 'neobrutal'
+										? 'bg-yellow-200 border-b-4 border-black'
+										: currentTheme === 'nintendo'
+											? 'bg-red-100 border-red-300'
+											: currentTheme === 'orange'
+												? 'bg-orange-100 border-orange-300'
+												: currentTheme === 'orangeDark'
+													? 'bg-orange-800 border-orange-700'
+													: currentTheme === 'blueLight'
+														? 'bg-blue-50 border-blue-200'
+														: currentTheme === 'blueDark'
+															? 'bg-blue-800 border-blue-700'
+															: 'bg-gray-50 border-gray-200'
 								}`}
 							initial={{ opacity: 0, y: -20 }}
 							animate={{ opacity: 1, y: 0 }}
@@ -441,21 +426,19 @@ const ChatSidebar = ({
 										? "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
 										: "I can help you understand the content, find specific topics, or answer questions about what's discussed."}
 								</p>
-								<div className={`mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${currentTheme === 'glass'
-									? 'bg-white/10 backdrop-blur-sm'
-									: currentTheme === 'neobrutal'
-										? 'bg-yellow-200 border-2 border-black'
-										: currentTheme === 'nintendo'
-											? 'bg-red-100'
-											: currentTheme === 'orange'
-												? 'bg-orange-100'
-												: currentTheme === 'orangeDark'
-													? 'bg-orange-800'
-													: currentTheme === 'blueLight'
-														? 'bg-blue-50'
-														: currentTheme === 'blueDark'
-															? 'bg-blue-800'
-															: 'bg-blue-50'
+								<div className={`mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${currentTheme === 'neobrutal'
+									? 'bg-yellow-200 border-2 border-black'
+									: currentTheme === 'nintendo'
+										? 'bg-red-100'
+										: currentTheme === 'orange'
+											? 'bg-orange-100'
+											: currentTheme === 'orangeDark'
+												? 'bg-orange-800'
+												: currentTheme === 'blueLight'
+													? 'bg-blue-50'
+													: currentTheme === 'blueDark'
+														? 'bg-blue-800'
+														: 'bg-blue-50'
 									}`}>
 									<p className="font-medium">Try asking:</p>
 									<ul className="space-y-1">
@@ -522,23 +505,21 @@ const ChatSidebar = ({
 					{/* Input */}
 					<div className={`p-4 border-t ${currentTheme === 'xp'
 						? 'border-blue-300 bg-blue-50'
-						: currentTheme === 'glass'
-							? 'border-white/20 bg-white/5'
-							: currentTheme === 'macos'
-								? 'border-gray-300 bg-gray-50'
-								: currentTheme === 'neobrutal'
-									? 'border-t-4 border-black bg-yellow-200'
-									: currentTheme === 'nintendo'
-										? 'border-red-300 bg-red-100'
-										: currentTheme === 'orange'
-											? 'border-orange-300 bg-orange-100'
-											: currentTheme === 'orangeDark'
-												? 'border-orange-700 bg-orange-800'
-												: currentTheme === 'blueLight'
-													? 'border-blue-200 bg-blue-50'
-													: currentTheme === 'blueDark'
-														? 'border-blue-700 bg-blue-800'
-														: 'border-gray-200 bg-white'
+						: currentTheme === 'macos'
+							? 'border-gray-300 bg-gray-50'
+							: currentTheme === 'neobrutal'
+								? 'border-t-4 border-black bg-yellow-200'
+								: currentTheme === 'nintendo'
+									? 'border-red-300 bg-red-100'
+									: currentTheme === 'orange'
+										? 'border-orange-300 bg-orange-100'
+										: currentTheme === 'orangeDark'
+											? 'border-orange-700 bg-orange-800'
+											: currentTheme === 'blueLight'
+												? 'border-blue-200 bg-blue-50'
+												: currentTheme === 'blueDark'
+													? 'border-blue-700 bg-blue-800'
+													: 'border-gray-200 bg-white'
 						}`}>
 						<form onSubmit={handleSubmit} className="flex space-x-2">
 							<input
@@ -556,43 +537,39 @@ const ChatSidebar = ({
 								disabled={!canInteract || isLoading}
 								className={`flex-1 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed text-sm ${currentTheme === 'xp'
 									? 'bg-white border-2 border-t-black border-l-black border-r-white border-b-white text-black placeholder-gray-500 rounded-none'
-									: currentTheme === 'glass'
-										? 'bg-white/20 backdrop-blur-sm border border-white/30 text-gray-900 placeholder-gray-600'
-										: currentTheme === 'neobrutal'
-											? 'bg-white border-2 border-black text-black placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
-											: currentTheme === 'nintendo'
-												? 'bg-white border border-red-300 text-red-900 placeholder-red-500'
-												: currentTheme === 'orange'
-													? 'bg-white border border-orange-300 text-orange-900 placeholder-orange-500'
-													: currentTheme === 'orangeDark'
-														? 'bg-orange-700 border border-orange-600 text-orange-100 placeholder-orange-300'
-														: currentTheme === 'blueLight'
-															? 'bg-white border border-blue-300 text-blue-900 placeholder-blue-500'
-															: currentTheme === 'blueDark'
-																? 'bg-blue-700 border border-blue-600 text-blue-100 placeholder-blue-300'
-																: 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500 disabled:bg-gray-100'
+									: currentTheme === 'neobrutal'
+										? 'bg-white border-2 border-black text-black placeholder-gray-600 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]'
+										: currentTheme === 'nintendo'
+											? 'bg-white border border-red-300 text-red-900 placeholder-red-500'
+											: currentTheme === 'orange'
+												? 'bg-white border border-orange-300 text-orange-900 placeholder-orange-500'
+												: currentTheme === 'orangeDark'
+													? 'bg-orange-700 border border-orange-600 text-orange-100 placeholder-orange-300'
+													: currentTheme === 'blueLight'
+														? 'bg-white border border-blue-300 text-blue-900 placeholder-blue-500'
+														: currentTheme === 'blueDark'
+															? 'bg-blue-700 border border-blue-600 text-blue-100 placeholder-blue-300'
+															: 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500 disabled:bg-gray-100'
 									}`}
 							/>
 							<button
 								type="submit"
 								disabled={!inputValue.trim() || !canInteract || isLoading}
 								className={`px-1 py-2  rounded-lg disabled:cursor-not-allowed flex items-center space-x-2 ${currentTheme === 'xp'
-									? 'p-1 rounded-none bg-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100 disabled:opacity-50'
-									: currentTheme === 'glass'
-										? 'bg-white/30 backdrop-blur-sm text-gray-900 hover:bg-white/40 disabled:bg-white/10 border border-white/30 transition-all duration-150'
-										: currentTheme === 'neobrutal'
-											? 'bg-black text-yellow-300 hover:bg-gray-800 disabled:bg-gray-400 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150'
-											: currentTheme === 'nintendo'
-												? 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300 border border-red-700 pixel-font text-xs transition-all duration-150'
-												: currentTheme === 'orange'
-													? 'bg-orange-600 text-white hover:bg-orange-700 disabled:bg-orange-300 border border-orange-700 transition-all duration-150'
-													: currentTheme === 'orangeDark'
-														? 'bg-orange-600 text-white hover:bg-orange-500 disabled:bg-orange-800 border border-orange-500 transition-all duration-150'
-														: currentTheme === 'blueLight'
-															? 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 border border-blue-600 transition-all duration-150'
-															: currentTheme === 'blueDark'
-																? 'bg-blue-600 text-white hover:bg-blue-500 disabled:bg-blue-800 border border-blue-500 transition-all duration-150'
-																: 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 transition-all duration-150'
+									? 'p-1 rounded-none bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100 disabled:opacity-50'
+									: currentTheme === 'neobrutal'
+										? 'bg-black text-yellow-300 hover:bg-gray-800 disabled:bg-gray-400 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] transition-all duration-150'
+										: currentTheme === 'nintendo'
+											? 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300 border border-red-700 pixel-font text-xs transition-all duration-150'
+											: currentTheme === 'orange'
+												? 'bg-orange-600 text-white hover:bg-orange-700 disabled:bg-orange-300 border border-orange-700 transition-all duration-150'
+												: currentTheme === 'orangeDark'
+													? 'bg-orange-600 text-white hover:bg-orange-500 disabled:bg-orange-800 border border-orange-500 transition-all duration-150'
+													: currentTheme === 'blueLight'
+														? 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 border border-blue-600 transition-all duration-150'
+														: currentTheme === 'blueDark'
+															? 'bg-blue-600 text-white hover:bg-blue-500 disabled:bg-blue-800 border border-blue-500 transition-all duration-150'
+															: 'bg-blue-500 text-white hover:bg-blue-600 disabled:bg-gray-300 transition-all duration-150'
 									}`}
 							>
 								<Send size={16} />
