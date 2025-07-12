@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
-from models.requests import SubtitlesRequest
-from models.response import SubtitlesResponse
-from core import get_logger
-from youtube_utils import get_subtitle_content
-from youtube_utils.transcript_generator import processed_transcript
+from app.models.requests import SubtitlesRequest
+from app.models.response import SubtitlesResponse
+from app.core import get_logger
+from app.youtube_utils import get_subtitle_content
+from app.youtube_utils.transcript_generator import processed_transcript
 
 router = APIRouter()
 logger = get_logger(__name__)

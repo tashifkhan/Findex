@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
-from models import YTVideoInfo
-from models.requests import VideoInfoRequest
-from core import get_logger
-from youtube_utils import get_video_info
+from app.models import YTVideoInfo
+from app.models.requests import VideoInfoRequest
+from app.core import get_logger
+from app.youtube_utils import get_video_info
 
 router = APIRouter()
 logger = get_logger(__name__)
