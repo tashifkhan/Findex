@@ -58,6 +58,10 @@ def get_video_info(video_url):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
 
+            if not info:
+                logger.error(f"Could not extract video info for {video_url}")
+                return None
+
             video_info = {
                 "title": info.get("title", "Unknown"),
                 "description": info.get("description", ""),
@@ -91,7 +95,17 @@ def get_video_info(video_url):
 
 def get_subtitle_content(video_url, lang="en"):
     """Downloads and extracts subtitle content for a given video URL and language."""
-    temp_dir = tempfile.mkdtemp()
+
+    temp_dir = os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__),
+        ),
+        "temp_subs",
+    )
+    os.makedirs(
+        temp_dir,
+        exist_ok=True,
+    )
 
     try:
         ydl_opts = {
@@ -114,6 +128,10 @@ def get_subtitle_content(video_url, lang="en"):
             info = ydl.extract_info(
                 video_url, download=True
             )  # download=True is important for subtitles
+
+            if not info:
+                logger.error(f"No info returned for URL: {video_url}")
+                return "No information available for the requested video."
 
             requested_subs = info.get("requested_subtitles")
 
@@ -213,25 +231,40 @@ def extract_subtitle_text(subtitle_list):
 def generate_answer(video_info, question):
     """Generate answer using video information"""
 
-    context = f"""
-    Video Title: {video_info.get('title', 'Unknown')}
-    Channel: {video_info.get('uploader', 'Unknown')}
-    Description: {video_info.get('description', 'No description available')[:500]}...
-    Duration: {video_info.get('duration', 0)} seconds
-    Tags: {', '.join(video_info.get('tags', [])[:10])}
-    Categories: {', '.join(video_info.get('categories', []))}
-    """
+    context = (
+        f"Video Title: {video_info.get('title', 'Unknown')}\n"
+        f"Channel: {video_info.get('uploader', 'Unknown')}\n"
+        f"Description: {video_info.get('description', 'No description available')[:500]}...\n"
+        f"Duration: {video_info.get('duration', 0)} seconds\n"
+        f"Tags: {', '.join(video_info.get('tags', [])[:10])}\n"
+        f"Categories: {', '.join(video_info.get('categories', []))}"
+    )
 
     question_lower = question.lower()
-    return f"""
-        I can help you with questions about this video: "{video_info.get('title', 'Unknown')}" by {video_info.get('uploader', 'Unknown')}.
-        Some information I can provide:
-        - Video duration: {video_info.get('duration', 0) // 60} minutes
-        - Views: {video_info.get('view_count', 0):,}
-        - Upload date: {video_info.get('upload_date', 'Unknown')}
 
-        For more specific answers, try asking about the video's title, channel, duration, views, or topic.
-    """
+    if "duration" in question_lower:
+        return f"The video is {video_info.get('duration', 0)} seconds long."
+
+    if "title" in question_lower:
+        return f"The title of the video is '{video_info.get('title', 'Unknown')}'."
+
+    if "channel" in question_lower or "uploader" in question_lower:
+        return f"The video was uploaded by '{video_info.get('uploader', 'Unknown')}'."
+
+    if "view" in question_lower:
+        return f"The video has {video_info.get('view_count', 0):,} views."
+
+    if "date" in question_lower:
+        return f"The video was uploaded on {video_info.get('upload_date', 'Unknown')}."
+
+    return (
+        f"I can help with questions about '{video_info.get('title', 'Unknown')}'.\n"
+        f"Here's some info:\n"
+        f"- Channel: {video_info.get('uploader', 'Unknown')}\n"
+        f"- Duration: {video_info.get('duration', 0)} seconds\n"
+        f"- Views: {video_info.get('view_count', 0):,}\n"
+        f"You can ask about the title, channel, duration, views, or topic."
+    )
 
 
 # ROutes
