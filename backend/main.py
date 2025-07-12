@@ -54,3 +54,15 @@ if __name__ == "__main__":
         port=BACKEND_PORT,
         reload=True,
     )
+
+
+def main():
+    """Entry point for the findex-backend command."""
+    import uvicorn
+    
+    uvicorn.run(
+        "main:app",
+        host=BACKEND_HOST,
+        port=BACKEND_PORT,
+        reload=True,
+    )
