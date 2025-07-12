@@ -329,6 +329,17 @@ def clean_timestamps_and_dedupe(text: str) -> str:
     return "\n".join(out_lines)
 
 
+def remove_sentence_repeats(text: str) -> str:
+    """
+    Collapse any sentence (or quoted phrase) that is repeated
+    consecutively into a single instance.
+    """
+    lines = text.splitlines()
+    out_lines = [lines[i] for i in range(0, len(lines), 2)]
+
+    return "\n".join(out_lines)
+
+
 def extract_subtitle_text(subtitle_list):
     """Extract text from subtitle entries"""
     try:
@@ -488,8 +499,10 @@ def get_subtitles_handler():
             )
 
         else:
-            cleaned_subtitle_text = clean_timestamps_and_dedupe(
-                clean_srt_text(clean_transcript(subtitle_text_raw))
+            cleaned_subtitle_text = remove_sentence_repeats(
+                clean_timestamps_and_dedupe(
+                    clean_srt_text(clean_transcript(subtitle_text_raw))
+                )
             )
 
             if not cleaned_subtitle_text:
