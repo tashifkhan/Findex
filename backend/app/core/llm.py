@@ -46,6 +46,13 @@ class LargeLanguageModel:
                     model=model_name,
                     ollama_api_key=api_key,
                 )
+            elif provideer == "deepseek":
+                from langchain_deepseek import DeepSeek
+
+                self.cilient = DeepSeek(
+                    model=model_name,
+                    deepseek_api_key=api_key,
+                )
             else:
                 raise ValueError(f"Unsupported provider: {provideer}")
 
