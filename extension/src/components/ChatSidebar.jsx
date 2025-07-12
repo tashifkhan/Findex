@@ -155,7 +155,7 @@ const ChatSidebar = ({
 
 		switch (theme) {
 			case 'xp':
-				return `p-1 rounded-none bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100`;
+				return `p-1 rounded-none bg-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100`;
 			case 'glass':
 				return `${baseClasses} hover:bg-white/20 border border-white/30`;
 			case 'macos':
@@ -576,8 +576,8 @@ const ChatSidebar = ({
 							<button
 								type="submit"
 								disabled={!inputValue.trim() || !canInteract || isLoading}
-								className={`px-4 py-2 rounded-lg disabled:cursor-not-allowed flex items-center space-x-2 ${currentTheme === 'xp'
-									? 'p-1 rounded-none bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100 disabled:opacity-50'
+								className={`px-1 py-2  rounded-lg disabled:cursor-not-allowed flex items-center space-x-2 ${currentTheme === 'xp'
+									? 'p-1 rounded-none bg-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100 disabled:opacity-50'
 									: currentTheme === 'glass'
 										? 'bg-white/30 backdrop-blur-sm text-gray-900 hover:bg-white/40 disabled:bg-white/10 border border-white/30 transition-all duration-150'
 										: currentTheme === 'neobrutal'
