@@ -4,7 +4,8 @@ Ctrl + F Extetended (on steriods)
 
 ## Basic Plan
 
-<img width="1050" height="1009" alt="image" src="https://github.com/user-attachments/assets/d460e52c-d706-4a13-9c11-e7aedb4b2f00" />
+<img width="1050" height="1009" alt="image" src="https://github.com/user-attachments/assets/ceda4f37-7c0d-4a90-b79a-2b41e2e25844" />
+
 
 
 - [ ] umm explore langhain.js (maybe works on client side)
