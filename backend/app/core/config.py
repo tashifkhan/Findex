@@ -10,6 +10,9 @@ FLASK_DEBUG = os.getenv("FLASK_DEBUG", True if FLASK_ENV == "development" else F
 BACKEND_HOST = os.getenv("BACKEND_HOST", "0.0.0.0")
 BACKEND_PORT = int(os.getenv("BACKEND_PORT", 5454))
 
+# Google API key
+google_api_key = os.getenv("GOOGLE_API_KEY", "")
+
 # logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
