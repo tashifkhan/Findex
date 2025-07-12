@@ -300,26 +300,32 @@ def get_subtitles_handler():
         logger.info(f"Received /subs request for URL: {video_url}, lang: {lang}")
         subtitle_text = get_subtitle_content(video_url, lang)
 
-        if subtitle_text:
-            # if the returned text is an error message from get_subtitle_content
-            error_keywords = [
-                "error",
-                "unavailable",
-                "not found",
-                "could not be retrieved",
-                "failed",
-            ]
+        if not subtitle_text:
+            return (
+                jsonify(
+                    {"error": "Failed to retrieve subtitles or subtitles are empty."}
+                ),
+                404,
+            )
 
-            if any(keyword in subtitle_text.lower() for keyword in error_keywords):
-                return (
-                    jsonify(
-                        {
-                            "error": subtitle_text,
-                        }
-                    ),
-                    404,
-                )  # Or 500 depending on error type
+        # getting error messages from get_subtitle_content
+        known_error_messages = [
+            "Video unavailable.",
+            "Subtitles not available for the specified language.",
+            "Subtitles were requested but could not be retrieved from file.",
+            "Subtitles not available for the specified language or download failed.",
+        ]
 
+        # error prefixes
+        known_error_prefixes = [
+            "Error downloading subtitles:",
+            "An unexpected error occurred while fetching subtitles:",
+        ]
+
+        is_actual_error = False
+
+        if subtitle_text in known_error_messages:
+            is_actual_error = True
             return (
                 jsonify(
                     {
@@ -330,14 +336,39 @@ def get_subtitles_handler():
             )
 
         else:
-            # This case should ideally be covered by error messages from get_subtitle_content
+            for prefix in known_error_prefixes:
+                if subtitle_text.startswith(prefix):
+                    is_actual_error = True
+                    break
+
+        if is_actual_error:
+            status_code = 500
+
+            # server-side/download issues
+            if (
+                "unavailable" in subtitle_text.lower()
+                or "not found" in subtitle_text.lower()
+                or "not available" in subtitle_text.lower()
+            ):
+                status_code = 404
+
             return (
                 jsonify(
                     {
-                        "error": "Subtitles not found or an unknown error occurred.",
+                        "error": subtitle_text,
                     }
                 ),
-                404,
+                status_code,
+            )
+
+        else:
+            return (
+                jsonify(
+                    {
+                        "subtitles": subtitle_text,
+                    }
+                ),
+                200,
             )
 
     except Exception as e:
