@@ -33,15 +33,9 @@ VTT_HEADER_OR_METADATA_PATTERN = re.compile(
     r"^(WEBVTT|Kind:|Language:).*$|^(NOTE|STYLE|REGION\\s*$|\\s*::cue).*$",
     re.IGNORECASE,
 )
-INLINE_TIMESTAMP_PATTERN = re.compile(
-    r"<\\d{2}:\\d{2}:\\d{2}[.,]\\d{3}>",
-)
-CUE_TAG_PATTERN = re.compile(
-    r"</?c.*?>",
-)
-SPEAKER_TAG_PATTERN = re.compile(
-    r"<v\\s+[^>]+>.*?</v>",
-)  # Match <v Speaker>...</v>
+INLINE_TIMESTAMP_PATTERN = re.compile(r"<\\d{2}:\\d{2}:\\d{2}[.,]\\d{3}>")
+CUE_TAG_PATTERN = re.compile(r"</?c.*?>")
+SPEAKER_TAG_PATTERN = re.compile(r"<v\\s+[^>]+>.*?</v>")
 
 
 def extract_video_id(url):
@@ -63,10 +57,7 @@ def extract_video_id(url):
 
 
 def clean_transcript(text: str) -> str:
-    """
-    Remove SRT/VTT timestamps and cue tags, dedupe, and
-    merge into paragraphs.
-    """
+    """Remove SRT/VTT timestamps and cue tags, dedupe, andmerge into paragraphs."""
 
     lines = text.splitlines()
     paragraphs = []
@@ -275,6 +266,69 @@ def get_subtitle_content(video_url, lang="en"):
             logger.error(f"Error cleaning up temp directory {temp_dir}: {e_cleanup}")
 
 
+def clean_srt_text(raw: str) -> str:
+    # remove full timestamp lines (with align:… and the literal "\n\n")
+    full_ts_re = re.compile(
+        r"^\d{2}:\d{2}:\d{2}\.\d{3}"
+        r"\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{3}"  # the --> timestamp
+        r".*?"
+        r"(?:\\n){2}",  # literal "\n\n"
+        re.MULTILINE | re.DOTALL,
+    )
+
+    # remove inline time-codes
+    inline_ts_re = re.compile(r"<\d{2}:\d{2}:\d{2}\.\d{3}>")
+
+    # remove align directives
+    align_re = re.compile(r"align:start position:0%")
+
+    # collapse literal backslash-n sequences into real newlines
+    backslash_n_re = re.compile(r"\\n+")
+
+    # apply passes
+    text = full_ts_re.sub("", raw)
+    text = inline_ts_re.sub("", text)
+    text = align_re.sub("", text)
+    text = backslash_n_re.sub("\n", text)
+
+    return text.strip()
+
+
+# 1) matches any timestamp arrow "00:00:02.470 --> 00:00:04.309"
+_TIMESTAMP_ARROW_RE = re.compile(
+    r"\d{2}:\d{2}:\d{2}\.\d{3}"  # start
+    r"\s*-->\s*"
+    r"\d{2}:\d{2}:\d{2}\.\d{3}"  # end
+)
+
+# 2) optional: strip inline cues like <00:00:02.879>
+_CUE_RE = re.compile(r"<\d{2}:\d{2}:\d{2}\.\d{3}>")
+
+
+def clean_timestamps_and_dedupe(text: str) -> str:
+    """
+    1) Remove all 'hh:mm:ss.mmm --> hh:mm:ss.mmm'
+    2) Remove inline <hh:mm:ss.mmm> cues
+    3) Split/strip/dedupe lines
+    """
+    # strip out the timestamp-arrows
+    no_arrows = _TIMESTAMP_ARROW_RE.sub("", text)
+
+    # strip any leftover <…> cues
+    no_cues = _CUE_RE.sub("", no_arrows)
+
+    seen = set()
+    out_lines = []
+    for raw_line in no_cues.splitlines():
+        line = raw_line.strip()
+        if not line or line in seen:
+            continue
+        seen.add(line)
+        out_lines.append(line)
+
+    return "\n".join(out_lines)
+
+
 def extract_subtitle_text(subtitle_list):
     """Extract text from subtitle entries"""
     try:
@@ -434,9 +488,11 @@ def get_subtitles_handler():
             )
 
         else:
-            cleaned_subtitle_text = clean_transcript(subtitle_text_raw)
+            cleaned_subtitle_text = clean_timestamps_and_dedupe(
+                clean_srt_text(clean_transcript(subtitle_text_raw))
+            )
 
-            if not cleaned_subtitle_text:  # if cleaning results in empty string
+            if not cleaned_subtitle_text:
                 return (
                     jsonify(
                         {
@@ -446,14 +502,7 @@ def get_subtitles_handler():
                     404,
                 )
 
-            return (
-                jsonify(
-                    {
-                        "subtitles": cleaned_subtitle_text,
-                    }
-                ),
-                200,
-            )
+            return jsonify({"subtitles": cleaned_subtitle_text}), 200
 
     except Exception as e:
         logger.error(f"Error in /subs route: {e}")
