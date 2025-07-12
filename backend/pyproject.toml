@@ -4,9 +4,12 @@ version = "0.1.0"
 description = "GenAI - langchain backend"
 requires-python = ">=3.13"
 dependencies = [
+    "bs4>=0.0.2",
     "flask>=3.1.1",
     "flask-cors>=6.0.1",
+    "html2text>=2024.2.26",
     "pydantic>=2.11.7",
     "python-dotenv>=1.1.1",
+    "requests>=2.32.3",
     "yt-dlp>=2025.6.30",
 ]
