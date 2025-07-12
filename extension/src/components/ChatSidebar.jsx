@@ -96,13 +96,14 @@ const ChatSidebar = ({
 	};
 
 	const getThemeClasses = (theme) => {
-		const baseClasses = "fixed right-0 top-0 h-full shadow-2xl border-l z-40 flex flex-col transition-all duration-300";
+		const baseClasses = "fixed right-0 top-0 h-full z-40 flex flex-col transition-all duration-300";
 
 		switch (theme) {
 			case 'xp':
-				return `${baseClasses} bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black text-black`;
+				return `${baseClasses} bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black text-black shadow-2xl`;
 			case 'macos':
-				return `${baseClasses} bg-gray-100 border-gray-300 text-gray-900`;
+				// Classic Mac: light gray, square corners, 3D beveled border, Segoe UI font
+				return `${baseClasses} bg-[#c3c3c3] border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)]`;
 			case 'neobrutal':
 				return `${baseClasses} bg-yellow-300 border-4 border-black text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]`;
 			case 'nintendo':
@@ -116,7 +117,7 @@ const ChatSidebar = ({
 			case 'blueDark':
 				return `${baseClasses} bg-blue-900 border-blue-800 text-blue-100`;
 			default:
-				return `${baseClasses} bg-white border-gray-200 text-gray-900`;
+				return `${baseClasses} bg-white border-gray-200 text-gray-900 shadow-2xl`;
 		}
 	};
 
@@ -127,7 +128,8 @@ const ChatSidebar = ({
 			case 'xp':
 				return 'flex items-center justify-between p-1 border-b-2 border-black bg-blue-800 text-white';
 			case 'macos':
-				return 'flex items-center justify-between p-4 border-b border-gray-300 bg-gray-200';
+				// Classic Mac: gray bar, square, subtle border, Segoe UI font
+				return "flex items-center justify-between px-3 py-1 border-b-2 border-b-[#6e6e6e] bg-[#e0e0e0] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-none";
 			case 'neobrutal':
 				return 'flex items-center justify-between p-4 border-b-4 border-black bg-yellow-400';
 			case 'nintendo':
@@ -152,7 +154,8 @@ const ChatSidebar = ({
 			case 'xp':
 				return `p-1 rounded-none bg-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100`;
 			case 'macos':
-				return `${baseClasses} hover:bg-gray-300 border border-gray-400`;
+				// Classic Mac: square, 3D, gray, Segoe UI font
+				return "px-2 py-1 rounded-none border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] bg-[#e0e0e0] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-none hover:bg-[#d0d0d0] active:border-t-[#6e6e6e] active:border-l-[#6e6e6e] active:border-b-white active:border-r-white";
 			case 'neobrutal':
 				return `${baseClasses} hover:bg-yellow-200 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]`;
 			case 'nintendo':
@@ -178,7 +181,8 @@ const ChatSidebar = ({
 				case 'xp':
 					return `${baseClasses} bg-white text-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black`;
 				case 'macos':
-					return `${baseClasses} bg-blue-500 text-white border border-blue-600`;
+					// Classic Mac: white, square, 3D border, Segoe UI font
+					return "max-w-xs lg:max-w-md px-4 py-2 rounded-none bg-white text-black border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] font-['Segoe_UI',system-ui,sans-serif] shadow-none";
 				case 'neobrutal':
 					return `${baseClasses} bg-black text-yellow-300 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`;
 				case 'nintendo':
@@ -199,7 +203,8 @@ const ChatSidebar = ({
 				case 'xp':
 					return `${baseClasses} bg-white text-black border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black`;
 				case 'macos':
-					return `${baseClasses} bg-white text-gray-900 border border-gray-300`;
+					// Classic Mac: white, square, 3D border, Segoe UI font
+					return "max-w-xs lg:max-w-md px-4 py-2 rounded-none bg-white text-black border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] font-['Segoe_UI',system-ui,sans-serif] shadow-none";
 				case 'neobrutal':
 					return `${baseClasses} bg-white text-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`;
 				case 'nintendo':
