@@ -5,7 +5,7 @@ import googlesearch
 from typing import List, Optional
 
 try:
-    from app.website_context import markdown_fetcher
+    from app.website_context import html_md_convertor
 
 except ImportError:
     sys.path.append(
@@ -13,7 +13,7 @@ except ImportError:
             os.path.dirname(os.path.abspath(__file__)),
         ),
     )
-    from website_context import markdown_fetcher
+    from website_context import html_md_convertor
 
 
 def search_and_get_urls(
@@ -81,6 +81,19 @@ def fetch_html(url: str) -> str:
         return ""
 
 
+def html_to_markdown(html: str) -> str:
+    """
+    Convert HTML to markdown using website_context.html_md_convertor.
+    Returns markdown as a string.
+    """
+    try:
+        return html_md_convertor(html)
+
+    except Exception as e:
+        print(f"Error converting HTML to markdown: {e}")
+        return html
+
+
 def get_cleaned_texts(urls: List[str]) -> List[str]:
     """
     Fetch and clean text from multiple URLs synchronously.
@@ -89,9 +102,11 @@ def get_cleaned_texts(urls: List[str]) -> List[str]:
     texts = []
 
     for url in urls:
-        clean_text = markdown_fetcher(url)
-        if clean_text.strip():
-            texts.append(f"Source: {url}\n{clean_text}\n\n")
+        html = fetch_html(url)
+        if html:
+            clean_text = html_to_markdown(html)
+            if clean_text.strip():
+                texts.append(f"Source: {url}\n{clean_text}\n\n")
 
     return texts
 
@@ -101,7 +116,8 @@ def extract_text_from_url(url: str) -> str:
     Extract clean text from a single URL synchronously.
     Returns markdown as a string.
     """
-    return markdown_fetcher(url) if url else ""
+    html = fetch_html(url)
+    return html_to_markdown(html) if html else ""
 
 
 def web_search_pipeline(
