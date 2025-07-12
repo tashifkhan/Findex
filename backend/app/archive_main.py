@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from config import BACKEND_HOST, BACKEND_PORT, get_logger
+from core import BACKEND_HOST, BACKEND_PORT, get_logger
 from models import YTVideoInfo
 from youtube_utils import extract_video_id, get_video_info, get_subtitle_content
 from youtube_utils.transcript_generator import processed_transcript

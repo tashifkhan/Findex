@@ -1,6 +1,6 @@
 from typing import Optional
 from urllib.parse import urlparse, parse_qs
-from core import get_logger
+from app.core import get_logger
 
 logger = get_logger(__name__)
 
