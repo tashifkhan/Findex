@@ -1,0 +1,19 @@
+{
+  "name": "Findex Sidebar Extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["sidePanel", "storage", "activeTab"],
+  "side_panel": {
+    "default_path": "sidebar/sidebar.html"
+  },
+  "action": {
+    "default_title": "Click to open sidebar"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  }
+}
