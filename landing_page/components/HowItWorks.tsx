@@ -40,7 +40,7 @@ export default function HowItWorks() {
 			></div>
 			<div className="container mx-auto px-6 relative z-10">
 				<div className="text-center mb-16">
-					<h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						How It Works
 					</h2>
 					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -75,7 +75,7 @@ export default function HowItWorks() {
 									className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 mt-4"
 									style={{ background: "var(--accent-ocean)" }}
 								>
-									<div className="text-purple-600">{step.icon}</div>
+									<div className="text-white opacity-65">{step.icon}</div>
 								</div>
 
 								{/* Content */}

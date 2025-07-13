@@ -147,9 +147,18 @@ export default function Demo() {
 								onClick={() => setCurrentDemo(index)}
 								className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
 									index === currentDemo
-										? "border-purple-400 shadow-lg shadow-purple-400/25"
+										? "shadow-lg"
 										: "border-gray-600 hover:border-gray-500"
 								}`}
+								style={
+									index === currentDemo
+										? {
+												borderColor: "var(--accent-ocean)",
+												boxShadow:
+													"0 0 0 4px var(--accent-ocean), 0 4px 24px 0 rgba(56,189,248,0.15)",
+										  }
+										: {}
+								}
 							>
 								<div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 									<div className="text-center p-2">
