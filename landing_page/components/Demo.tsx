@@ -53,8 +53,20 @@ export default function Demo() {
 	};
 
 	return (
-		<section className="py-20 bg-gray-900 text-white">
-			<div className="container mx-auto px-6">
+		<section
+			className="relative py-20 text-white overflow-hidden"
+			style={{
+				background:
+					"radial-gradient(ellipse 80% 60% at 60% 20%, var(--accent-ocean) 0%, transparent 60%)," +
+					"radial-gradient(ellipse 60% 40% at 20% 80%, var(--accent-teal) 0%, transparent 70%)," +
+					"linear-gradient(120deg, #0a0a0a 60%, #10151a 100%)",
+			}}
+		>
+			<div
+				className="absolute inset-0"
+				style={{ background: "rgba(10,10,20,0.85)" }}
+			></div>
+			<div className="container mx-auto px-6 relative z-10">
 				<div className="text-center mb-16">
 					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						See FindexAI in Action
@@ -72,7 +84,10 @@ export default function Demo() {
 						<div className="relative aspect-video bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 							{/* Placeholder for actual demo video/gif */}
 							<div className="text-center p-8">
-								<div className="w-24 h-24 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6">
+								<div
+									className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+									style={{ background: "var(--accent-gradient)" }}
+								>
 									<Play className="w-12 h-12 text-white ml-1" />
 								</div>
 								<h3 className="text-2xl font-bold text-white mb-4">
@@ -138,7 +153,10 @@ export default function Demo() {
 							>
 								<div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 									<div className="text-center p-2">
-										<div className="w-8 h-8 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-2">
+										<div
+											className="w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-2"
+											style={{ background: "var(--accent-gradient)" }}
+										>
 											<Play className="w-4 h-4 text-white ml-0.5" />
 										</div>
 										<div className="text-xs font-medium text-white">

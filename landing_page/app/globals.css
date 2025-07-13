@@ -3,16 +3,28 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent-teal: #14b8a6; /* teal-500 */
+  --accent-orange: #fb923c; /* orange-400 */
+  --accent-ocean: #38bdf8; /* sky-400 (ocean blue) */
+  --accent-gradient: linear-gradient(90deg, var(--accent-teal), var(--accent-ocean), var(--accent-orange));
 }
 
 [data-theme="dark"] {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --accent-teal: #2dd4bf; /* teal-400 */
+  --accent-orange: #fdba74; /* orange-300 */
+  --accent-ocean: #0ea5e9; /* sky-500 (ocean blue) */
+  --accent-gradient: linear-gradient(90deg, var(--accent-teal), var(--accent-ocean), var(--accent-orange));
 }
 
 [data-theme="light"] {
   --background: #ffffff;
   --foreground: #171717;
+  --accent-teal: #14b8a6;
+  --accent-orange: #fb923c;
+  --accent-ocean: #38bdf8;
+  --accent-gradient: linear-gradient(90deg, var(--accent-teal), var(--accent-ocean), var(--accent-orange));
 }
 
 body {

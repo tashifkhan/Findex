@@ -67,8 +67,20 @@ export default function Testimonials() {
 	];
 
 	return (
-		<section className="py-20 bg-gray-900 text-white">
-			<div className="container mx-auto px-6">
+		<section
+			className="relative py-20 text-white overflow-hidden"
+			style={{
+				background:
+					"radial-gradient(ellipse 80% 60% at 60% 20%, var(--accent-ocean) 0%, transparent 60%)," +
+					"radial-gradient(ellipse 60% 40% at 20% 80%, var(--accent-teal) 0%, transparent 70%)," +
+					"linear-gradient(120deg, #0a0a0a 60%, #10151a 100%)",
+			}}
+		>
+			<div
+				className="absolute inset-0"
+				style={{ background: "rgba(10,10,20,0.85)" }}
+			></div>
+			<div className="container mx-auto px-6 relative z-10">
 				<div className="text-center mb-16">
 					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						Loved by Knowledge Workers
@@ -118,7 +130,10 @@ export default function Testimonials() {
 
 							{/* Author */}
 							<div className="flex items-center gap-4">
-								<div className="w-12 h-12 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center text-white font-bold">
+								<div
+									className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold"
+									style={{ background: "var(--accent-gradient)" }}
+								>
 									{testimonial.avatar}
 								</div>
 								<div className="flex-1">
@@ -143,7 +158,10 @@ export default function Testimonials() {
 
 				{/* Social Proof */}
 				<div className="mt-16 text-center">
-					<div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-8 max-w-4xl mx-auto">
+					<div
+						className="rounded-2xl p-8 max-w-4xl mx-auto"
+						style={{ background: "var(--accent-gradient)" }}
+					>
 						<h3 className="text-2xl font-bold text-white mb-4">
 							Join the Community
 						</h3>

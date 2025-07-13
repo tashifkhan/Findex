@@ -14,7 +14,20 @@ export default function Hero() {
 	};
 
 	return (
-		<section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
+		<section
+			className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
+			style={{
+				background:
+					"radial-gradient(ellipse 80% 60% at 60% 20%, var(--accent-ocean) 0%, transparent 60%)," +
+					"radial-gradient(ellipse 60% 40% at 20% 80%, var(--accent-teal) 0%, transparent 70%)," +
+					"linear-gradient(120deg, #0a0a0a 60%, #10151a 100%)",
+			}}
+		>
+			{/* Overlay for extra darkness and softness */}
+			<div
+				className="absolute inset-0"
+				style={{ background: "rgba(10,10,20,0.85)" }}
+			></div>
 			{/* Background Pattern */}
 			<div
 				className="absolute inset-0 opacity-20"
@@ -27,10 +40,16 @@ export default function Hero() {
 				<div className="max-w-4xl mx-auto">
 					{/* Logo/Brand */}
 					<div className="mb-8">
-						<h1 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
+						<h1
+							className="text-6xl md:text-7xl font-black bg-clip-text text-transparent leading-tight bg-[--accent-gradient]"
+							style={{ background: "var(--accent-gradient)" }}
+						>
 							FindexAI
 						</h1>
-						<div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto mt-4 rounded-full"></div>
+						<div
+							className="w-24 h-1 mx-auto mt-4 rounded-full"
+							style={{ background: "var(--accent-gradient)" }}
+						></div>
 					</div>
 					{/* Hero Headline */}
 					<h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-200">
@@ -45,7 +64,10 @@ export default function Hero() {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
 						{/* Semantic Search */}
 						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-							<div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+							<div
+								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
+								style={{ background: "var(--accent-ocean)" }}
+							>
 								<Chrome className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">Semantic Search</h3>
@@ -55,7 +77,10 @@ export default function Hero() {
 						</div>
 						{/* YouTube Integration */}
 						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-							<div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+							<div
+								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
+								style={{ background: "var(--accent-orange)" }}
+							>
 								<Github className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">
@@ -67,7 +92,10 @@ export default function Hero() {
 						</div>
 						{/* Bring Your Own */}
 						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
-							<div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+							<div
+								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
+								style={{ background: "var(--accent-teal)" }}
+							>
 								<Download className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">Bring Your Own</h3>
@@ -80,7 +108,8 @@ export default function Hero() {
 					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
 						<a
 							href="/chrome"
-							className="group flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+							className="group flex items-center gap-3 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+							style={{ background: "var(--accent-ocean)" }}
 						>
 							<Chrome className="w-6 h-6" />
 							Install for Chrome
@@ -88,7 +117,8 @@ export default function Hero() {
 						</a>
 						<a
 							href="/firefox"
-							className="group flex items-center gap-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+							className="group flex items-center gap-3 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+							style={{ background: "var(--accent-orange)" }}
 						>
 							<Chrome className="w-6 h-6" />
 							Install for Firefox

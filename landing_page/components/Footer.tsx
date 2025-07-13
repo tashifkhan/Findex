@@ -76,14 +76,25 @@ export default function Footer() {
 	};
 
 	return (
-		<footer className="bg-gray-900 text-white border-t border-gray-800">
+		<footer
+			className="relative text-white border-t border-gray-800 overflow-hidden"
+			style={{ background: "#0a0a0a" }}
+		>
+			{/* Accent gradient bar at the top of the footer */}
+			<div
+				className="absolute top-0 left-0 w-full h-1"
+				style={{ background: "var(--accent-gradient)" }}
+			></div>
 			{/* Main Footer */}
 			<div className="container mx-auto px-6 py-16">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
 					{/* Brand Column */}
 					<div className="lg:col-span-2">
 						<div className="mb-6">
-							<h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+							<h3
+								className="text-2xl font-bold bg-clip-text text-transparent"
+								style={{ background: "var(--accent-gradient)" }}
+							>
 								FindexAI
 							</h3>
 							<p className="text-gray-400 mt-2 leading-relaxed">
@@ -217,15 +228,24 @@ export default function Footer() {
 							<span className="text-gray-400">Built with:</span>
 							<div className="flex items-center gap-4">
 								<span className="flex items-center gap-1 text-gray-400">
-									<span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+									<span
+										className="w-2 h-2 rounded-full"
+										style={{ background: "var(--accent-ocean)" }}
+									></span>
 									Next.js
 								</span>
 								<span className="flex items-center gap-1 text-gray-400">
-									<span className="w-2 h-2 bg-green-400 rounded-full"></span>
+									<span
+										className="w-2 h-2 rounded-full"
+										style={{ background: "var(--accent-teal)" }}
+									></span>
 									FastAPI
 								</span>
 								<span className="flex items-center gap-1 text-gray-400">
-									<span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+									<span
+										className="w-2 h-2 rounded-full"
+										style={{ background: "var(--accent-orange)" }}
+									></span>
 									LangChain
 								</span>
 							</div>
