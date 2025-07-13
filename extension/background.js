@@ -2,6 +2,23 @@
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) => console.error(error));
 
+// Handle messages from content scripts
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'openSidePanel') {
+    // Open the side panel
+    chrome.sidePanel.open({ windowId: chrome.windows.WINDOW_ID_CURRENT })
+      .then(() => {
+        console.log('Side panel opened successfully');
+        sendResponse({ success: true });
+      })
+      .catch((error) => {
+        console.error('Failed to open side panel:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+    return true; // Keep the message channel open for async response
+  }
+});
+
 // Handle keyboard shortcuts for the extension
 chrome.commands.onCommand.addListener((command) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

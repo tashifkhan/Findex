@@ -14,6 +14,10 @@ class FixedFindTool {
             this.caseSensitiveCheckbox = null;
             this.wholeWordCheckbox = null;
             this.searchInHTMLCheckbox = null;
+            this.aiBtn = null;
+            this.aiResponseContainer = null;
+            this.aiContent = null;
+            this.aiCloseBtn = null;
 
             this.searchTerm = '';
             this.matches = [];
@@ -72,11 +76,16 @@ class FixedFindTool {
             this.caseSensitiveCheckbox = document.getElementById('fixedFindCaseSensitive');
             this.wholeWordCheckbox = document.getElementById('fixedFindWholeWord');
             this.searchInHTMLCheckbox = document.getElementById('fixedFindInHTML');
+            this.aiBtn = document.getElementById('fixedFindAiBtn');
+            this.aiResponseContainer = document.getElementById('fixedFindAiResponse');
+            this.aiContent = document.getElementById('fixedFindAiContent');
+            this.aiCloseBtn = document.getElementById('fixedFindAiCloseBtn');
 
             // Check if all elements are found
             if (!this.toolbar || !this.input || !this.status || !this.prevBtn ||
                 !this.nextBtn || !this.clearBtn || !this.closeBtn ||
-                !this.caseSensitiveCheckbox || !this.wholeWordCheckbox || !this.searchInHTMLCheckbox) {
+                !this.caseSensitiveCheckbox || !this.wholeWordCheckbox || !this.searchInHTMLCheckbox ||
+                !this.aiBtn || !this.aiResponseContainer || !this.aiContent || !this.aiCloseBtn) {
                 console.log(`FixedFindTool elements not found, retrying... (attempt ${retryCount + 1}/20)`);
                 setTimeout(() => {
                     this.initializeElements(retryCount + 1);
@@ -305,6 +314,120 @@ class FixedFindTool {
                         font-family: inherit;
                         text-shadow: 1px 1px 0 #fff;
                     }
+                    /* AI Button Styles */
+                    .fixed-find-toolbar-ai-btn {
+                        padding: 8px 16px;
+                        background: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 13px;
+                        font-weight: 500;
+                        transition: all 0.15s ease;
+                        white-space: nowrap;
+                        margin-top: 8px;
+                        width: 100%;
+                    }
+                    .fixed-find-toolbar-ai-btn:hover {
+                        background: #059669;
+                        transform: translateY(-1px);
+                    }
+                    .fixed-find-toolbar-ai-btn:active {
+                        transform: translateY(0);
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-ai-btn {
+                        background: #f7d51d;
+                        color: #222;
+                        border: 2px solid #222;
+                        border-radius: 0.5rem;
+                        font-family: inherit;
+                        box-shadow: 0 2px 0 #fffbe6 inset;
+                        text-shadow: 1px 1px 0 #fff;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-ai-btn:hover {
+                        background: #fffbe6;
+                        color: #f7d51d;
+                        border-color: #f7d51d;
+                    }
+                    /* AI Response Styles */
+                    .fixed-find-toolbar-ai-response {
+                        border-top: 1px solid #e5e7eb;
+                        padding-top: 12px;
+                        margin-top: 12px;
+                        display: none;
+                    }
+                    .fixed-find-toolbar-ai-response.show {
+                        display: block;
+                        animation: fadeIn 0.3s ease;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    .fixed-find-toolbar-ai-header {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 8px;
+                        font-weight: 600;
+                        color: #1f2937;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-ai-header {
+                        color: #222;
+                        text-shadow: 1px 1px 0 #fff;
+                    }
+                    .fixed-find-toolbar-ai-close {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        padding: 2px;
+                        border-radius: 4px;
+                        color: #6b7280;
+                        font-size: 16px;
+                        line-height: 1;
+                    }
+                    .fixed-find-toolbar-ai-close:hover {
+                        background: #f3f4f6;
+                        color: #374151;
+                    }
+                    .fixed-find-toolbar-ai-content {
+                        background: #f8fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 6px;
+                        padding: 10px;
+                        font-size: 12px;
+                        line-height: 1.4;
+                        color: #374151;
+                        max-height: 150px;
+                        overflow-y: auto;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-ai-content {
+                        background: #fffbe6;
+                        border: 2px solid #222;
+                        color: #222;
+                        font-family: inherit;
+                        text-shadow: 1px 1px 0 #fff;
+                    }
+                    .fixed-find-toolbar-ai-loading {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        color: #6b7280;
+                    }
+                    .fixed-find-toolbar-ai-loading::before {
+                        content: '';
+                        width: 14px;
+                        height: 14px;
+                        border: 2px solid #e5e7eb;
+                        border-top: 2px solid #3b82f6;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    }
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
                     /* Highlight styles */
                     .fixed-find-highlight {
                         background-color: #fef3c7;
@@ -441,6 +564,40 @@ class FixedFindTool {
             options.appendChild(wholeWordLabel);
             options.appendChild(htmlLabel);
 
+            // Create AI button
+            const aiBtn = document.createElement('button');
+            aiBtn.className = 'fixed-find-toolbar-ai-btn';
+            aiBtn.id = 'fixedFindAiBtn';
+            aiBtn.title = 'Ask AI about search results (opens sidebar if no search term)';
+            aiBtn.textContent = '🤖 Ask AI';
+
+            // Create AI response container
+            const aiResponseContainer = document.createElement('div');
+            aiResponseContainer.className = 'fixed-find-toolbar-ai-response';
+            aiResponseContainer.id = 'fixedFindAiResponse';
+
+            const aiHeader = document.createElement('div');
+            aiHeader.className = 'fixed-find-toolbar-ai-header';
+
+            const aiTitle = document.createElement('span');
+            aiTitle.textContent = '🤖 AI Response';
+
+            const aiCloseBtn = document.createElement('button');
+            aiCloseBtn.className = 'fixed-find-toolbar-ai-close';
+            aiCloseBtn.id = 'fixedFindAiCloseBtn';
+            aiCloseBtn.textContent = '×';
+
+            aiHeader.appendChild(aiTitle);
+            aiHeader.appendChild(aiCloseBtn);
+
+            const aiContent = document.createElement('div');
+            aiContent.className = 'fixed-find-toolbar-ai-content';
+            aiContent.id = 'fixedFindAiContent';
+            aiContent.innerHTML = '<p style="color: #9ca3af; font-style: italic; margin: 0;">Ask AI about your search results...</p>';
+
+            aiResponseContainer.appendChild(aiHeader);
+            aiResponseContainer.appendChild(aiContent);
+
             // Create controls
             const controls = document.createElement('div');
             controls.className = 'fixed-find-toolbar-controls';
@@ -481,6 +638,8 @@ class FixedFindTool {
             toolbarElement.appendChild(header);
             toolbarElement.appendChild(inputGroup);
             toolbarElement.appendChild(options);
+            toolbarElement.appendChild(aiBtn);
+            toolbarElement.appendChild(aiResponseContainer);
             toolbarElement.appendChild(controls);
 
             document.body.appendChild(toolbarElement);
@@ -523,6 +682,16 @@ class FixedFindTool {
         this.searchInHTMLCheckbox.addEventListener('change', () => {
             this.searchInHTML = this.searchInHTMLCheckbox.checked;
             this.performSearch();
+        });
+
+        // AI button event
+        this.aiBtn.addEventListener('click', () => {
+            this.askAI();
+        });
+
+        // AI close button event
+        this.aiCloseBtn.addEventListener('click', () => {
+            this.hideAIResponse();
         });
     }
 
@@ -609,6 +778,7 @@ class FixedFindTool {
         this.isVisible = false;
         this.toolbar.classList.remove('show');
         this.clearHighlights();
+        this.hideAIResponse();
     }
 
     performSearch() {
@@ -899,6 +1069,124 @@ class FixedFindTool {
         this.prevBtn.disabled = !hasResults;
         this.nextBtn.disabled = !hasResults;
         this.clearBtn.disabled = !hasResults;
+    }
+
+    askAI() {
+        // Dynamically update tooltip
+        if (this.aiBtn) {
+            if (!this.searchTerm.trim()) {
+                this.aiBtn.title = 'Open sidebar to chat (no search term)';
+            } else {
+                this.aiBtn.title = 'Ask AI about search results';
+            }
+        }
+        // Check if search input is empty
+        if (!this.searchTerm.trim()) {
+            // Open sidebar if search input is empty
+            this.openSidebar();
+            return;
+        }
+
+        // Show AI response for search results
+        if (!this.aiResponseContainer || !this.aiContent) {
+            console.error('AI response container or content not initialized.');
+            return;
+        }
+
+        this.aiResponseContainer.classList.add('show');
+        this.aiContent.innerHTML = '<div class="fixed-find-toolbar-ai-loading">Asking AI...</div>';
+
+        // Simulate AI response based on search results
+        setTimeout(() => {
+            if (this.matches.length > 0) {
+                this.aiContent.innerHTML = `
+                    <p><strong>Found ${this.matches.length} matches for "${this.searchTerm}" in the DOM.</strong></p>
+                    <p>The term appears in various contexts throughout the page content. You can use the navigation buttons to browse through each occurrence.</p>
+                    <p><em>Current position: ${this.currentIndex + 1} of ${this.matches.length}</em></p>
+                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide contextual analysis and insights about the search term.</em></p>
+                `;
+            } else {
+                this.aiContent.innerHTML = `
+                    <p><strong>No exact matches found for "${this.searchTerm}" in the DOM.</strong></p>
+                    <p>Here are some suggestions:</p>
+                    <ul>
+                        <li>Try different keywords or synonyms</li>
+                        <li>Check for spelling variations</li>
+                        <li>Use broader search terms</li>
+                        <li>Consider related concepts</li>
+                    </ul>
+                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide intelligent suggestions and alternative search strategies.</em></p>
+                `;
+            }
+        }, 1500); // Simulate a 1.5-second loading time
+    }
+
+    openSidebar() {
+        // Try to open the Chrome extension side panel
+        try {
+            // Method 1: Use Chrome extension API to open side panel
+            if (chrome && chrome.sidePanel && chrome.sidePanel.open) {
+                chrome.sidePanel.open({ windowId: chrome.windows.WINDOW_ID_CURRENT })
+                    .then(() => {
+                        console.log('Side panel opened successfully via Chrome API');
+                    })
+                    .catch((error) => {
+                        console.log('Failed to open side panel via Chrome API:', error);
+                        this.fallbackOpenSidebar();
+                    });
+            } else {
+                // Method 2: Send message to background script to open side panel
+                if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                    chrome.runtime.sendMessage({ action: 'openSidePanel' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            console.log('Failed to send message to background script:', chrome.runtime.lastError);
+                            this.fallbackOpenSidebar();
+                        } else {
+                            console.log('Side panel open request sent to background script');
+                        }
+                    });
+                } else {
+                    this.fallbackOpenSidebar();
+                }
+            }
+        } catch (error) {
+            console.error('Error opening sidebar:', error);
+            this.fallbackOpenSidebar();
+        }
+    }
+
+    fallbackOpenSidebar() {
+        // Fallback methods if Chrome API is not available
+        try {
+            // Method 1: Send message to open sidebar
+            window.postMessage({ type: 'OPEN_SIDEBAR' }, '*');
+            
+            // Method 2: Try to find and show sidebar directly
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'block';
+                sidebar.style.transform = 'translateX(0)';
+                console.log('Sidebar opened directly');
+            } else {
+                console.log('Sidebar not found, trying alternative methods...');
+                // Method 3: Try to trigger any existing sidebar functionality
+                if (window.openSidebar) {
+                    window.openSidebar();
+                } else if (window.toggleSidebar) {
+                    window.toggleSidebar();
+                }
+            }
+        } catch (error) {
+            console.error('Error in fallback sidebar opening:', error);
+        }
+    }
+
+    hideAIResponse() {
+        if (this.aiResponseContainer) {
+            this.aiResponseContainer.classList.remove('show');
+            this.aiContent.innerHTML = '<p style="color: #9ca3af; font-style: italic; margin: 0;">Ask AI about your search results...</p>';
+            this.aiContent.classList.remove('fixed-find-toolbar-ai-loading');
+        }
     }
 }
 
