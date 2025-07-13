@@ -400,22 +400,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateVideoInfoStyle = (theme) => {
     if (!videoInfo) return
     videoInfo.className = `p-4 border-b ${theme === "xp"
-        ? "bg-blue-50 border-blue-300"
-        : theme === "macos"
-          ? "bg-gray-50 border-gray-300"
-          : theme === "neobrutal"
-            ? "bg-yellow-200 border-b-4 border-black"
-            : theme === "nintendo"
-              ? "bg-red-100 border-red-300"
-              : theme === "orange"
-                ? "bg-orange-100 border-orange-300"
-                : theme === "orangeDark"
-                  ? "bg-orange-800 border-orange-700"
-                  : theme === "blueLight"
-                    ? "bg-blue-50 border-blue-200"
-                    : theme === "blueDark"
-                      ? "bg-blue-800 border-blue-700"
-                      : "bg-gray-50 border-gray-200"
+      ? "bg-blue-50 border-blue-300"
+      : theme === "macos"
+        ? "bg-gray-50 border-gray-300"
+        : theme === "neobrutal"
+          ? "bg-yellow-200 border-b-4 border-black"
+          : theme === "nintendo"
+            ? "bg-red-100 border-red-300"
+            : theme === "orange"
+              ? "bg-orange-100 border-orange-300"
+              : theme === "orangeDark"
+                ? "bg-orange-800 border-orange-700"
+                : theme === "blueLight"
+                  ? "bg-blue-50 border-blue-200"
+                  : theme === "blueDark"
+                    ? "bg-blue-800 border-blue-700"
+                    : "bg-gray-50 border-gray-200"
       }`
     // Update transcript badge style
     transcriptBadge.className = `mt-2 text-xs px-2 py-1 rounded ${getTranscriptBadgeClasses(theme)} ${videoData && videoData.transcript ? "" : "hidden"}`
@@ -590,19 +590,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Close sidebar button functionality
-  closeButton.addEventListener("click", () => {
-    // First try to send message to parent
-    try {
-      window.parent.postMessage({ type: 'close' }, '*');
-    } catch (e) {
-      console.error('Error sending close message:', e);
-    }
+  // closeButton.addEventListener("click", () => {
+  //   // First try to send message to parent
+  //   try {
+  //     window.parent.postMessage({ type: 'close' }, '*');
+  //   } catch (e) {
+  //     console.error('Error sending close message:', e);
+  //   }
 
-    // Fallback: try to close the window directly if it's a popup
-    if (window.opener) {
-      window.close();
-    }
-  })
+  //   // Fallback: try to close the window directly if it's a popup
+  //   if (window.opener) {
+  //     window.close();
+  //   }
+  // })
 
   searchButton.addEventListener("click", () => {
     // Open find-in-page toolbar in the current page
