@@ -144,6 +144,10 @@ Context:
 {context}
 
 ---
+Chat History (if available):
+{chat_history}
+
+---
 
 Response formatting:
 • Use bullet points for lists.
@@ -163,6 +167,7 @@ prompt = PromptTemplate(
     input_variables=[
         "context",
         "question",
+        "chat_history",
     ],
 )
 
@@ -170,6 +175,7 @@ main_chain2 = RunnableParallel(
     {
         "context": main_chain,
         "question": RunnableLambda(lambda d: d["question"]),
+        "chat_history": RunnableLambda(lambda d: d.get("chat_history", "")),
     }
 )
 
@@ -180,10 +186,16 @@ def get_chain():
     return youtube_chain
 
 
-def get_answer(chain, question, url=None):
+def get_answer(
+    chain,
+    question,
+    url=None,
+    chat_history="",
+):
     return chain.invoke(
         {
             "question": question,
             "url": url,
+            "chat_history": chat_history,
         }
     )
