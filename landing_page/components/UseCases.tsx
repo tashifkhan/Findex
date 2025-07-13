@@ -191,7 +191,7 @@ export default function UseCases() {
 							<div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-2">
 								85%
 							</div>
-							<div className="text-gray-600 font-medium">
+							<div className="text-gray-400 font-medium">
 								Reduction in Research Time
 							</div>
 						</div>
@@ -199,7 +199,7 @@ export default function UseCases() {
 							<div className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">
 								100%
 							</div>
-							<div className="text-gray-600 font-medium">
+							<div className="text-gray-400 font-medium">
 								Free & Open Source
 							</div>
 						</div>
