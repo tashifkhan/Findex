@@ -94,10 +94,10 @@ def html_to_markdown(html: str) -> str:
         return html
 
 
-def get_cleaned_texts(urls: List[str]) -> List[str]:
+def get_cleaned_texts(urls: List[str]) -> List[dict]:
     """
     Fetch and clean text from multiple URLs synchronously.
-    Returns a list of markdown strings, each prefixed with its source URL.
+    Returns a list of dictionaries with url and md_body_content.
     """
     texts = []
 
@@ -106,7 +106,7 @@ def get_cleaned_texts(urls: List[str]) -> List[str]:
         if html:
             clean_text = html_to_markdown(html)
             if clean_text.strip():
-                texts.append(f"Source: {url}\n{clean_text}\n\n")
+                texts.append({"url": url, "md_body_content": clean_text})
 
     return texts
 
@@ -124,12 +124,12 @@ def web_search_pipeline(
     query: str,
     search_url: Optional[str] = None,
     max_results: int = 5,
-) -> List[str]:
+) -> List[dict]:
     """
     Run the full web search and extraction pipeline synchronously:
     1. Search for URLs using the query.
     2. Fetch and clean text from each URL.
-    Returns a list of cleaned markdown strings with source URLs.
+    Returns a list of dictionaries with url and md_body_content.
     """
     urls = search_urls(
         query,
@@ -154,9 +154,10 @@ if __name__ == "__main__":
     )
 
     if results:
-        print("\nFound URLs:")
-        for i, url in enumerate(results):
-            print(f"  {i+1}. {url}")
-
+        print("\nFound URLs and content:")
+        for i, result in enumerate(results):
+            print(f"  {i+1}. URL: {result['url']}")
+            print(f"     Content preview: {result['md_body_content'][:100]}...")
+            print()
     else:
         print("No URLs found or an error occurred.")
