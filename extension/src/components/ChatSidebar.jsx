@@ -46,7 +46,9 @@ const ChatSidebar = ({
 	// Check if we're in development mode
 	const isDevelopment =
 		window.location.hostname === "localhost" ||
-		window.location.hostname === "127.0.0.1";
+		window.location.hostname === "127.0.0.1" ||
+		window.location.href.includes("youtube.com/watch") ||
+		window.location.href.includes("youtube.com/live");
 	const canInteract = isOnYouTube || isDevelopment;
 
 	const scrollToBottom = () => {

@@ -298,8 +298,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let videoData = null
 
   // Development mode check
+  // Only enable chat input when the URL includes 'youtube.com/watch' or 'youtube.com/live', like in ChatSidebar.jsx
+  const isOnYouTube = window.location.includes("youtube.com/watch") || window.location.href.includes("youtube.com/live")
+  // For demo mode, allow if running on localhost or 127.0.0.1
   const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-  const isOnYouTube = window.location.hostname === "www.youtube.com"
   const canInteract = isOnYouTube || isDevelopment
 
   // Update input placeholder and status based on context
@@ -312,9 +314,10 @@ document.addEventListener("DOMContentLoaded", () => {
       chatInput.placeholder = "Navigate to a YouTube video first"
       chatInput.disabled = true
       statusText.textContent = "Navigate to YouTube"
+      console.log(window.location.href)
     }
-    // Also update send button disabled state
     sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
+    // In the future, update canInteract and isOnYouTube based on messages from the content script
   }
 
   // Theme Management
@@ -366,17 +369,17 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeTitle.textContent = "Demo Mode"
         welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
         welcomeExamples.innerHTML = `
-            <li>• "How does this extension work?"</li>
-            <li>• "What features are available?"</li>
-            <li>• "Tell me about the search functionality"</li>
+            <li>"How does this extension work?"</li>
+            <li>"What features are available?"</li>
+            <li>"Tell me about the search functionality"</li>
           `
       } else {
         welcomeTitle.textContent = "Ask about this video"
         welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
         welcomeExamples.innerHTML = `
-            <li>• "What is this video about?"</li>
-            <li>• "Summarize the main points"</li>
-            <li>• "What does the speaker say about..."</li>
+            <li>"What is this video about?"</li>
+            <li>"Summarize the main points"</li>
+            <li>"What does the speaker say about..."</li>
           `
       }
     }
@@ -713,17 +716,17 @@ document.addEventListener("DOMContentLoaded", () => {
               welcomeTitle.textContent = "Demo Mode"
               welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
               welcomeExamples.innerHTML = `
-                  <li>• "How does this extension work?"</li>
-                  <li>• "What features are available?"</li>
-                  <li>• "Tell me about the search functionality"</li>
+                  <li>"How does this extension work?"</li>
+                  <li>"What features are available?"</li>
+                  <li>"Tell me about the search functionality"</li>
                 `
             } else {
               welcomeTitle.textContent = "Ask about this video"
               welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
               welcomeExamples.innerHTML = `
-                  <li>• "What is this video about?"</li>
-                  <li>• "Summarize the main points"</li>
-                  <li>• "What does the speaker say about..."</li>
+                  <li>"What is this video about?"</li>
+                  <li>"Summarize the main points"</li>
+                  <li>"What does the speaker say about..."</li>
                 `
             }
           }
@@ -755,9 +758,9 @@ document.addEventListener("DOMContentLoaded", () => {
       welcomeTitle.textContent = "Demo Mode"
       welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
       welcomeExamples.innerHTML = `
-          <li>• "How does this extension work?"</li>
-          <li>• "What features are available?"</li>
-          <li>• "Tell me about the search functionality"</li>
+          <li>"How does this extension work?"</li>
+          <li>"What features are available?"</li>
+          <li>"Tell me about the search functionality"</li>
         `
     } else {
       welcomeTitle.textContent = "Ask about this video"
@@ -784,6 +787,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fallback for environments without chrome.storage (e.g., local browser preview)
     updateUIForTheme(currentTheme)
   }
+
+
 })
 
 // Base classes for the sidebar container itself, used by updateUIForTheme
