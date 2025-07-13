@@ -82,7 +82,16 @@ export default function Testimonials() {
 			></div>
 			<div className="container mx-auto px-6 relative z-10">
 				<div className="text-center mb-16">
-					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+					<h2
+						className="text-4xl md:text-5xl font-bold mb-6"
+						style={{
+							background: "var(--accent-gradient)",
+							WebkitBackgroundClip: "text",
+							backgroundClip: "text",
+							color: "transparent",
+							WebkitTextFillColor: "transparent",
+						}}
+					>
 						Loved by Knowledge Workers
 					</h2>
 					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
