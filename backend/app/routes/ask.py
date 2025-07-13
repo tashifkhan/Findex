@@ -10,7 +10,7 @@ logger = get_logger(__name__)
 
 
 async def generate_answer(
-    video_info: YTVideoInfo,
+    url: str,
     question: str,
     chat_history: str = "",
 ) -> str:
@@ -18,18 +18,9 @@ async def generate_answer(
     try:
         response = youtube_chain.invoke(
             {
+                "url": url,
+                "question": question,
                 "chat_history": chat_history,
-                "title": video_info.title or "Unknown",
-                "description": video_info.description or "No description available",
-                "uploader": video_info.uploader or "Unknown",
-                "tags": ", ".join(video_info.tags) if video_info.tags else "None",
-                "categories": (
-                    ", ".join(video_info.categories)
-                    if video_info.categories
-                    else "None"
-                ),
-                "transcript": video_info.transcript or "No transcript available",
-                "user_question": question,
             }
         )
 
@@ -40,7 +31,7 @@ async def generate_answer(
 
     except Exception as e:
         logger.error(f"Error generating answer with LLM: {e}")
-        return f"I apologize, but I encountered an error processing your question about '{video_info.title}'. Please try again."
+        return f"I apologize, but I encountered an error processing your question about the video. Please try again."
 
 
 # route
@@ -49,6 +40,7 @@ async def ask(request: AskRequest):
     try:
         url = request.url
         question = request.question
+        chat_history = request.chat_history or ""
 
         if not url or not question:
             raise HTTPException(
@@ -58,25 +50,23 @@ async def ask(request: AskRequest):
 
         logger.info(f"Processing question: '{question}' for URL: {url}")
 
-        video_id = extract_video_id(url)
-        if not video_id:
-            raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+        # video_id = extract_video_id(url)
+        # if not video_id:
+        #     raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
-        # info using yt-dlp
-        video_info_obj = get_video_info(url)
-        if not video_info_obj:
-            raise HTTPException(
-                status_code=500,
-                detail="Could not fetch video information",
-            )
+        # # info using yt-dlp
+        # video_info_obj = get_video_info(url)
+        # if not video_info_obj:
+        #     raise HTTPException(
+        #         status_code=500,
+        #         detail="Could not fetch video information",
+        #     )
 
         # answer
-        answer = await generate_answer(video_info_obj, question)
+        answer = await generate_answer(url, question, chat_history)
 
         return {
             "answer": answer,
-            "video_title": video_info_obj.title,
-            "video_channel": video_info_obj.uploader,
         }
 
     except HTTPException:
