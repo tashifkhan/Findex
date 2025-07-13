@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Github,
 	Twitter,
@@ -7,9 +9,13 @@ import {
 	Chrome,
 	Shield,
 	Heart,
+	Sun,
+	Moon,
 } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
 
 export default function Footer() {
+	const { theme, toggleTheme } = useTheme();
 	const footerLinks = {
 		product: [
 			{
@@ -223,6 +229,17 @@ export default function Footer() {
 									LangChain
 								</span>
 							</div>
+							<button
+								aria-label="Toggle theme"
+								onClick={toggleTheme}
+								className="ml-4 p-2 rounded-full border border-gray-700 bg-gray-800 hover:bg-gray-700 transition-colors text-yellow-400 dark:text-gray-200"
+							>
+								{theme === "dark" ? (
+									<Sun className="w-5 h-5" />
+								) : (
+									<Moon className="w-5 h-5" />
+								)}
+							</button>
 						</div>
 					</div>
 				</div>

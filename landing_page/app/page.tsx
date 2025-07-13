@@ -7,15 +7,15 @@ import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
 
 export default function Home() {
-  return (
-    <main className="bg-white text-gray-900">
-      <Hero />
-      <HowItWorks />
-      <UseCases />
-      <Features />
-      <Demo />
-      <Testimonials />
-      <Footer />
-    </main>
-  );
+	return (
+		<main>
+			<Hero />
+			<HowItWorks />
+			<UseCases />
+			<Features />
+			<Demo />
+			{/* <Testimonials /> */}
+			<Footer />
+		</main>
+	);
 }
