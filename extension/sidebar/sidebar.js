@@ -254,7 +254,27 @@ const getThemeDropdownButtonClasses = (theme, isSelected) => {
         return `${base} bg-blue-500 text-white`
     }
   }
-  return `${base} theme-dropdown-button` // Use a base class for non-selected state
+  // Non-selected state with theme-specific hover colors
+  switch (theme) {
+    case "neobrutal":
+      return `${base} hover:bg-yellow-200 text-black`
+    case "nintendo":
+      return `${base} hover:bg-red-200 text-red-900`
+    case "orange":
+      return `${base} hover:bg-orange-200 text-orange-900`
+    case "orangeDark":
+      return `${base} hover:bg-orange-700 text-orange-100`
+    case "blueLight":
+      return `${base} hover:bg-blue-100 text-blue-900`
+    case "blueDark":
+      return `${base} hover:bg-blue-700 text-blue-100`
+    case "xp":
+      return `${base} hover:bg-blue-100 text-blue-900`
+    case "macos":
+      return `${base} hover:bg-gray-100 text-gray-900`
+    default:
+      return `${base} hover:bg-gray-100 text-gray-900`
+  }
 }
 
 const getTranscriptBadgeClasses = (theme) => {
@@ -298,10 +318,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let videoData = null
 
   // Development mode check
-  // Only enable chat input when the URL includes 'youtube.com/watch' or 'youtube.com/live', like in ChatSidebar.jsx
-  const isOnYouTube = window.location.includes("youtube.com/watch") || window.location.href.includes("youtube.com/live")
-  // For demo mode, allow if running on localhost or 127.0.0.1
   const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  const isOnYouTube = window.location.hostname === "www.youtube.com"
   const canInteract = isOnYouTube || isDevelopment
 
   // Update input placeholder and status based on context
@@ -314,19 +332,24 @@ document.addEventListener("DOMContentLoaded", () => {
       chatInput.placeholder = "Navigate to a YouTube video first"
       chatInput.disabled = true
       statusText.textContent = "Navigate to YouTube"
-      console.log(window.location.href)
     }
+    // Also update send button disabled state
     sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
-    // In the future, update canInteract and isOnYouTube based on messages from the content script
   }
 
   // Theme Management
   const setTheme = (theme) => {
+    console.log("Setting theme to:", theme)
     document.body.className = `theme-${theme}`
     currentTheme = theme
 
     // Update UI elements based on theme
     updateUIForTheme(theme)
+    
+    // Save theme to storage
+    if (chrome && chrome.storage && chrome.storage.sync) {
+      chrome.storage.sync.set({ theme: theme })
+    }
   }
 
   const updateUIForTheme = (theme) => {
@@ -336,6 +359,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("input-container").className = getInputContainerClasses(theme)
     chatInput.className = getChatInputClasses(theme)
     sendButton.className = getSendButtonClasses(theme)
+    
+    // Update theme button styling
+    themeButton.className = `theme-button ${getButtonClasses(theme)}`
+    searchButton.className = `theme-button ${getButtonClasses(theme)}`
+    minimizeButton.className = `theme-button ${getButtonClasses(theme)}`
 
     // Update font and rendering for body
     document.body.style.fontFamily =
@@ -369,17 +397,17 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeTitle.textContent = "Demo Mode"
         welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
         welcomeExamples.innerHTML = `
-            <li>"How does this extension work?"</li>
-            <li>"What features are available?"</li>
-            <li>"Tell me about the search functionality"</li>
+            <li>• "How does this extension work?"</li>
+            <li>• "What features are available?"</li>
+            <li>• "Tell me about the search functionality"</li>
           `
       } else {
         welcomeTitle.textContent = "Ask about this video"
         welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
         welcomeExamples.innerHTML = `
-            <li>"What is this video about?"</li>
-            <li>"Summarize the main points"</li>
-            <li>"What does the speaker say about..."</li>
+            <li>• "What is this video about?"</li>
+            <li>• "Summarize the main points"</li>
+            <li>• "What does the speaker say about..."</li>
           `
       }
     }
@@ -393,45 +421,31 @@ document.addEventListener("DOMContentLoaded", () => {
       themeDropdown.style.display = "none"
     }
     populateThemeDropdown() // Re-populate to update selected state and button styles
-
-    // Update search overlay theme if it's open
-    // if (isSearchOverlayOpen) { // This line is removed as per the edit hint
-    //   updateSearchOverlayTheme(theme)
-    // }
   }
 
   const updateVideoInfoStyle = (theme) => {
     if (!videoInfo) return
     videoInfo.className = `p-4 border-b ${theme === "xp"
-      ? "bg-blue-50 border-blue-300"
-      : theme === "macos"
-        ? "bg-gray-50 border-gray-300"
-        : theme === "neobrutal"
-          ? "bg-yellow-200 border-b-4 border-black"
-          : theme === "nintendo"
-            ? "bg-red-100 border-red-300"
-            : theme === "orange"
-              ? "bg-orange-100 border-orange-300"
-              : theme === "orangeDark"
-                ? "bg-orange-800 border-orange-700"
-                : theme === "blueLight"
-                  ? "bg-blue-50 border-blue-200"
-                  : theme === "blueDark"
-                    ? "bg-blue-800 border-blue-700"
-                    : "bg-gray-50 border-gray-200"
+        ? "bg-blue-50 border-blue-300"
+        : theme === "macos"
+          ? "bg-gray-50 border-gray-300"
+          : theme === "neobrutal"
+            ? "bg-yellow-200 border-b-4 border-black"
+            : theme === "nintendo"
+              ? "bg-red-100 border-red-300"
+              : theme === "orange"
+                ? "bg-orange-100 border-orange-300"
+                : theme === "orangeDark"
+                  ? "bg-orange-800 border-orange-700"
+                  : theme === "blueLight"
+                    ? "bg-blue-50 border-blue-200"
+                    : theme === "blueDark"
+                      ? "bg-blue-800 border-blue-700"
+                      : "bg-gray-50 border-gray-200"
       }`
     // Update transcript badge style
     transcriptBadge.className = `mt-2 text-xs px-2 py-1 rounded ${getTranscriptBadgeClasses(theme)} ${videoData && videoData.transcript ? "" : "hidden"}`
   }
-
-  // const updateSearchOverlayTheme = (theme) => { // This function is removed as per the edit hint
-  //   // The CSS classes will handle most of the theming
-  //   // This function can be used for any additional theme-specific logic
-  //   if (searchInput) {
-  //     // Focus the input after theme change to maintain user experience
-  //     searchInput.focus()
-  //   }
-  // }
 
   // Message handling
   const addMessage = (content, type = "assistant") => {
@@ -568,6 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
   themeButton.addEventListener("click", (e) => {
     e.stopPropagation() // Prevent document click from immediately closing it
     const isVisible = themeDropdown.classList.contains("show")
+    console.log("Theme button clicked, current visibility:", isVisible)
 
     if (isVisible) {
       themeDropdown.classList.remove("show")
@@ -579,8 +594,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update dropdown styling based on current theme
     themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+    populateThemeDropdown() // Re-populate to ensure proper styling
+    console.log("Theme dropdown classes:", themeDropdown.className)
   })
-
 
   // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
@@ -593,19 +609,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Close sidebar button functionality
-  // closeButton.addEventListener("click", () => {
-  //   // First try to send message to parent
-  //   try {
-  //     window.parent.postMessage({ type: 'close' }, '*');
-  //   } catch (e) {
-  //     console.error('Error sending close message:', e);
-  //   }
+  closeButton.addEventListener("click", () => {
+    // First try to send message to parent
+    try {
+      window.parent.postMessage({ type: 'close' }, '*');
+    } catch (e) {
+      console.error('Error sending close message:', e);
+    }
 
-  //   // Fallback: try to close the window directly if it's a popup
-  //   if (window.opener) {
-  //     window.close();
-  //   }
-  // })
+    // Fallback: try to close the window directly if it's a popup
+    if (window.opener) {
+      window.close();
+    }
+  })
 
   searchButton.addEventListener("click", () => {
     // Open find-in-page toolbar in the current page
@@ -624,60 +640,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
-  // Search Overlay Event Handlers
-  // searchOverlayClose.addEventListener("click", () => { // This line is removed as per the edit hint
-  //   closeSearchOverlay()
-  // })
-
-  // searchInput.addEventListener("input", (e) => { // This line is removed as per the edit hint
-  //   performSearch(e.target.value)
-  // })
-
-  // searchInput.addEventListener("keydown", (e) => { // This line is removed as per the edit hint
-  //   if (e.key === "Enter" && !e.shiftKey) {
-  //     e.preventDefault()
-  //     goToNextResult()
-  //   } else if (e.key === "Enter" && e.shiftKey) {
-  //     e.preventDefault()
-  //     goToPrevResult()
-  //   } else if (e.key === "Escape") {
-  //     e.preventDefault()
-  //     closeSearchOverlay()
-  //   }
-  // })
-
-  // searchNextButton.addEventListener("click", () => { // This line is removed as per the edit hint
-  //   goToNextResult()
-  // })
-
-  // searchPrevButton.addEventListener("click", () => { // This line is removed as per the edit hint
-  //   goToPrevResult()
-  // })
-
-  // Close search overlay when clicking outside
-  // searchOverlay.addEventListener("click", (e) => { // This line is removed as per the edit hint
-  //   if (e.target === searchOverlay) {
-  //     closeSearchOverlay()
-  //   }
-  // })
-
   // Populate theme dropdown
   const populateThemeDropdown = () => {
     const themeContent = themeDropdown.querySelector("div")
+    if (!themeContent) {
+      console.error("Theme content div not found")
+      return
+    }
     themeContent.innerHTML = "" // Clear existing buttons
+    console.log("Populating theme dropdown with themes:", Object.keys(THEMES))
     Object.entries(THEMES).forEach(([key, theme]) => {
       const button = document.createElement("button")
       button.className = getThemeDropdownButtonClasses(currentTheme, currentTheme === key)
       button.textContent = theme.name
       button.onclick = () => {
+        console.log("Theme selected:", key)
         setTheme(key)
         themeDropdown.classList.remove("show")
         themeDropdown.style.display = "none"
         // Update dropdown styling after hiding
-        themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
+        themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(key)}`
+        // Save theme to storage
+        if (chrome && chrome.storage && chrome.storage.sync) {
+          chrome.storage.sync.set({ theme: key })
+        }
       }
       themeContent.appendChild(button)
     })
+    console.log("Theme dropdown populated with", themeContent.children.length, "buttons")
   }
 
   // Listen for messages from parent window
@@ -716,24 +706,23 @@ document.addEventListener("DOMContentLoaded", () => {
               welcomeTitle.textContent = "Demo Mode"
               welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
               welcomeExamples.innerHTML = `
-                  <li>"How does this extension work?"</li>
-                  <li>"What features are available?"</li>
-                  <li>"Tell me about the search functionality"</li>
+                  <li>• "How does this extension work?"</li>
+                  <li>• "What features are available?"</li>
+                  <li>• "Tell me about the search functionality"</li>
                 `
             } else {
               welcomeTitle.textContent = "Ask about this video"
               welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
               welcomeExamples.innerHTML = `
-                  <li>"What is this video about?"</li>
-                  <li>"Summarize the main points"</li>
-                  <li>"What does the speaker say about..."</li>
+                  <li>• "What is this video about?"</li>
+                  <li>• "Summarize the main points"</li>
+                  <li>• "What does the speaker say about..."</li>
                 `
             }
           }
         }
         break
       case "openSearch":
-        // Search functionality removed as per comments
         break
     }
   })
@@ -758,17 +747,9 @@ document.addEventListener("DOMContentLoaded", () => {
       welcomeTitle.textContent = "Demo Mode"
       welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
       welcomeExamples.innerHTML = `
-          <li>"How does this extension work?"</li>
-          <li>"What features are available?"</li>
-          <li>"Tell me about the search functionality"</li>
-        `
-    } else {
-      welcomeTitle.textContent = "Ask about this video"
-      welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
-      welcomeExamples.innerHTML = `
-          <li>• "What is this video about?"</li>
-          <li>• "Summarize the main points"</li>
-          <li>• "What does the speaker say about..."</li>
+          <li>• "How does this extension work?"</li>
+          <li>• "What features are available?"</li>
+          <li>• "Tell me about the search functionality"</li>
         `
     }
   }
@@ -777,18 +758,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const chrome = window.chrome // Declare chrome variable
   if (chrome && chrome.storage && chrome.storage.sync) {
     chrome.storage.sync.get("theme", (data) => {
+      console.log("Loading saved theme:", data.theme)
       if (data.theme) {
         setTheme(data.theme)
       } else {
+        console.log("No saved theme, using default")
         updateUIForTheme(currentTheme) // Apply default theme classes if no saved theme
       }
     })
   } else {
     // Fallback for environments without chrome.storage (e.g., local browser preview)
+    console.log("No chrome storage, using default theme")
     updateUIForTheme(currentTheme)
   }
-
-
 })
 
 // Base classes for the sidebar container itself, used by updateUIForTheme
