@@ -4,6 +4,8 @@ from app.routes.video_info import router as video_info_router
 from app.routes.subtitles import router as subtitles_router
 from app.routes.ask import router as ask_router
 from app.routes.health import router as health_router
+from app.routes.website import router as website_router
+from app.routes.crawller import router as crawller_router
 from app.core import get_logger, BACKEND_HOST, BACKEND_PORT
 
 logger = get_logger(__name__)
@@ -43,6 +45,16 @@ backend.include_router(
     health_router,
     prefix="/health",
     tags=["health"],
+)
+backend.include_router(
+    website_router,
+    prefix="/website",
+    tags=["website"],
+)
+backend.include_router(
+    crawller_router,
+    prefix="/crawller",
+    tags=["crawller"],
 )
 
 
