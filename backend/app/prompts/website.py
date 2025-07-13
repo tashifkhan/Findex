@@ -49,4 +49,4 @@ website_chat_prompt_template = PromptTemplate(
     template=website_chat_prompt_template_str,
 )
 
-website_chain = website_chat_prompt_template | llm.cilient
+website_chain = website_chat_prompt_template | llm.client

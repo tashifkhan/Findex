@@ -15,7 +15,7 @@ class LargeLanguageModel:
         if provideer == "google":
             from langchain_google_genai import GoogleGenerativeAI
 
-            self.cilient = GoogleGenerativeAI(
+            self.client = GoogleGenerativeAI(
                 model=model_name,
                 api_key=api_key,
                 provider=provideer,
@@ -29,28 +29,28 @@ class LargeLanguageModel:
             if provideer == "openai":
                 from langchain_openai import OpenAI
 
-                self.cilient = OpenAI(
+                self.client = OpenAI(
                     model=model_name,
                     openai_api_key=api_key,
                 )
             elif provideer == "claude":
                 from langchain_anthropic import Anthropic
 
-                self.cilient = Anthropic(
+                self.client = Anthropic(
                     model=model_name,
                     anthropic_api_key=api_key,
                 )
             elif provideer == "ollama":
                 from langchain_ollama import Ollama
 
-                self.cilient = Ollama(
+                self.client = Ollama(
                     model=model_name,
                     ollama_api_key=api_key,
                 )
             elif provideer == "deepseek":
                 from langchain_deepseek import DeepSeek
 
-                self.cilient = DeepSeek(
+                self.client = DeepSeek(
                     model=model_name,
                     deepseek_api_key=api_key,
                 )
