@@ -43,7 +43,7 @@ export default function HowItWorks() {
 					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						How It Works
 					</h2>
-					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
+					<p className="text-xl text-white opacity-65 max-w-2xl mx-auto">
 						Transform your browsing experience in three simple steps
 					</p>
 				</div>

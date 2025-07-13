@@ -41,8 +41,14 @@ export default function Hero() {
 					{/* Logo/Brand */}
 					<div className="mb-8">
 						<h1
-							className="text-6xl md:text-7xl font-black bg-clip-text text-transparent leading-tight bg-[--accent-gradient]"
-							style={{ background: "var(--accent-gradient)" }}
+							className="text-6xl md:text-7xl font-black"
+							style={{
+								background: "var(--accent-gradient)",
+								WebkitBackgroundClip: "text",
+								backgroundClip: "text",
+								color: "transparent",
+								WebkitTextFillColor: "transparent",
+							}}
 						>
 							FindexAI
 						</h1>
@@ -52,7 +58,17 @@ export default function Hero() {
 						></div>
 					</div>
 					{/* Hero Headline */}
-					<h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-200">
+					<h2
+						className="text-2xl md:text-3xl font-bold mb-6"
+						style={{
+							background: "var(--accent-gradient)",
+							opacity: 10,
+							WebkitBackgroundClip: "text",
+							backgroundClip: "text",
+							color: "transparent",
+							WebkitTextFillColor: "transparent",
+						}}
+					>
 						AI-powered search, multi-agent context, and real-time web results
 					</h2>
 					{/* Subheadline */}

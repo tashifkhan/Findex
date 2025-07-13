@@ -92,8 +92,14 @@ export default function Footer() {
 					<div className="lg:col-span-2">
 						<div className="mb-6">
 							<h3
-								className="text-2xl font-bold bg-clip-text text-transparent"
-								style={{ background: "var(--accent-gradient)" }}
+								className="text-2xl font-bold"
+								style={{
+									background: "var(--accent-gradient)",
+									WebkitBackgroundClip: "text",
+									backgroundClip: "text",
+									color: "transparent",
+									WebkitTextFillColor: "transparent",
+								}}
 							>
 								FindexAI
 							</h3>
