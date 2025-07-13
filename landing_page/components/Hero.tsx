@@ -51,7 +51,7 @@ export default function Hero() {
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
 						<div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
 							<div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-								<span className="text-2xl">🔍</span>
+								<Chrome className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">Semantic Search</h3>
 							<p className="text-gray-300 text-sm">
@@ -61,7 +61,7 @@ export default function Hero() {
 
 						<div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
 							<div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-								<span className="text-2xl">🎥</span>
+								<Github className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">
 								YouTube Integration
@@ -73,7 +73,7 @@ export default function Hero() {
 
 						<div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
 							<div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mx-auto mb-4">
-								<span className="text-2xl">🔧</span>
+								<Download className="w-6 h-6" />
 							</div>
 							<h3 className="font-semibold text-lg mb-2">Bring Your Own</h3>
 							<p className="text-gray-300 text-sm">
@@ -91,14 +91,15 @@ export default function Hero() {
 							<Chrome className="w-6 h-6" />
 							Install for Chrome
 							<Download className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
-						</a>            <a
-              href="/firefox"
-              className="group flex items-center gap-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              <span className="text-xl">🦊</span>
-              Install for Firefox
-              <Download className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
+						</a>{" "}
+						<a
+							href="/firefox"
+							className="group flex items-center gap-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						>
+							<Chrome className="w-6 h-6" />
+							Install for Firefox
+							<Download className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
+						</a>
 					</div>
 
 					{/* Secondary CTA */}
@@ -140,7 +141,9 @@ export default function Hero() {
 					<div className="mt-16 max-w-4xl mx-auto">
 						<div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-8 text-center">
 							<div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 mb-4">
-								<p className="text-gray-300 mb-4">🎬 Demo video coming soon!</p>
+								<p className="text-gray-300 mb-4">
+									<Github className="w-6 h-6" /> Demo video coming soon!
+								</p>
 								<p className="text-sm text-gray-400">
 									See FindexAI in action: Ctrl+Shift+F → Ask questions → Get
 									instant AI-powered answers
