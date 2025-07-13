@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException
 from app.core import get_logger
 from app.models import YTVideoInfo
 from app.youtube_utils import get_video_info, extract_video_id
 from app.prompts.youtube import youtube_chain
+from app.models.requests.ask import AskRequest
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -44,14 +45,10 @@ async def generate_answer(
 
 # route
 @router.post("/", response_model=dict)
-async def ask(request: Request):
+async def ask(request: AskRequest):
     try:
-        data = await request.json()
-        if not data:
-            raise HTTPException(status_code=400, detail="No data provided")
-
-        url = data.get("url")
-        question = data.get("question")
+        url = request.url
+        question = request.question
 
         if not url or not question:
             raise HTTPException(
