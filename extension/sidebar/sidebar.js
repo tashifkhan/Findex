@@ -267,204 +267,202 @@ const getTranscriptBadgeClasses = (theme) => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // DOM Elements
-    const sidebar = document.getElementById("sidebar");
-    const messages = document.getElementById("messages");
-    const chatForm = document.getElementById("chatForm");
-    const chatInput = document.getElementById("chatInput");
-    const themeButton = document.getElementById("themeButton");
-    const themeDropdown = document.getElementById("themeDropdown");
-    const themeDropdownContainer = document.getElementById("theme-dropdown-container");
-    const xpThemeButton = document.getElementById("xpThemeButton");
-    const minimizeButton = document.getElementById("minimizeButton");
-    const closeButton = document.getElementById("closeButton");
-    const welcomeMessage = document.getElementById("welcome-message");
-    const searchButton = document.getElementById("searchButton");
-    const videoInfo = document.getElementById("video-info");
-    const videoTitle = document.getElementById("video-title")
-    const videoUploader = document.getElementById("video-uploader")
-    const videoDuration = document.getElementById("video-duration")
-    const videoViews = document.getElementById("video-views")
-    const transcriptBadge = document.getElementById("transcript-badge")
-    const transcriptLength = document.getElementById("transcript-length")
-    const statusText = document.getElementById("status-text")
-    const headerContent = document.getElementById("header-content")
-    const sendButton = chatForm.querySelector('button[type="submit"]')
+  // DOM Elements
+  const sidebar = document.getElementById("sidebar");
+  const messages = document.getElementById("messages");
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const themeButton = document.getElementById("themeButton");
+  const themeDropdown = document.getElementById("themeDropdown");
+  const themeDropdownContainer = document.getElementById("theme-dropdown-container");
+  const minimizeButton = document.getElementById("minimizeButton");
+  const closeButton = document.getElementById("closeButton");
+  const welcomeMessage = document.getElementById("welcome-message");
+  const searchButton = document.getElementById("searchButton");
+  const videoInfo = document.getElementById("video-info");
+  const videoTitle = document.getElementById("video-title")
+  const videoUploader = document.getElementById("video-uploader")
+  const videoDuration = document.getElementById("video-duration")
+  const videoViews = document.getElementById("video-views")
+  const transcriptBadge = document.getElementById("transcript-badge")
+  const transcriptLength = document.getElementById("transcript-length")
+  const statusText = document.getElementById("status-text")
+  const headerContent = document.getElementById("header-content")
+  const sendButton = chatForm.querySelector('button[type="submit"]')
 
-    // State
-    let isMinimized = false
-    let currentTheme = "default"
-    let messageHistory = []
-    let isLoading = false
-    let videoData = null
-    
-    // Development mode check
-    const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    const isOnYouTube = window.location.hostname === "www.youtube.com"
-    const canInteract = isOnYouTube || isDevelopment
+  // State
+  let isMinimized = false
+  let currentTheme = "default"
+  let messageHistory = []
+  let isLoading = false
+  let videoData = null
 
-    // Update input placeholder and status based on context
-    const updateContextStatus = () => {
-      if (canInteract) {
-        chatInput.placeholder = isDevelopment && !isOnYouTube ? "Ask about the extension..." : "Ask about this video..."
-        chatInput.disabled = false
-        statusText.textContent = isOnYouTube ? "Ready to help" : "Demo mode"
-      } else {
-        chatInput.placeholder = "Navigate to a YouTube video first"
-        chatInput.disabled = true
-        statusText.textContent = "Navigate to YouTube"
-      }
-      // Also update send button disabled state
-      sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
+  // Development mode check
+  const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  const isOnYouTube = window.location.hostname === "www.youtube.com"
+  const canInteract = isOnYouTube || isDevelopment
+
+  // Update input placeholder and status based on context
+  const updateContextStatus = () => {
+    if (canInteract) {
+      chatInput.placeholder = isDevelopment && !isOnYouTube ? "Ask about the extension..." : "Ask about this video..."
+      chatInput.disabled = false
+      statusText.textContent = isOnYouTube ? "Ready to help" : "Demo mode"
+    } else {
+      chatInput.placeholder = "Navigate to a YouTube video first"
+      chatInput.disabled = true
+      statusText.textContent = "Navigate to YouTube"
+    }
+    // Also update send button disabled state
+    sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
+  }
+
+  // Theme Management
+  const setTheme = (theme) => {
+    document.body.className = `theme-${theme}`
+    currentTheme = theme
+
+    // Update UI elements based on theme
+    updateUIForTheme(theme)
+  }
+
+  const updateUIForTheme = (theme) => {
+    // Apply theme classes to main elements
+    sidebar.className = `${getSidebarBaseClasses(theme)} ${isMinimized ? "w-16" : "w-96"}`
+    document.getElementById("header").className = getHeaderClasses(theme)
+    document.getElementById("input-container").className = getInputContainerClasses(theme)
+    chatInput.className = getChatInputClasses(theme)
+    sendButton.className = getSendButtonClasses(theme)
+
+    // Update font and rendering for body
+    document.body.style.fontFamily =
+      theme === "nintendo"
+        ? "monospace"
+        : theme === "xp"
+          ? 'Tahoma, "MS Sans Serif", sans-serif'
+          : theme === "macos"
+            ? "'Segoe UI', system-ui, sans-serif"
+            : "inherit"
+    document.body.style.imageRendering = theme === "nintendo" ? "pixelated" : "auto"
+
+    // Update video info section if visible
+    if (videoData) {
+      updateVideoInfoStyle(theme)
     }
 
-    // Theme Management
-    const setTheme = (theme) => {
-      document.body.className = `theme-${theme}`
-      currentTheme = theme
-
-      // Update UI elements based on theme
-      updateUIForTheme(theme)
+    // Update welcome message background
+    const welcomeMessageDiv = welcomeMessage.querySelector("div")
+    if (welcomeMessageDiv) {
+      welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(theme)}`
     }
 
-    const updateUIForTheme = (theme) => {
-      // Apply theme classes to main elements
-      sidebar.className = `${getSidebarBaseClasses(theme)} ${isMinimized ? "w-16" : "w-96"}`
-      document.getElementById("header").className = getHeaderClasses(theme)
-      document.getElementById("input-container").className = getInputContainerClasses(theme)
-      chatInput.className = getChatInputClasses(theme)
-      sendButton.className = getSendButtonClasses(theme)
+    // Update welcome message content based on context
+    const welcomeTitle = welcomeMessage.querySelector("h3")
+    const welcomeDescription = welcomeMessage.querySelector("p")
+    const welcomeExamples = welcomeMessage.querySelector("ul")
 
-      // Update font and rendering for body
-      document.body.style.fontFamily =
-        theme === "nintendo"
-          ? "monospace"
-          : theme === "xp"
-            ? 'Tahoma, "MS Sans Serif", sans-serif'
-            : theme === "macos"
-              ? "'Segoe UI', system-ui, sans-serif"
-              : "inherit"
-      document.body.style.imageRendering = theme === "nintendo" ? "pixelated" : "auto"
-
-      // Update video info section if visible
-      if (videoData) {
-        updateVideoInfoStyle(theme)
-      }
-
-      // Update welcome message background
-      const welcomeMessageDiv = welcomeMessage.querySelector("div")
-      if (welcomeMessageDiv) {
-        welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(theme)}`
-      }
-
-      // Update welcome message content based on context
-      const welcomeTitle = welcomeMessage.querySelector("h3")
-      const welcomeDescription = welcomeMessage.querySelector("p")
-      const welcomeExamples = welcomeMessage.querySelector("ul")
-
-      if (welcomeTitle && welcomeDescription && welcomeExamples) {
-        if (isDevelopment && !isOnYouTube) {
-          welcomeTitle.textContent = "Demo Mode"
-          welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
-          welcomeExamples.innerHTML = `
+    if (welcomeTitle && welcomeDescription && welcomeExamples) {
+      if (isDevelopment && !isOnYouTube) {
+        welcomeTitle.textContent = "Demo Mode"
+        welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+        welcomeExamples.innerHTML = `
             <li>• "How does this extension work?"</li>
             <li>• "What features are available?"</li>
             <li>• "Tell me about the search functionality"</li>
           `
-        } else {
-          welcomeTitle.textContent = "Ask about this video"
-          welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
-          welcomeExamples.innerHTML = `
+      } else {
+        welcomeTitle.textContent = "Ask about this video"
+        welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
+        welcomeExamples.innerHTML = `
             <li>• "What is this video about?"</li>
             <li>• "Summarize the main points"</li>
             <li>• "What does the speaker say about..."</li>
           `
-        }
       }
-
-      // Update theme dropdown appearance
-      const wasVisible = themeDropdown.classList.contains("show")
-      themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(theme)} ${wasVisible ? "show" : ""}`
-      if (wasVisible) {
-        themeDropdown.style.display = "block"
-      } else {
-        themeDropdown.style.display = "none"
-      }
-      populateThemeDropdown() // Re-populate to update selected state and button styles
-
-      // Update search overlay theme if it's open
-      // if (isSearchOverlayOpen) { // This line is removed as per the edit hint
-      //   updateSearchOverlayTheme(theme)
-      // }
     }
 
-    const updateVideoInfoStyle = (theme) => {
-      if (!videoInfo) return
-      videoInfo.className = `p-4 border-b ${
-        theme === "xp"
-          ? "bg-blue-50 border-blue-300"
-          : theme === "macos"
-            ? "bg-gray-50 border-gray-300"
-            : theme === "neobrutal"
-              ? "bg-yellow-200 border-b-4 border-black"
-              : theme === "nintendo"
-                ? "bg-red-100 border-red-300"
-                : theme === "orange"
-                  ? "bg-orange-100 border-orange-300"
-                  : theme === "orangeDark"
-                    ? "bg-orange-800 border-orange-700"
-                    : theme === "blueLight"
-                      ? "bg-blue-50 border-blue-200"
-                      : theme === "blueDark"
-                        ? "bg-blue-800 border-blue-700"
-                        : "bg-gray-50 border-gray-200"
-      }`
-      // Update transcript badge style
-      transcriptBadge.className = `mt-2 text-xs px-2 py-1 rounded ${getTranscriptBadgeClasses(theme)} ${videoData && videoData.transcript ? "" : "hidden"}`
+    // Update theme dropdown appearance
+    const wasVisible = themeDropdown.classList.contains("show")
+    themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(theme)} ${wasVisible ? "show" : ""}`
+    if (wasVisible) {
+      themeDropdown.style.display = "block"
+    } else {
+      themeDropdown.style.display = "none"
     }
+    populateThemeDropdown() // Re-populate to update selected state and button styles
 
-    // const updateSearchOverlayTheme = (theme) => { // This function is removed as per the edit hint
-    //   // The CSS classes will handle most of the theming
-    //   // This function can be used for any additional theme-specific logic
-    //   if (searchInput) {
-    //     // Focus the input after theme change to maintain user experience
-    //     searchInput.focus()
-    //   }
+    // Update search overlay theme if it's open
+    // if (isSearchOverlayOpen) { // This line is removed as per the edit hint
+    //   updateSearchOverlayTheme(theme)
     // }
+  }
 
-    // Message handling
-    const addMessage = (content, type = "assistant") => {
-      // Remove welcome message if present
-      if (welcomeMessage.parentNode === messages) {
-        messages.removeChild(welcomeMessage)
-      }
+  const updateVideoInfoStyle = (theme) => {
+    if (!videoInfo) return
+    videoInfo.className = `p-4 border-b ${theme === "xp"
+        ? "bg-blue-50 border-blue-300"
+        : theme === "macos"
+          ? "bg-gray-50 border-gray-300"
+          : theme === "neobrutal"
+            ? "bg-yellow-200 border-b-4 border-black"
+            : theme === "nintendo"
+              ? "bg-red-100 border-red-300"
+              : theme === "orange"
+                ? "bg-orange-100 border-orange-300"
+                : theme === "orangeDark"
+                  ? "bg-orange-800 border-orange-700"
+                  : theme === "blueLight"
+                    ? "bg-blue-50 border-blue-200"
+                    : theme === "blueDark"
+                      ? "bg-blue-800 border-blue-700"
+                      : "bg-gray-50 border-gray-200"
+      }`
+    // Update transcript badge style
+    transcriptBadge.className = `mt-2 text-xs px-2 py-1 rounded ${getTranscriptBadgeClasses(theme)} ${videoData && videoData.transcript ? "" : "hidden"}`
+  }
 
-      const messageDiv = document.createElement("div")
-      messageDiv.className = `flex ${type === "user" ? "justify-end" : "justify-start"}`
+  // const updateSearchOverlayTheme = (theme) => { // This function is removed as per the edit hint
+  //   // The CSS classes will handle most of the theming
+  //   // This function can be used for any additional theme-specific logic
+  //   if (searchInput) {
+  //     // Focus the input after theme change to maintain user experience
+  //     searchInput.focus()
+  //   }
+  // }
 
-      const bubble = document.createElement("div")
-      bubble.className = `chat-bubble ${type}`
-      bubble.textContent = content
-
-      messageDiv.appendChild(bubble)
-      messages.appendChild(messageDiv)
-
-      // Auto scroll
-      messages.scrollTop = messages.scrollHeight
-
-      // Add to history
-      messageHistory.push({ content, type })
+  // Message handling
+  const addMessage = (content, type = "assistant") => {
+    // Remove welcome message if present
+    if (welcomeMessage.parentNode === messages) {
+      messages.removeChild(welcomeMessage)
     }
 
-    const setLoading = (loading) => {
-      isLoading = loading
-      sendButton.disabled = loading || !chatInput.value.trim() || !canInteract
+    const messageDiv = document.createElement("div")
+    messageDiv.className = `flex ${type === "user" ? "justify-end" : "justify-start"}`
 
-      if (loading) {
-        const loadingBubble = document.createElement("div")
-        loadingBubble.id = "loading-bubble"
-        loadingBubble.className = "flex justify-start"
-        loadingBubble.innerHTML = `
+    const bubble = document.createElement("div")
+    bubble.className = `chat-bubble ${type}`
+    bubble.textContent = content
+
+    messageDiv.appendChild(bubble)
+    messages.appendChild(messageDiv)
+
+    // Auto scroll
+    messages.scrollTop = messages.scrollHeight
+
+    // Add to history
+    messageHistory.push({ content, type })
+  }
+
+  const setLoading = (loading) => {
+    isLoading = loading
+    sendButton.disabled = loading || !chatInput.value.trim() || !canInteract
+
+    if (loading) {
+      const loadingBubble = document.createElement("div")
+      loadingBubble.id = "loading-bubble"
+      loadingBubble.className = "flex justify-start"
+      loadingBubble.innerHTML = `
                 <div class="chat-bubble assistant">
                     <div class="flex items-center space-x-2">
                         <div class="loading-dots">
@@ -476,391 +474,386 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
             `
-        messages.appendChild(loadingBubble)
-        messages.scrollTop = messages.scrollHeight
-      } else {
-        const loadingBubble = document.getElementById("loading-bubble")
-        if (loadingBubble) {
-          loadingBubble.remove()
+      messages.appendChild(loadingBubble)
+      messages.scrollTop = messages.scrollHeight
+    } else {
+      const loadingBubble = document.getElementById("loading-bubble")
+      if (loadingBubble) {
+        loadingBubble.remove()
+      }
+    }
+  }
+
+  // Video data handling
+  const updateVideoInfo = (data) => {
+    if (!data) {
+      videoInfo.classList.add("hidden")
+      videoData = null
+      return
+    }
+    videoData = data
+    videoInfo.classList.remove("hidden")
+    videoTitle.textContent = data.title
+    videoUploader.textContent = data.uploader
+
+    if (data.duration > 0) {
+      videoDuration.textContent = formatDuration(data.duration)
+      videoDuration.parentElement.classList.remove("hidden")
+    } else {
+      videoDuration.parentElement.classList.add("hidden")
+    }
+
+    if (data.view_count > 0) {
+      videoViews.textContent = formatViews(data.view_count)
+      videoViews.parentElement.classList.remove("hidden")
+    } else {
+      videoViews.parentElement.classList.add("hidden")
+    }
+
+    if (data.transcript) {
+      transcriptBadge.classList.remove("hidden")
+      transcriptLength.textContent = data.transcript.length
+    } else {
+      transcriptBadge.classList.add("hidden")
+    }
+    updateVideoInfoStyle(currentTheme)
+  }
+
+  // Event Handlers
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+    const message = chatInput.value.trim()
+    if (message && !isLoading) {
+      addMessage(message, "user")
+      chatInput.value = ""
+      sendButton.disabled = true // Disable immediately after sending
+
+      // Emit message event for parent window
+      window.parent.postMessage(
+        {
+          type: "askQuestion",
+          message,
+        },
+        "*",
+      )
+    }
+  })
+
+  chatInput.addEventListener("input", () => {
+    sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
+  })
+
+  minimizeButton.addEventListener("click", () => {
+    isMinimized = !isMinimized
+    sidebar.style.width = isMinimized ? "4rem" : "24rem"
+    minimizeButton.querySelector("div").classList.toggle("rotate-45", isMinimized)
+
+    // Hide/show elements based on minimized state
+    headerContent.style.display = isMinimized ? "none" : "flex"
+    themeDropdownContainer.style.display = isMinimized ? "none" : "block"
+    searchButton.style.display = isMinimized ? "none" : "block"
+    videoInfo.style.display = isMinimized ? "none" : videoData ? "block" : "none" // Re-evaluate video info visibility
+    messages.style.display = isMinimized ? "none" : "block"
+    document.getElementById("input-container").style.display = isMinimized ? "none" : "block"
+
+    if (!isMinimized) {
+      chatInput.focus()
+    }
+  })
+
+  // Theme dropdown handling - TOGGLE FUNCTIONALITY
+  themeButton.addEventListener("click", (e) => {
+    e.stopPropagation() // Prevent document click from immediately closing it
+    const isVisible = themeDropdown.classList.contains("show")
+
+    if (isVisible) {
+      themeDropdown.classList.remove("show")
+      themeDropdown.style.display = "none"
+    } else {
+      themeDropdown.classList.add("show")
+      themeDropdown.style.display = "block"
+    }
+
+    // Update dropdown styling based on current theme
+    themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+  })
+
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!themeDropdownContainer.contains(e.target)) {
+      themeDropdown.classList.remove('show');
+      themeDropdown.style.display = "none"
+      // Update dropdown styling after hiding
+      themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
+    }
+  });
+
+  // Close sidebar button functionality
+  closeButton.addEventListener("click", () => {
+    // First try to send message to parent
+    try {
+      window.parent.postMessage({ type: 'close' }, '*');
+    } catch (e) {
+      console.error('Error sending close message:', e);
+    }
+
+    // Fallback: try to close the window directly if it's a popup
+    if (window.opener) {
+      window.close();
+    }
+  })
+
+  searchButton.addEventListener("click", () => {
+    // Open find-in-page toolbar in the current page
+    if (window.findInPage) {
+      window.findInPage.show();
+    } else {
+      // If findInPage is not available, inject it
+      const script = document.createElement('script');
+      script.src = '../find-in-page/find-in-page.js';
+      script.onload = () => {
+        if (window.findInPage) {
+          window.findInPage.show();
         }
-      }
+      };
+      document.head.appendChild(script);
     }
+  })
 
-    // Video data handling
-    const updateVideoInfo = (data) => {
-      if (!data) {
-        videoInfo.classList.add("hidden")
-        videoData = null
-        return
-      }
-      videoData = data
-      videoInfo.classList.remove("hidden")
-      videoTitle.textContent = data.title
-      videoUploader.textContent = data.uploader
+  // Search Overlay Event Handlers
+  // searchOverlayClose.addEventListener("click", () => { // This line is removed as per the edit hint
+  //   closeSearchOverlay()
+  // })
 
-      if (data.duration > 0) {
-        videoDuration.textContent = formatDuration(data.duration)
-        videoDuration.parentElement.classList.remove("hidden")
-      } else {
-        videoDuration.parentElement.classList.add("hidden")
-      }
+  // searchInput.addEventListener("input", (e) => { // This line is removed as per the edit hint
+  //   performSearch(e.target.value)
+  // })
 
-      if (data.view_count > 0) {
-        videoViews.textContent = formatViews(data.view_count)
-        videoViews.parentElement.classList.remove("hidden")
-      } else {
-        videoViews.parentElement.classList.add("hidden")
-      }
+  // searchInput.addEventListener("keydown", (e) => { // This line is removed as per the edit hint
+  //   if (e.key === "Enter" && !e.shiftKey) {
+  //     e.preventDefault()
+  //     goToNextResult()
+  //   } else if (e.key === "Enter" && e.shiftKey) {
+  //     e.preventDefault()
+  //     goToPrevResult()
+  //   } else if (e.key === "Escape") {
+  //     e.preventDefault()
+  //     closeSearchOverlay()
+  //   }
+  // })
 
-      if (data.transcript) {
-        transcriptBadge.classList.remove("hidden")
-        transcriptLength.textContent = data.transcript.length
-      } else {
-        transcriptBadge.classList.add("hidden")
-      }
-      updateVideoInfoStyle(currentTheme)
-    }
+  // searchNextButton.addEventListener("click", () => { // This line is removed as per the edit hint
+  //   goToNextResult()
+  // })
 
-    // Event Handlers
-    chatForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-      const message = chatInput.value.trim()
-      if (message && !isLoading) {
-        addMessage(message, "user")
-        chatInput.value = ""
-        sendButton.disabled = true // Disable immediately after sending
+  // searchPrevButton.addEventListener("click", () => { // This line is removed as per the edit hint
+  //   goToPrevResult()
+  // })
 
-        // Emit message event for parent window
-        window.parent.postMessage(
-          {
-            type: "askQuestion",
-            message,
-          },
-          "*",
-        )
-      }
-    })
+  // Close search overlay when clicking outside
+  // searchOverlay.addEventListener("click", (e) => { // This line is removed as per the edit hint
+  //   if (e.target === searchOverlay) {
+  //     closeSearchOverlay()
+  //   }
+  // })
 
-    chatInput.addEventListener("input", () => {
-      sendButton.disabled = !chatInput.value.trim() || !canInteract || isLoading
-    })
-
-    minimizeButton.addEventListener("click", () => {
-      isMinimized = !isMinimized
-      sidebar.style.width = isMinimized ? "4rem" : "24rem"
-      minimizeButton.querySelector("div").classList.toggle("rotate-45", isMinimized)
-
-      // Hide/show elements based on minimized state
-      headerContent.style.display = isMinimized ? "none" : "flex"
-      themeDropdownContainer.style.display = isMinimized ? "none" : "block"
-      xpThemeButton.style.display = isMinimized ? "none" : "block"
-      searchButton.style.display = isMinimized ? "none" : "block"
-      videoInfo.style.display = isMinimized ? "none" : videoData ? "block" : "none" // Re-evaluate video info visibility
-      messages.style.display = isMinimized ? "none" : "block"
-      document.getElementById("input-container").style.display = isMinimized ? "none" : "block"
-
-      if (!isMinimized) {
-        chatInput.focus()
-      }
-    })
-
-    // Theme dropdown handling - TOGGLE FUNCTIONALITY
-    themeButton.addEventListener("click", (e) => {
-      e.stopPropagation() // Prevent document click from immediately closing it
-      const isVisible = themeDropdown.classList.contains("show")
-      
-      if (isVisible) {
+  // Populate theme dropdown
+  const populateThemeDropdown = () => {
+    const themeContent = themeDropdown.querySelector("div")
+    themeContent.innerHTML = "" // Clear existing buttons
+    Object.entries(THEMES).forEach(([key, theme]) => {
+      const button = document.createElement("button")
+      button.className = getThemeDropdownButtonClasses(currentTheme, currentTheme === key)
+      button.textContent = theme.name
+      button.onclick = () => {
+        setTheme(key)
         themeDropdown.classList.remove("show")
         themeDropdown.style.display = "none"
-      } else {
-        themeDropdown.classList.add("show")
-        themeDropdown.style.display = "block"
+        // Update dropdown styling after hiding
+        themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
       }
-      
-      // Update dropdown styling based on current theme
-      themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)} ${themeDropdown.classList.contains("show") ? "show" : ""}`
+      themeContent.appendChild(button)
     })
+  }
 
-    // Windows XP Theme Button
-    xpThemeButton.addEventListener("click", () => {
-      setTheme("xp")
-    })
+  // Listen for messages from parent window
+  window.addEventListener("message", (event) => {
+    const { type, data } = event.data
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!themeDropdownContainer.contains(e.target)) {
-            themeDropdown.classList.remove('show');
-            themeDropdown.style.display = "none"
-            // Update dropdown styling after hiding
-            themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
-        }
-    });
-
-    // Close sidebar button functionality
-    closeButton.addEventListener("click", () => {
-        // First try to send message to parent
-        try {
-            window.parent.postMessage({ type: 'close' }, '*');
-        } catch (e) {
-            console.error('Error sending close message:', e);
-        }
-        
-        // Fallback: try to close the window directly if it's a popup
-        if (window.opener) {
-            window.close();
-        }
-    })
-
-    searchButton.addEventListener("click", () => {
-      // Open find-in-page toolbar in the current page
-      if (window.findInPage) {
-        window.findInPage.show();
-      } else {
-        // If findInPage is not available, inject it
-        const script = document.createElement('script');
-        script.src = '../find-in-page/find-in-page.js';
-        script.onload = () => {
-          if (window.findInPage) {
-            window.findInPage.show();
+    switch (type) {
+      case "setVideoData":
+        updateVideoInfo(data)
+        // Refresh search results if overlay is open
+        // if (isSearchOverlayOpen && searchTerm) { // This line is removed as per the edit hint
+        //   performSearch(searchTerm)
+        // }
+        break
+      case "addMessage":
+        addMessage(data.content, data.type)
+        break
+      case "setLoading":
+        setLoading(data.loading)
+        break
+      case "clear":
+        messages.innerHTML = ""
+        messageHistory = []
+        videoData = null
+        updateVideoInfo(null)
+        if (welcomeMessage) {
+          messages.appendChild(welcomeMessage)
+          // Re-apply welcome message specific classes and content
+          const welcomeMessageDiv = welcomeMessage.querySelector("div")
+          if (welcomeMessageDiv) {
+            welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(currentTheme)}`
           }
-        };
-        document.head.appendChild(script);
-      }
-    })
+          // Update welcome message content
+          const welcomeTitle = welcomeMessage.querySelector("h3")
+          const welcomeDescription = welcomeMessage.querySelector("p")
+          const welcomeExamples = welcomeMessage.querySelector("ul")
 
-    // Search Overlay Event Handlers
-    // searchOverlayClose.addEventListener("click", () => { // This line is removed as per the edit hint
-    //   closeSearchOverlay()
-    // })
-
-    // searchInput.addEventListener("input", (e) => { // This line is removed as per the edit hint
-    //   performSearch(e.target.value)
-    // })
-
-    // searchInput.addEventListener("keydown", (e) => { // This line is removed as per the edit hint
-    //   if (e.key === "Enter" && !e.shiftKey) {
-    //     e.preventDefault()
-    //     goToNextResult()
-    //   } else if (e.key === "Enter" && e.shiftKey) {
-    //     e.preventDefault()
-    //     goToPrevResult()
-    //   } else if (e.key === "Escape") {
-    //     e.preventDefault()
-    //     closeSearchOverlay()
-    //   }
-    // })
-
-    // searchNextButton.addEventListener("click", () => { // This line is removed as per the edit hint
-    //   goToNextResult()
-    // })
-
-    // searchPrevButton.addEventListener("click", () => { // This line is removed as per the edit hint
-    //   goToPrevResult()
-    // })
-
-    // Close search overlay when clicking outside
-    // searchOverlay.addEventListener("click", (e) => { // This line is removed as per the edit hint
-    //   if (e.target === searchOverlay) {
-    //     closeSearchOverlay()
-    //   }
-    // })
-
-    // Populate theme dropdown
-    const populateThemeDropdown = () => {
-      const themeContent = themeDropdown.querySelector("div")
-      themeContent.innerHTML = "" // Clear existing buttons
-      Object.entries(THEMES).forEach(([key, theme]) => {
-        const button = document.createElement("button")
-        button.className = getThemeDropdownButtonClasses(currentTheme, currentTheme === key)
-        button.textContent = theme.name
-        button.onclick = () => {
-          setTheme(key)
-          themeDropdown.classList.remove("show")
-          themeDropdown.style.display = "none"
-          // Update dropdown styling after hiding
-          themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
-        }
-        themeContent.appendChild(button)
-      })
-    }
-
-    // Listen for messages from parent window
-    window.addEventListener("message", (event) => {
-      const { type, data } = event.data
-
-      switch (type) {
-        case "setVideoData":
-          updateVideoInfo(data)
-          // Refresh search results if overlay is open
-          // if (isSearchOverlayOpen && searchTerm) { // This line is removed as per the edit hint
-          //   performSearch(searchTerm)
-          // }
-          break
-        case "addMessage":
-          addMessage(data.content, data.type)
-          break
-        case "setLoading":
-          setLoading(data.loading)
-          break
-        case "clear":
-          messages.innerHTML = ""
-          messageHistory = []
-          videoData = null
-          updateVideoInfo(null)
-          if (welcomeMessage) {
-            messages.appendChild(welcomeMessage)
-            // Re-apply welcome message specific classes and content
-            const welcomeMessageDiv = welcomeMessage.querySelector("div")
-            if (welcomeMessageDiv) {
-              welcomeMessageDiv.className = `mt-4 space-y-2 text-xs text-left p-3 rounded-lg ${getWelcomeMessageClasses(currentTheme)}`
-            }
-            // Update welcome message content
-            const welcomeTitle = welcomeMessage.querySelector("h3")
-            const welcomeDescription = welcomeMessage.querySelector("p")
-            const welcomeExamples = welcomeMessage.querySelector("ul")
-
-            if (welcomeTitle && welcomeDescription && welcomeExamples) {
-              if (isDevelopment && !isOnYouTube) {
-                welcomeTitle.textContent = "Demo Mode"
-                welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
-                welcomeExamples.innerHTML = `
+          if (welcomeTitle && welcomeDescription && welcomeExamples) {
+            if (isDevelopment && !isOnYouTube) {
+              welcomeTitle.textContent = "Demo Mode"
+              welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+              welcomeExamples.innerHTML = `
                   <li>• "How does this extension work?"</li>
                   <li>• "What features are available?"</li>
                   <li>• "Tell me about the search functionality"</li>
                 `
-              } else {
-                welcomeTitle.textContent = "Ask about this video"
-                welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
-                welcomeExamples.innerHTML = `
+            } else {
+              welcomeTitle.textContent = "Ask about this video"
+              welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
+              welcomeExamples.innerHTML = `
                   <li>• "What is this video about?"</li>
                   <li>• "Summarize the main points"</li>
                   <li>• "What does the speaker say about..."</li>
                 `
-              }
             }
           }
-          break
-        case "openSearch":
-          // openSearchOverlay() // This line is removed as per the edit hint
-          break
-      }
-    })
+        }
+        break
+      case "openSearch":
+        // openSearchOverlay() // This line is removed as per the edit hint
+        break
+    }
+  })
 
-    // Initialize
-    updateContextStatus()
-    
-    // Ensure theme dropdown starts hidden and properly styled
-    themeDropdown.classList.remove("show")
-    themeDropdown.style.display = "none"
-    themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
-    
-    populateThemeDropdown() // Populate dropdown on initial load
+  // Initialize
+  updateContextStatus()
 
-    // Update welcome message content on initial load
-    const welcomeTitle = welcomeMessage.querySelector("h3")
-    const welcomeDescription = welcomeMessage.querySelector("p")
-    const welcomeExamples = welcomeMessage.querySelector("ul")
+  // Ensure theme dropdown starts hidden and properly styled
+  themeDropdown.classList.remove("show")
+  themeDropdown.style.display = "none"
+  themeDropdown.className = `theme-dropdown ${getThemeDropdownClasses(currentTheme)}`
 
-    if (welcomeTitle && welcomeDescription && welcomeExamples) {
-      if (isDevelopment && !isOnYouTube) {
-        welcomeTitle.textContent = "Demo Mode"
-        welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
-        welcomeExamples.innerHTML = `
+  populateThemeDropdown() // Populate dropdown on initial load
+
+  // Update welcome message content on initial load
+  const welcomeTitle = welcomeMessage.querySelector("h3")
+  const welcomeDescription = welcomeMessage.querySelector("p")
+  const welcomeExamples = welcomeMessage.querySelector("ul")
+
+  if (welcomeTitle && welcomeDescription && welcomeExamples) {
+    if (isDevelopment && !isOnYouTube) {
+      welcomeTitle.textContent = "Demo Mode"
+      welcomeDescription.textContent = "This is a demo of the YouTube Q&A assistant. Try asking questions to see how it works!"
+      welcomeExamples.innerHTML = `
           <li>• "How does this extension work?"</li>
           <li>• "What features are available?"</li>
           <li>• "Tell me about the search functionality"</li>
         `
+    }
+  }
+
+  // Load saved theme
+  const chrome = window.chrome // Declare chrome variable
+  if (chrome && chrome.storage && chrome.storage.sync) {
+    chrome.storage.sync.get("theme", (data) => {
+      if (data.theme) {
+        setTheme(data.theme)
+      } else {
+        updateUIForTheme(currentTheme) // Apply default theme classes if no saved theme
       }
-    }
+    })
+  } else {
+    // Fallback for environments without chrome.storage (e.g., local browser preview)
+    updateUIForTheme(currentTheme)
+  }
 
-    // Load saved theme
-    const chrome = window.chrome // Declare chrome variable
-    if (chrome && chrome.storage && chrome.storage.sync) {
-      chrome.storage.sync.get("theme", (data) => {
-        if (data.theme) {
-          setTheme(data.theme)
-        } else {
-          updateUIForTheme(currentTheme) // Apply default theme classes if no saved theme
-        }
-      })
-    } else {
-      // Fallback for environments without chrome.storage (e.g., local browser preview)
-      updateUIForTheme(currentTheme)
-    }
+  // Search functionality
+  // const openSearchOverlay = () => { // This function is removed as per the edit hint
+  //   isSearchOverlayOpen = true
+  //   searchOverlay.classList.remove("hidden")
+  //   searchInput.focus()
+  //   searchInput.value = searchTerm
+  //   updateSearchResults()
+  //   updateSearchOverlayTheme(currentTheme)
+  // }
 
-    // Search functionality
-    // const openSearchOverlay = () => { // This function is removed as per the edit hint
-    //   isSearchOverlayOpen = true
-    //   searchOverlay.classList.remove("hidden")
-    //   searchInput.focus()
-    //   searchInput.value = searchTerm
-    //   updateSearchResults()
-    //   updateSearchOverlayTheme(currentTheme)
-    // }
+  // const closeSearchOverlay = () => { // This function is removed as per the edit hint
+  //   isSearchOverlayOpen = false
+  //   searchOverlay.classList.add("hidden")
+  //   searchInput.blur()
+  // }
 
-    // const closeSearchOverlay = () => { // This function is removed as per the edit hint
-    //   isSearchOverlayOpen = false
-    //   searchOverlay.classList.add("hidden")
-    //   searchInput.blur()
-    // }
+  // const performSearch = (term) => { // This function is removed as per the edit hint
+  //   searchTerm = term
+  //   if (!term.trim() || !videoData?.transcript) {
+  //     searchResults = []
+  //     currentSearchIndex = 0
+  //     updateSearchResults()
+  //     return
+  //   }
 
-    // const performSearch = (term) => { // This function is removed as per the edit hint
-    //   searchTerm = term
-    //   if (!term.trim() || !videoData?.transcript) {
-    //     searchResults = []
-    //     currentSearchIndex = 0
-    //     updateSearchResults()
-    //     return
-    //   }
+  //   const transcript = videoData.transcript.toLowerCase()
+  //   const searchLower = term.toLowerCase()
+  //   const results = []
+  //   let index = 0
 
-    //   const transcript = videoData.transcript.toLowerCase()
-    //   const searchLower = term.toLowerCase()
-    //   const results = []
-    //   let index = 0
+  //   while ((index = transcript.indexOf(searchLower, index)) !== -1) {
+  //     results.push(index)
+  //     index += 1
+  //   }
 
-    //   while ((index = transcript.indexOf(searchLower, index)) !== -1) {
-    //     results.push(index)
-    //     index += 1
-    //   }
+  //   searchResults = results
+  //   currentSearchIndex = results.length > 0 ? 0 : -1
+  //   updateSearchResults()
+  // }
 
-    //   searchResults = results
-    //   currentSearchIndex = results.length > 0 ? 0 : -1
-    //   updateSearchResults()
-    // }
+  // const updateSearchResults = () => { // This function is removed as per the edit hint
+  //   if (searchResults.length === 0) {
+  //     searchResultsInfo.classList.add("hidden")
+  //     searchResultsCount.textContent = "No results found"
+  //     return
+  //   }
 
-    // const updateSearchResults = () => { // This function is removed as per the edit hint
-    //   if (searchResults.length === 0) {
-    //     searchResultsInfo.classList.add("hidden")
-    //     searchResultsCount.textContent = "No results found"
-    //     return
-    //   }
+  //   searchResultsInfo.classList.remove("hidden")
+  //   searchResultsCount.textContent = `${currentSearchIndex + 1} of ${searchResults.length} results`
 
-    //   searchResultsInfo.classList.remove("hidden")
-    //   searchResultsCount.textContent = `${currentSearchIndex + 1} of ${searchResults.length} results`
-      
-    //   // Highlight current result in transcript
-    //   if (currentSearchIndex >= 0 && currentSearchIndex < searchResults.length) {
-    //     const position = searchResults[currentSearchIndex]
-    //     // Send message to parent to highlight search result
-    //     window.parent.postMessage({
-    //       type: "highlightSearchResult",
-    //       position: position,
-    //       searchTerm: searchTerm
-    //     }, "*")
-    //   }
-    // }
+  //   // Highlight current result in transcript
+  //   if (currentSearchIndex >= 0 && currentSearchIndex < searchResults.length) {
+  //     const position = searchResults[currentSearchIndex]
+  //     // Send message to parent to highlight search result
+  //     window.parent.postMessage({
+  //       type: "highlightSearchResult",
+  //       position: position,
+  //       searchTerm: searchTerm
+  //     }, "*")
+  //   }
+  // }
 
-    // const goToNextResult = () => { // This function is removed as per the edit hint
-    //   if (searchResults.length === 0) return
-    //   currentSearchIndex = (currentSearchIndex + 1) % searchResults.length
-    //   updateSearchResults()
-    // }
+  // const goToNextResult = () => { // This function is removed as per the edit hint
+  //   if (searchResults.length === 0) return
+  //   currentSearchIndex = (currentSearchIndex + 1) % searchResults.length
+  //   updateSearchResults()
+  // }
 
-    // const goToPrevResult = () => { // This function is removed as per the edit hint
-    //   if (searchResults.length === 0) return
-    //   currentSearchIndex = currentSearchIndex === 0 ? searchResults.length - 1 : currentSearchIndex - 1
-    //   updateSearchResults()
-    // }
+  // const goToPrevResult = () => { // This function is removed as per the edit hint
+  //   if (searchResults.length === 0) return
+  //   currentSearchIndex = currentSearchIndex === 0 ? searchResults.length - 1 : currentSearchIndex - 1
+  //   updateSearchResults()
+  // }
 })
 
 // Base classes for the sidebar container itself, used by updateUIForTheme
