@@ -2,55 +2,44 @@ from fastapi import APIRouter, HTTPException, Request
 from app.core import get_logger
 from app.models import YTVideoInfo
 from app.youtube_utils import get_video_info, extract_video_id
+from app.prompts.youtube import youtube_chain
 
 router = APIRouter()
 logger = get_logger(__name__)
 
 
-async def generate_answer(video_info: YTVideoInfo, question: str) -> str:
-    """Generate answer using video information"""
-    desc_for_context = (
-        video_info.description if video_info.description else "No description available"
-    )[:500]
-    tags_for_context = ", ".join(video_info.tags[:10]) if video_info.tags else "None"
-    categories_for_context = (
-        ", ".join(video_info.categories) if video_info.categories else "None"
-    )
+async def generate_answer(
+    video_info: YTVideoInfo,
+    question: str,
+    chat_history: str = "",
+) -> str:
+    """Generate answer using video information and YouTube chat prompt"""
+    try:
+        response = youtube_chain.invoke(
+            {
+                "chat_history": chat_history,
+                "title": video_info.title or "Unknown",
+                "description": video_info.description or "No description available",
+                "uploader": video_info.uploader or "Unknown",
+                "tags": ", ".join(video_info.tags) if video_info.tags else "None",
+                "categories": (
+                    ", ".join(video_info.categories)
+                    if video_info.categories
+                    else "None"
+                ),
+                "transcript": video_info.transcript or "No transcript available",
+                "user_question": question,
+            }
+        )
 
-    context = (
-        f"  Title: {video_info.title}\n"
-        f"  Channel: {video_info.uploader}\n"
-        f"  Description: {desc_for_context}...\n"
-        f"  Duration: {video_info.duration} seconds\n"
-        f"  Tags: {tags_for_context}\n"
-        f"  Categories: {categories_for_context}\n"
-        f"  Transcript: {video_info.transcript[:200] if video_info.transcript else 'Not available'}...\n"
-    )
+        if isinstance(response, str):
+            return response
 
-    question_lower = question.lower()
+        return response.content
 
-    display_upload_date = (
-        video_info.upload_date if video_info.upload_date else "Unknown"
-    )
-
-    answer_detail = (
-        f"The transcript is available with {len(video_info.transcript)} characters."
-        if video_info.transcript
-        else "No transcript is available for this video."
-    )
-
-    return (
-        f'I can help you with questions about this video: "{video_info.title}" by {video_info.uploader}.\n'
-        f"{answer_detail}\n"
-        f"Some information I can provide:\n"
-        f"  - Video duration: {video_info.duration // 60} minutes\n"
-        f"  - Views: {video_info.view_count:,}\n"
-        f"  - Upload date: {display_upload_date}\n"
-        f"\n"
-        f"For more specific answers, try asking about the video's title, channel, duration, views, or topic.\n"
-        f"Context used:\n"
-        f"{''.join(context)}\n"
-    )
+    except Exception as e:
+        logger.error(f"Error generating answer with LLM: {e}")
+        return f"I apologize, but I encountered an error processing your question about '{video_info.title}'. Please try again."
 
 
 # route

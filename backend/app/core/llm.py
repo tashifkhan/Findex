@@ -8,6 +8,7 @@ class LargeLanguageModel:
         model_name: str = "gemini-2.0-flash",
         api_key: str = google_api_key,
         provideer: str = "google",
+        temperature: float = 0.4,
     ):
         if not api_key:
             raise ValueError("API key must be provided for the LLM.")
@@ -18,7 +19,7 @@ class LargeLanguageModel:
             self.client = GoogleGenerativeAI(
                 model=model_name,
                 api_key=api_key,
-                provider=provideer,
+                temperature=temperature,
             )
 
         else:
