@@ -117,3 +117,9 @@ main_chain2= RunnableParallel({
 })
 
 youtube_chain= main_chain2 | prompt | llm.client | parser
+
+def get_chain():
+    return youtube_chain
+
+def get_answer(chain, question, url=None):
+    return chain.invoke({"question": question, "url": url})
