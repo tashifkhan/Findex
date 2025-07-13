@@ -44,7 +44,10 @@ Response formatting:
 • Use LaTeX for any math expressions, e.g.
 • Keep each answer clear and concise.
 
----  
+---
+User Question: {user_question}
+---
+
 Just provide your answer in plain md format.
 """
 
@@ -59,6 +62,7 @@ youtube_chat_prompt_template = PromptTemplate(
         "tags",
         "categories",
         "transcript",
+        "user_question",
     ],
     template=youtube_chat_prmpt_templete_str,
 )

@@ -58,6 +58,7 @@ Response formatting:
 
 ---
 User Question: {user_question}
+---
 
 Provide your answer in plain markdown format, making sure to cite sources appropriately.
 """

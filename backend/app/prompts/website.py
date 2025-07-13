@@ -39,6 +39,9 @@ Response formatting:
 • Keep each answer clear and concise.
 
 ---
+User Question: {user_question}
+---
+
 Just provide your answer in plain md format.
 """
 
@@ -47,6 +50,7 @@ llm = LargeLanguageModel()
 website_chat_prompt_template = PromptTemplate(
     input_variables=[
         "markdown_page_info",
+        "user_question",
     ],
     template=website_chat_prompt_template_str,
 )
