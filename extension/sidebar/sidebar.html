@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Findex Sidebar</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      /* Theme styles */
+      .theme-default {
+        background: white;
+        color: #111827;
+        border-left: 1px solid #e5e7eb;
+      }
+      .theme-xp {
+        background: #d1d5db;
+        color: #111827;
+        font-family: Tahoma, "MS Sans Serif", sans-serif;
+        border: 2px solid;
+        border-top-color: #f3f4f6;
+        border-left-color: #f3f4f6;
+        border-right-color: black;
+        border-bottom-color: black;
+      }
+      .theme-macos {
+        background: #c3c3c3;
+        color: black;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        border: 2px solid;
+        border-top-color: white;
+        border-left-color: white;
+        border-bottom-color: #6e6e6e;
+        border-right-color: #6e6e6e;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.15);
+      }
+      .theme-neobrutal {
+        background: #fde047;
+        color: black;
+        border: 4px solid black;
+        box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+      }
+      .theme-nintendo {
+        background: #ef4444;
+        color: white;
+        font-family: monospace;
+        image-rendering: pixelated;
+        border: 2px solid #dc2626;
+      }
+      .theme-orange {
+        background: #f97316;
+        color: white;
+        border: 2px solid #ea580c;
+      }
+      .theme-orangeDark {
+        background: #7c2d12;
+        color: #fed7aa;
+        border: 2px solid #9a3412;
+      }
+      .theme-blueLight {
+        background: #dbeafe;
+        color: #1e3a8a;
+        border: 2px solid #bfdbfe;
+      }
+      .theme-blueDark {
+        background: #1e3a8a;
+        color: #dbeafe;
+        border: 2px solid #1e40af;
+      }
+      /* Chat bubble styles by theme */
+      .chat-bubble {
+        max-width: 24rem;
+        margin: 8px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        animation: slideIn 0.2s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Default theme bubbles */
+      .theme-default .chat-bubble.user {
+        background: #3b82f6;
+        color: white;
+        margin-left: auto;
+      }
+      .theme-default .chat-bubble.assistant {
+        background: #f3f4f6;
+        color: #111827;
+        margin-right: auto;
+      }
+      /* XP theme bubbles */
+      .theme-xp .chat-bubble {
+        border-radius: 0;
+        border: 2px solid;
+        background: white;
+        color: black;
+        border-top-color: #f3f4f6;
+        border-left-color: #f3f4f6;
+        border-right-color: black;
+        border-bottom-color: black;
+      }
+      /* macOS theme bubbles */
+      .theme-macos .chat-bubble {
+        border-radius: 0;
+        background: white;
+        color: black;
+        border: 2px solid;
+        border-top-color: white;
+        border-left-color: white;
+        border-bottom-color: #6e6e6e;
+        border-right-color: #6e6e6e;
+      }
+      /* Neobrutal theme bubbles */
+      .theme-neobrutal .chat-bubble.user {
+        background: black;
+        color: #fde047;
+        border: 2px solid black;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+      }
+      .theme-neobrutal .chat-bubble.assistant {
+        background: white;
+        color: black;
+        border: 2px solid black;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+      }
+      /* Nintendo theme bubbles */
+      .theme-nintendo .chat-bubble.user {
+        background: white;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+      }
+      .theme-nintendo .chat-bubble.assistant {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+      /* Orange theme bubbles */
+      .theme-orange .chat-bubble.user {
+        background: white;
+        color: #ea580c;
+        border: 1px solid #fdba74;
+      }
+      .theme-orange .chat-bubble.assistant {
+        background: #ffedd5;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+      }
+      /* Orange Dark theme bubbles */
+      .theme-orangeDark .chat-bubble.user {
+        background: #ea580c;
+        color: white;
+        border: 1px solid #c2410c;
+      }
+      .theme-orangeDark .chat-bubble.assistant {
+        background: #9a3412;
+        color: #fed7aa;
+        border: 1px solid #7c2d12;
+      }
+      /* Blue Light theme bubbles */
+      .theme-blueLight .chat-bubble.user {
+        background: #3b82f6;
+        color: white;
+        border: 1px solid #2563eb;
+      }
+      .theme-blueLight .chat-bubble.assistant {
+        background: white;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+      }
+      /* Blue Dark theme bubbles */
+      .theme-blueDark .chat-bubble.user {
+        background: #2563eb;
+        color: white;
+        border: 1px solid #1d4ed8;
+      }
+      .theme-blueDark .chat-bubble.assistant {
+        background: #1e40af;
+        color: #bfdbfe;
+        border: 1px solid #1e3a8a;
+      }
+      /* Buttons */
+      .theme-button {
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+      }
+      .theme-xp .theme-button {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: #f3f4f6;
+        border-left-color: #f3f4f6;
+        border-right-color: black;
+        border-bottom-color: black;
+        background: #d1d5db;
+      }
+      .theme-xp .theme-button:active {
+        border-top-color: black;
+        border-left-color: black;
+        border-right-color: #f3f4f6;
+        border-bottom-color: #f3f4f6;
+      }
+      .theme-macos .theme-button {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: white;
+        border-left-color: white;
+        border-bottom-color: #6e6e6e;
+        border-right-color: #6e6e6e;
+        background: #e0e0e0;
+      }
+      .theme-neobrutal .theme-button {
+        border: 2px solid black;
+        background: #fde047;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+      }
+      .theme-neobrutal .theme-button:active {
+        box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+        transform: translate(2px, 2px);
+      }
+      /* Input styles */
+      .theme-input {
+        flex: 1;
+        padding: 8px 12px;
+        border-radius: 8px;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+      .theme-xp .theme-input {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: black;
+        border-left-color: black;
+        border-right-color: white;
+        border-bottom-color: white;
+      }
+      .theme-macos .theme-input {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: #6e6e6e;
+        border-left-color: #6e6e6e;
+        border-right-color: white;
+        border-bottom-color: white;
+      }
+      .theme-neobrutal .theme-input {
+        border: 2px solid black;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+      }
+      /* Loading animation */
+      .loading-dots {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .loading-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.5;
+        animation: bounce 0.5s ease infinite;
+      }
+      .loading-dot:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .loading-dot:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+      /* Theme dropdown */
+      .theme-dropdown {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 8px;
+        width: 12rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        display: none;
+        background: white;
+        overflow: hidden;
+      }
+
+      .theme-dropdown.show {
+        display: block;
+        animation: fadeIn 0.2s ease;
+      }
+
+      .theme-dropdown button {
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        transition: all 0.15s ease;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+
+      .theme-dropdown button:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      /* Theme-specific dropdown button hover states */
+      .theme-neobrutal .theme-dropdown button:hover {
+        background-color: #fde047;
+      }
+
+      .theme-nintendo .theme-dropdown button:hover {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+
+      .theme-orange .theme-dropdown button:hover {
+        background-color: #ffedd5;
+        color: #9a3412;
+      }
+
+      .theme-orangeDark .theme-dropdown button:hover {
+        background-color: #9a3412;
+        color: #fed7aa;
+      }
+
+      .theme-blueLight .theme-dropdown button:hover {
+        background-color: #dbeafe;
+        color: #1e3a8a;
+      }
+
+      .theme-blueDark .theme-dropdown button:hover {
+        background-color: #1e40af;
+        color: #bfdbfe;
+      }
+
+      .theme-neobrutal .theme-dropdown {
+        border: 2px solid black;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+        background: #fde047;
+      }
+
+      .theme-xp .theme-dropdown {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: #f3f4f6;
+        border-left-color: #f3f4f6;
+        border-right-color: black;
+        border-bottom-color: black;
+        background: #d1d5db;
+      }
+
+      .theme-macos .theme-dropdown {
+        border-radius: 0;
+        border: 2px solid;
+        border-top-color: white;
+        border-left-color: white;
+        border-bottom-color: #6e6e6e;
+        border-right-color: #6e6e6e;
+        background: #e0e0e0;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Specific styles for theme dropdown buttons */
+      .theme-dropdown-button.selected {
+        background-color: #3b82f6; /* Blue-500 */
+        color: white;
+      }
+      .theme-neobrutal .theme-dropdown-button.selected {
+        background-color: black;
+        color: #fde047; /* Yellow-300 */
+      }
+      .theme-nintendo .theme-dropdown-button.selected {
+        background-color: #dc2626; /* Red-600 */
+        color: white;
+      }
+      .theme-orange .theme-dropdown-button.selected {
+        background-color: #ea580c; /* Orange-600 */
+        color: white;
+      }
+      .theme-orangeDark .theme-dropdown-button.selected {
+        background-color: #9a3412; /* Orange-800 */
+        color: #fed7aa; /* Orange-200 */
+      }
+      .theme-blueLight .theme-dropdown-button.selected {
+        background-color: #2563eb; /* Blue-600 */
+        color: white;
+      }
+      .theme-blueDark .theme-dropdown-button.selected {
+        background-color: #1e40af; /* Blue-800 */
+        color: #dbeafe; /* Blue-200 */
+      }
+      .theme-xp .theme-dropdown-button.selected {
+        background-color: #1e40af; /* Blue-800 */
+        color: white;
+      }
+      .theme-macos .theme-dropdown-button.selected {
+        background-color: #6e6e6e; /* Darker gray */
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="theme-default">
+    <div
+      id="sidebar"
+      class="fixed right-0 top-0 h-full z-40 flex flex-col transition-all duration-300 w-96"
+    >
+      <!-- Header -->
+      <div
+        id="header"
+        class="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50"
+      >
+        <div id="header-content" class="flex items-center space-x-2">
+          <div
+            class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
+          >
+            <span class="material-icons text-white text-xl">smart_display</span>
+          </div>
+          <div>
+            <h3 class="font-semibold">YouTube Q&A</h3>
+            <p id="status-text" class="text-xs opacity-75">Ready to help</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-1">
+          <!-- Theme Dropdown Toggle Button -->
+          <div class="relative" id="theme-dropdown-container">
+            <button
+              id="themeButton"
+              class="theme-button flex items-center justify-center"
+              title="Change theme"
+            >
+              <span class="material-icons text-xl">palette</span>
+            </button>
+            <div id="themeDropdown" class="theme-dropdown">
+              <div class="p-2 space-y-1">
+                <!-- Theme options will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Button -->
+          <button
+            id="searchButton"
+            class="theme-button flex items-center justify-center"
+            title="Search in transcript (Ctrl+F)"
+          >
+            <span class="material-icons text-xl">search</span>
+          </button>
+
+          <!-- Minimize Button -->
+          <button
+            id="minimizeButton"
+            class="theme-button flex items-center justify-center"
+            title="Minimize sidebar"
+          >
+            <div class="w-4 h-4 border-2 rounded transition-transform"></div>
+          </button>
+
+          <!-- Close Sidebar Button -->
+          <button
+            id="closeButton"
+            class="theme-button flex items-center justify-center"
+            title="Close sidebar"
+          >
+            <span class="material-icons text-xl">close</span>
+          </button>
+        </div>
+      </div>
+      <!-- Video Info -->
+      <div
+        id="video-info"
+        class="p-4 border-b border-gray-200 bg-gray-50 hidden"
+      >
+        <h4 class="font-medium text-sm mb-2 line-clamp-2" id="video-title"></h4>
+        <div class="flex items-center space-x-4 text-xs opacity-75">
+          <div class="flex items-center space-x-1">
+            <span class="material-icons text-base">person</span>
+            <span id="video-uploader"></span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <span class="material-icons text-base">schedule</span>
+            <span id="video-duration"></span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <span class="material-icons text-base">visibility</span>
+            <span id="video-views"></span>
+          </div>
+        </div>
+        <div
+          id="transcript-badge"
+          class="hidden mt-2 text-xs px-2 py-1 rounded text-green-600 bg-green-50"
+        >
+          ✓ Transcript available (<span id="transcript-length">0</span> chars)
+        </div>
+      </div>
+      <!-- Messages -->
+      <div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div id="welcome-message" class="text-center mt-8 opacity-75">
+          <span
+            class="material-icons mx-auto mb-4 opacity-50"
+            style="font-size: 48px"
+            >smart_display</span
+          >
+          <h3 class="font-medium mb-2">Ask about this video</h3>
+          <p class="text-sm">
+            I can help you understand the content, find specific topics, or
+            answer questions about what's discussed.
+          </p>
+          <div
+            class="mt-4 space-y-2 text-xs text-left p-3 rounded-lg bg-blue-50"
+          >
+            <p class="font-medium">Try asking:</p>
+            <ul class="space-y-1">
+              <li>• "What is this video about?"</li>
+              <li>• "Summarize the main points"</li>
+              <li>• "What does the speaker say about..."</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Input -->
+      <div id="input-container" class="p-4 border-t border-gray-200 bg-white">
+        <form id="chatForm" class="flex space-x-2">
+          <input
+            type="text"
+            id="chatInput"
+            class="theme-input"
+            placeholder="Ask about this video..."
+            disabled
+          />
+          <button type="submit" class="theme-button" disabled>
+            <span class="material-icons text-xl">send</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="sidebar.js"></script>
+  </body>
+</html>

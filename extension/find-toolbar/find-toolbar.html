@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Toolbar</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: transparent;
+            user-select: none;
+        }
+        
+        /* Theme styles */
+        .theme-default {
+            background: white;
+            color: #111827;
+            border: 1px solid #E5E7EB;
+        }
+        .theme-xp {
+            background: #D1D5DB;
+            color: #111827;
+            font-family: Tahoma, "MS Sans Serif", sans-serif;
+            border: 2px solid;
+            border-top-color: #f3f4f6;
+            border-left-color: #f3f4f6;
+            border-right-color: black;
+            border-bottom-color: black;
+        }
+        .theme-macos {
+            background: #c3c3c3;
+            color: black;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            border: 2px solid;
+            border-top-color: white;
+            border-left-color: white;
+            border-bottom-color: #6e6e6e;
+            border-right-color: #6e6e6e;
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.15);
+        }
+        .theme-neobrutal {
+            background: #FDE047;
+            color: black;
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+        .theme-nintendo {
+            background: #EF4444;
+            color: white;
+            font-family: monospace;
+            image-rendering: pixelated;
+            border: 2px solid #DC2626;
+        }
+        .theme-orange {
+            background: #F97316;
+            color: white;
+            border: 2px solid #EA580C;
+        }
+        .theme-orangeDark {
+            background: #7C2D12;
+            color: #FED7AA;
+            border: 2px solid #9A3412;
+        }
+        .theme-blueLight {
+            background: #DBEAFE;
+            color: #1E3A8A;
+            border: 2px solid #BFDBFE;
+        }
+        .theme-blueDark {
+            background: #1E3A8A;
+            color: #DBEAFE;
+            border: 2px solid #1E40AF;
+        }
+        
+        /* Find Input Theme Styles */
+        .theme-default #findInput {
+            background: white;
+            border: 1px solid #D1D5DB;
+            color: #111827;
+        }
+        
+        .theme-xp #findInput {
+            background: white;
+            border: 2px solid;
+            border-top-color: black;
+            border-left-color: black;
+            border-right-color: white;
+            border-bottom-color: white;
+            color: black;
+            border-radius: 0;
+        }
+        
+        .theme-macos #findInput {
+            background: white;
+            border: 2px solid;
+            border-top-color: #6e6e6e;
+            border-left-color: #6e6e6e;
+            border-right-color: white;
+            border-bottom-color: white;
+            color: black;
+            border-radius: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .theme-neobrutal #findInput {
+            background: white;
+            border: 2px solid black;
+            color: black;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .theme-nintendo #findInput {
+            background: white;
+            border: 1px solid #FCA5A5;
+            color: #DC2626;
+        }
+        
+        .theme-orange #findInput {
+            background: white;
+            border: 1px solid #FDBA74;
+            color: #EA580C;
+        }
+        
+        .theme-orangeDark #findInput {
+            background: #EA580C;
+            border: 1px solid #C2410C;
+            color: white;
+        }
+        
+        .theme-blueLight #findInput {
+            background: white;
+            border: 1px solid #BFDBFE;
+            color: #1E40AF;
+        }
+        
+        .theme-blueDark #findInput {
+            background: #2563EB;
+            border: 1px solid #1D4ED8;
+            color: white;
+        }
+        
+        /* Find Button Theme Styles */
+        .theme-default .find-button {
+            background: transparent;
+            color: #6B7280;
+        }
+        
+        .theme-xp .find-button {
+            background: #D1D5DB;
+            border: 2px solid;
+            border-top-color: #f3f4f6;
+            border-left-color: #f3f4f6;
+            border-right-color: black;
+            border-bottom-color: black;
+            color: black;
+            border-radius: 0;
+        }
+        
+        .theme-macos .find-button {
+            background: #e0e0e0;
+            border: 2px solid;
+            border-top-color: white;
+            border-left-color: white;
+            border-bottom-color: #6e6e6e;
+            border-right-color: #6e6e6e;
+            color: black;
+            border-radius: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .theme-neobrutal .find-button {
+            background: #FDE047;
+            border: 2px solid black;
+            color: black;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .theme-nintendo .find-button {
+            background: #DC2626;
+            border: 1px solid #FCA5A5;
+            color: white;
+        }
+        
+        .theme-orange .find-button {
+            background: #EA580C;
+            border: 1px solid #FDBA74;
+            color: white;
+        }
+        
+        .theme-orangeDark .find-button {
+            background: #9A3412;
+            border: 1px solid #7C2D12;
+            color: #FED7AA;
+        }
+        
+        .theme-blueLight .find-button {
+            background: #3B82F6;
+            border: 1px solid #2563EB;
+            color: white;
+        }
+        
+        .theme-blueDark .find-button {
+            background: #1E40AF;
+            border: 1px solid #1D4ED8;
+            color: #DBEAFE;
+        }
+        
+        /* Animation */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .find-toolbar {
+            animation: slideDown 0.2s ease;
+        }
+        
+        /* Focus styles */
+        .find-button:focus {
+            outline: none;
+        }
+        
+        .find-button:hover {
+            opacity: 0.8;
+        }
+        
+        /* Disabled state */
+        .find-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Compact toolbar design */
+        .find-toolbar {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 8px;
+        }
+        
+        .find-input-container {
+            position: relative;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .find-input {
+            width: 100%;
+            height: 28px;
+            padding: 0 8px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+        
+        .find-button {
+            height: 28px;
+            width: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .find-results {
+            font-size: 11px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .find-options {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .find-option {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+    </style>
+</head>
+<body class="theme-default">
+    <div id="findToolbar" class="find-toolbar fixed top-0 left-0 right-0 z-50 hidden">
+        <div id="findToolbarContent" class="w-full h-full flex items-center justify-between px-4">
+            <!-- Left side - Find input and navigation -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-icons text-sm">search</span>
+                    <span class="text-xs font-medium">Find:</span>
+                </div>
+                
+                <div class="find-input-container">
+                    <input
+                        id="findInput"
+                        type="text"
+                        placeholder="Search in transcript..."
+                        class="find-input focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                </div>
+                
+                <div class="flex items-center gap-1">
+                    <button id="findPrevButton" class="find-button" title="Previous (Shift+Enter)">
+                        <span class="material-icons text-sm">keyboard_arrow_up</span>
+                    </button>
+                    <button id="findNextButton" class="find-button" title="Next (Enter)">
+                        <span class="material-icons text-sm">keyboard_arrow_down</span>
+                    </button>
+                </div>
+                
+                <div id="findResults" class="find-results text-xs">
+                    0 of 0
+                </div>
+            </div>
+            
+            <!-- Right side - Options and close -->
+            <div class="flex items-center gap-3">
+                <div class="find-options">
+                    <label class="find-option">
+                        <input type="checkbox" id="findCaseSensitive" class="mr-1">
+                        <span class="text-xs">Case</span>
+                    </label>
+                    <label class="find-option">
+                        <input type="checkbox" id="findWholeWord" class="mr-1">
+                        <span class="text-xs">Word</span>
+                    </label>
+                </div>
+                
+                <button id="findCloseButton" class="find-button" title="Close (Esc)">
+                    <span class="material-icons text-sm">close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="find-toolbar.js"></script>
+</body>
+</html> 

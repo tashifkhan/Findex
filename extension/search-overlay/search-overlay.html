@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Overlay</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: transparent;
+        }
+        
+        /* Theme styles */
+        .theme-default {
+            background: white;
+            color: #111827;
+            border: 1px solid #E5E7EB;
+        }
+        .theme-xp {
+            background: #D1D5DB;
+            color: #111827;
+            font-family: Tahoma, "MS Sans Serif", sans-serif;
+            border: 2px solid;
+            border-top-color: #f3f4f6;
+            border-left-color: #f3f4f6;
+            border-right-color: black;
+            border-bottom-color: black;
+        }
+        .theme-macos {
+            background: #c3c3c3;
+            color: black;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            border: 2px solid;
+            border-top-color: white;
+            border-left-color: white;
+            border-bottom-color: #6e6e6e;
+            border-right-color: #6e6e6e;
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.15);
+        }
+        .theme-neobrutal {
+            background: #FDE047;
+            color: black;
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+        .theme-nintendo {
+            background: #EF4444;
+            color: white;
+            font-family: monospace;
+            image-rendering: pixelated;
+            border: 2px solid #DC2626;
+        }
+        .theme-orange {
+            background: #F97316;
+            color: white;
+            border: 2px solid #EA580C;
+        }
+        .theme-orangeDark {
+            background: #7C2D12;
+            color: #FED7AA;
+            border: 2px solid #9A3412;
+        }
+        .theme-blueLight {
+            background: #DBEAFE;
+            color: #1E3A8A;
+            border: 2px solid #BFDBFE;
+        }
+        .theme-blueDark {
+            background: #1E3A8A;
+            color: #DBEAFE;
+            border: 2px solid #1E40AF;
+        }
+        
+        /* Search Input Theme Styles */
+        .theme-default #searchInput {
+            background: white;
+            border: 1px solid #D1D5DB;
+            color: #111827;
+        }
+        
+        .theme-xp #searchInput {
+            background: white;
+            border: 2px solid;
+            border-top-color: black;
+            border-left-color: black;
+            border-right-color: white;
+            border-bottom-color: white;
+            color: black;
+            border-radius: 0;
+        }
+        
+        .theme-macos #searchInput {
+            background: white;
+            border: 2px solid;
+            border-top-color: #6e6e6e;
+            border-left-color: #6e6e6e;
+            border-right-color: white;
+            border-bottom-color: white;
+            color: black;
+            border-radius: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .theme-neobrutal #searchInput {
+            background: white;
+            border: 2px solid black;
+            color: black;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .theme-nintendo #searchInput {
+            background: white;
+            border: 1px solid #FCA5A5;
+            color: #DC2626;
+        }
+        
+        .theme-orange #searchInput {
+            background: white;
+            border: 1px solid #FDBA74;
+            color: #EA580C;
+        }
+        
+        .theme-orangeDark #searchInput {
+            background: #EA580C;
+            border: 1px solid #C2410C;
+            color: white;
+        }
+        
+        .theme-blueLight #searchInput {
+            background: white;
+            border: 1px solid #BFDBFE;
+            color: #1E40AF;
+        }
+        
+        .theme-blueDark #searchInput {
+            background: #2563EB;
+            border: 1px solid #1D4ED8;
+            color: white;
+        }
+        
+        /* Search Button Theme Styles */
+        .theme-default .search-button {
+            background: transparent;
+            color: #6B7280;
+        }
+        
+        .theme-xp .search-button {
+            background: #D1D5DB;
+            border: 2px solid;
+            border-top-color: #f3f4f6;
+            border-left-color: #f3f4f6;
+            border-right-color: black;
+            border-bottom-color: black;
+            color: black;
+            border-radius: 0;
+        }
+        
+        .theme-macos .search-button {
+            background: #e0e0e0;
+            border: 2px solid;
+            border-top-color: white;
+            border-left-color: white;
+            border-bottom-color: #6e6e6e;
+            border-right-color: #6e6e6e;
+            color: black;
+            border-radius: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .theme-neobrutal .search-button {
+            background: #FDE047;
+            border: 2px solid black;
+            color: black;
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+        }
+        
+        .theme-nintendo .search-button {
+            background: #DC2626;
+            border: 1px solid #FCA5A5;
+            color: white;
+        }
+        
+        .theme-orange .search-button {
+            background: #EA580C;
+            border: 1px solid #FDBA74;
+            color: white;
+        }
+        
+        .theme-orangeDark .search-button {
+            background: #9A3412;
+            border: 1px solid #7C2D12;
+            color: #FED7AA;
+        }
+        
+        .theme-blueLight .search-button {
+            background: #3B82F6;
+            border: 1px solid #2563EB;
+            color: white;
+        }
+        
+        .theme-blueDark .search-button {
+            background: #1E40AF;
+            border: 1px solid #1D4ED8;
+            color: #DBEAFE;
+        }
+        
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .search-overlay {
+            animation: slideIn 0.2s ease;
+        }
+        
+        /* Focus styles */
+        .search-button:focus {
+            outline: none;
+        }
+        
+        .search-button:hover {
+            opacity: 0.8;
+        }
+        
+        /* Disabled state */
+        .search-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="theme-default">
+    <div id="searchOverlay" class="search-overlay fixed top-4 left-4 z-50 w-80">
+        <div id="searchOverlayContent" class="rounded-lg shadow-2xl p-4">
+            <!-- Header -->
+            <div id="searchOverlayHeader" class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="material-icons text-blue-500 text-xl">search</span>
+                    <h3 class="font-semibold text-sm">Search in Video</h3>
+                </div>
+                <button id="searchOverlayClose" class="search-button p-1 rounded transition-colors">
+                    <span class="material-icons text-lg">close</span>
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="mb-3">
+                <div class="relative">
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="Search in transcript..."
+                        class="w-full px-3 py-2 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    />
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                        <span class="material-icons text-gray-400 text-lg">search</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Results Info -->
+            <div id="searchResultsInfo" class="mb-3 flex items-center justify-between hidden">
+                <div class="text-xs text-gray-600">
+                    <span id="searchResultsCount">0</span> results
+                </div>
+                <div class="flex items-center space-x-1">
+                    <button id="searchPrevButton" class="search-button p-1 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" title="Previous result (Shift+Enter)">
+                        <span class="material-icons text-lg">keyboard_arrow_up</span>
+                    </button>
+                    <button id="searchNextButton" class="search-button p-1 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" title="Next result (Enter)">
+                        <span class="material-icons text-lg">keyboard_arrow_down</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="text-xs text-gray-500 space-y-1">
+                <div>
+                    • Press <kbd class="px-1 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> for next result
+                </div>
+                <div>
+                    • Press <kbd class="px-1 py-0.5 bg-gray-100 rounded text-xs">Shift+Enter</kbd> for previous result
+                </div>
+                <div>
+                    • Press <kbd class="px-1 py-0.5 bg-gray-100 rounded text-xs">Esc</kbd> to close
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="search-overlay.js"></script>
+</body>
+</html> 
