@@ -10,22 +10,22 @@ class FindInPage {
         this.closeBtn = null;
         this.caseSensitiveCheckbox = null;
         this.wholeWordCheckbox = null;
-        
+
         this.searchTerm = '';
         this.matches = [];
         this.currentIndex = -1;
         this.highlights = [];
         this.isVisible = false;
-        
+
         this.init();
     }
-    
+
     init() {
         // Create toolbar if it doesn't exist
         if (!document.getElementById('findToolbar')) {
             this.createToolbar();
         }
-        
+
         this.toolbar = document.getElementById('findToolbar');
         this.input = document.getElementById('findInput');
         this.status = document.getElementById('findStatus');
@@ -35,20 +35,20 @@ class FindInPage {
         this.closeBtn = document.getElementById('findCloseBtn');
         this.caseSensitiveCheckbox = document.getElementById('findCaseSensitive');
         this.wholeWordCheckbox = document.getElementById('findWholeWord');
-        
+
         this.bindEvents();
         this.setupKeyboardShortcuts();
     }
-    
+
     createToolbar() {
         const toolbarHTML = `
             <div id="findToolbar" class="find-toolbar">
                 <div class="find-toolbar-header">
                     <div class="find-toolbar-title">
-                        🔍 Find in Page
+                        Find in Page
                         <span class="find-toolbar-shortcut">Ctrl+F</span>
                     </div>
-                    <button class="find-toolbar-close" id="findCloseBtn" title="Close (Esc)">×</button>
+                    <button class="find-toolbar-close" id="findCloseBtn" title="Close (Esc)">X</button>
                 </div>
                 
                 <div class="find-toolbar-input-group">
@@ -74,15 +74,15 @@ class FindInPage {
                 
                 <div class="find-toolbar-controls">
                     <div class="find-toolbar-nav">
-                        <button class="find-toolbar-btn" id="findPrevBtn" title="Previous (Shift+Enter)">↑ Prev</button>
-                        <button class="find-toolbar-btn" id="findNextBtn" title="Next (Enter)">↓ Next</button>
+                        <button class="find-toolbar-btn" id="findPrevBtn" title="Previous (Shift+Enter)">Prev</button>
+                        <button class="find-toolbar-btn" id="findNextBtn" title="Next (Enter)">Next</button>
                         <button class="find-toolbar-btn" id="findClearBtn" title="Clear highlights">Clear</button>
                     </div>
                     <div class="find-toolbar-status" id="findStatus"></div>
                 </div>
             </div>
         `;
-        
+
         // Add CSS if not already present
         if (!document.getElementById('findToolbarStyles')) {
             const style = document.createElement('style');
@@ -237,31 +237,31 @@ class FindInPage {
             `;
             document.head.appendChild(style);
         }
-        
+
         document.body.insertAdjacentHTML('beforeend', toolbarHTML);
     }
-    
+
     bindEvents() {
         // Input events
         this.input.addEventListener('input', (e) => {
             this.searchTerm = e.target.value;
             this.performSearch();
         });
-        
+
         // Button events
         this.prevBtn.addEventListener('click', () => this.goToPrevious());
         this.nextBtn.addEventListener('click', () => this.goToNext());
         this.clearBtn.addEventListener('click', () => this.clearHighlights());
         this.closeBtn.addEventListener('click', () => this.hide());
-        
+
         // Option changes
         this.caseSensitiveCheckbox.addEventListener('change', () => this.performSearch());
         this.wholeWordCheckbox.addEventListener('change', () => this.performSearch());
-        
+
         // Prevent toolbar from closing when clicking inside it
         this.toolbar.addEventListener('click', (e) => e.stopPropagation());
     }
-    
+
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Ctrl+F to show toolbar
@@ -270,17 +270,17 @@ class FindInPage {
                 this.show();
                 return;
             }
-            
+
             // Only handle shortcuts when toolbar is visible
             if (!this.isVisible) return;
-            
+
             // Escape to close
             if (e.key === 'Escape') {
                 e.preventDefault();
                 this.hide();
                 return;
             }
-            
+
             // Enter for next, Shift+Enter for previous
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -293,40 +293,40 @@ class FindInPage {
             }
         });
     }
-    
+
     show() {
         this.isVisible = true;
         this.toolbar.classList.add('show');
         this.input.focus();
         this.input.select();
-        
+
         // If there's a previous search term, restore it
         if (this.searchTerm) {
             this.input.value = this.searchTerm;
             this.performSearch();
         }
     }
-    
+
     hide() {
         this.isVisible = false;
         this.toolbar.classList.remove('show');
         this.clearHighlights();
         this.input.blur();
     }
-    
+
     performSearch() {
         this.clearHighlights();
-        
+
         if (!this.searchTerm.trim()) {
             this.updateStatus('');
             this.updateButtons();
             return;
         }
-        
+
         const searchText = this.searchTerm;
         const caseSensitive = this.caseSensitiveCheckbox.checked;
         const wholeWord = this.wholeWordCheckbox.checked;
-        
+
         // Get all text nodes in the document
         const walker = document.createTreeWalker(
             document.body,
@@ -342,15 +342,15 @@ class FindInPage {
                 }
             }
         );
-        
+
         const matches = [];
         let node;
-        
+
         while (node = walker.nextNode()) {
             const text = node.textContent;
             const searchRegex = this.createSearchRegex(searchText, caseSensitive, wholeWord);
             let match;
-            
+
             while ((match = searchRegex.exec(text)) !== null) {
                 matches.push({
                     node: node,
@@ -360,78 +360,78 @@ class FindInPage {
                 });
             }
         }
-        
+
         this.matches = matches;
         this.currentIndex = matches.length > 0 ? 0 : -1;
-        
+
         if (matches.length > 0) {
             this.highlightMatches();
             this.goToMatch(0);
         }
-        
+
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     createSearchRegex(searchText, caseSensitive, wholeWord) {
         let pattern = searchText;
-        
+
         if (wholeWord) {
             pattern = `\\b${this.escapeRegex(searchText)}\\b`;
         } else {
             pattern = this.escapeRegex(searchText);
         }
-        
+
         const flags = caseSensitive ? 'g' : 'gi';
         return new RegExp(pattern, flags);
     }
-    
+
     escapeRegex(text) {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-    
+
     highlightMatches() {
         this.highlights = [];
-        
+
         this.matches.forEach((match, index) => {
             const highlight = this.createHighlight(match, index);
             this.highlights.push(highlight);
         });
     }
-    
+
     createHighlight(match, index) {
         const node = match.node;
         const parent = node.parentNode;
         const text = node.textContent;
-        
+
         // Create wrapper for the highlighted text
         const wrapper = document.createElement('span');
         wrapper.className = 'find-highlight';
         wrapper.dataset.findIndex = index;
-        
+
         // Split the text node
         const beforeText = text.substring(0, match.start);
         const matchText = text.substring(match.start, match.end);
         const afterText = text.substring(match.end);
-        
+
         // Create text nodes
         if (beforeText) {
             wrapper.appendChild(document.createTextNode(beforeText));
         }
-        
+
         const matchSpan = document.createElement('span');
         matchSpan.textContent = matchText;
         matchSpan.className = 'find-highlight';
         matchSpan.dataset.findIndex = index;
         wrapper.appendChild(matchSpan);
-        
+
         if (afterText) {
             wrapper.appendChild(document.createTextNode(afterText));
         }
-        
+
         // Replace the original text node
         parent.replaceChild(wrapper, node);
-        
+
         return {
             wrapper: wrapper,
             matchSpan: matchSpan,
@@ -439,51 +439,51 @@ class FindInPage {
             originalText: text
         };
     }
-    
+
     goToMatch(index) {
         if (index < 0 || index >= this.matches.length) return;
-        
+
         // Remove current highlight
         this.removeCurrentHighlight();
-        
+
         this.currentIndex = index;
-        
+
         // Add current highlight
         this.addCurrentHighlight();
-        
+
         // Scroll to the match
         this.scrollToMatch();
-        
+
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     goToNext() {
         if (this.matches.length === 0) return;
-        
+
         const nextIndex = (this.currentIndex + 1) % this.matches.length;
         this.goToMatch(nextIndex);
     }
-    
+
     goToPrevious() {
         if (this.matches.length === 0) return;
-        
+
         const prevIndex = this.currentIndex === 0 ? this.matches.length - 1 : this.currentIndex - 1;
         this.goToMatch(prevIndex);
     }
-    
+
     removeCurrentHighlight() {
         if (this.currentIndex >= 0 && this.highlights[this.currentIndex]) {
             this.highlights[this.currentIndex].matchSpan.classList.remove('current');
         }
     }
-    
+
     addCurrentHighlight() {
         if (this.currentIndex >= 0 && this.highlights[this.currentIndex]) {
             this.highlights[this.currentIndex].matchSpan.classList.add('current');
         }
     }
-    
+
     scrollToMatch() {
         if (this.currentIndex >= 0 && this.highlights[this.currentIndex]) {
             const matchSpan = this.highlights[this.currentIndex].matchSpan;
@@ -494,7 +494,7 @@ class FindInPage {
             });
         }
     }
-    
+
     clearHighlights() {
         // Restore original text nodes
         this.highlights.forEach(highlight => {
@@ -502,15 +502,15 @@ class FindInPage {
                 highlight.wrapper.parentNode.replaceChild(highlight.originalNode, highlight.wrapper);
             }
         });
-        
+
         this.highlights = [];
         this.matches = [];
         this.currentIndex = -1;
-        
+
         this.updateStatus('');
         this.updateButtons();
     }
-    
+
     updateStatus() {
         if (this.matches.length === 0) {
             if (this.searchTerm.trim()) {
@@ -525,11 +525,11 @@ class FindInPage {
             this.status.classList.remove('no-results');
         }
     }
-    
+
     updateButtons() {
         const hasMatches = this.matches.length > 0;
         const hasHighlights = this.highlights.length > 0;
-        
+
         this.prevBtn.disabled = !hasMatches;
         this.nextBtn.disabled = !hasMatches;
         this.clearBtn.disabled = !hasHighlights;
