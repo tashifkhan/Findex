@@ -84,7 +84,15 @@ export default function Features() {
 					{features.map((feature, index) => (
 						<div
 							key={index}
-							className="group bg-gray-800 rounded-xl border border-gray-700 p-8 hover:shadow-xl transition-all duration-300 hover:border-gray-500 hover:-translate-y-1"
+							className="group rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
 						>
 							<div
 								className="w-12 h-12 rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300"
@@ -107,7 +115,14 @@ export default function Features() {
 				{/* Tech Stack Info */}
 				<div
 					className="mt-20 rounded-2xl p-8 md:p-12 text-white"
-					style={{ background: "var(--accent-gradient)" }}
+					style={{
+						background: "rgba(20, 30, 40, 0.35)",
+						border: "1px solid rgba(255,255,255,0.18)",
+						borderRadius: "2rem",
+						backdropFilter: "blur(16px)",
+						WebkitBackdropFilter: "blur(16px)",
+						boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+					}}
 				>
 					<div className="text-center mb-8">
 						<h3 className="text-3xl font-bold mb-4">Built with Modern Tech</h3>

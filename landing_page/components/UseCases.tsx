@@ -94,7 +94,15 @@ export default function UseCases() {
 					{useCases.map((useCase, index) => (
 						<div
 							key={index}
-							className="bg-gray-800 rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300 border border-gray-700"
+							className="rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all duration-300"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1.5rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
 						>
 							{/* Header */}
 							<div className="flex items-start gap-4 mb-6">
@@ -142,7 +150,14 @@ export default function UseCases() {
 				{/* Stats Section */}
 				<div
 					className="mt-20 rounded-2xl shadow-lg p-8 md:p-12"
-					style={{ background: "var(--accent-gradient)" }}
+					style={{
+						background: "rgba(20, 30, 40, 0.35)",
+						border: "1px solid rgba(255,255,255,0.18)",
+						borderRadius: "2rem",
+						backdropFilter: "blur(16px)",
+						WebkitBackdropFilter: "blur(16px)",
+						boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+					}}
 				>
 					<div className="text-center mb-12">
 						<h3

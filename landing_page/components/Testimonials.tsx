@@ -120,7 +120,15 @@ export default function Testimonials() {
 					{testimonials.map((testimonial, index) => (
 						<div
 							key={index}
-							className="bg-gray-800 border border-gray-700 rounded-xl p-8 hover:shadow-lg transition-shadow duration-300"
+							className="rounded-xl p-8 hover:shadow-lg transition-shadow duration-300"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
 						>
 							{/* Rating */}
 							<div className="flex items-center gap-1 mb-4">

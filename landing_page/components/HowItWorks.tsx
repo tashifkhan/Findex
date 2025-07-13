@@ -70,7 +70,17 @@ export default function HowItWorks() {
 								</div>
 							)}
 
-							<div className="bg-gray-800 rounded-xl shadow-lg p-8 text-center relative z-10 border border-gray-700 hover:shadow-xl transition-shadow duration-300">
+							<div
+								className="rounded-xl shadow-lg p-8 text-center relative z-10 hover:shadow-xl transition-shadow duration-300"
+								style={{
+									background: "rgba(20, 30, 40, 0.35)",
+									border: "1px solid rgba(255,255,255,0.18)",
+									borderRadius: "1rem",
+									backdropFilter: "blur(16px)",
+									WebkitBackdropFilter: "blur(16px)",
+									boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+								}}
+							>
 								{/* Step Number */}
 								<div
 									className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm"
@@ -113,7 +123,17 @@ export default function HowItWorks() {
 
 				{/* Additional Info */}
 				<div className="text-center mt-16">
-					<div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-700">
+					<div
+						className="rounded-xl shadow-lg p-8 max-w-4xl mx-auto"
+						style={{
+							background: "rgba(20, 30, 40, 0.35)",
+							border: "1px solid rgba(255,255,255,0.18)",
+							borderRadius: "1rem",
+							backdropFilter: "blur(16px)",
+							WebkitBackdropFilter: "blur(16px)",
+							boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+						}}
+					>
 						<h3 className="text-2xl font-bold text-white mb-4">
 							Powered by Advanced AI
 						</h3>

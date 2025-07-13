@@ -88,7 +88,17 @@ export default function Demo() {
 
 				{/* Main Demo Display */}
 				<div className="max-w-5xl mx-auto">
-					<div className="relative bg-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+					<div
+						className="relative rounded-2xl overflow-hidden shadow-2xl"
+						style={{
+							background: "rgba(20, 30, 40, 0.35)",
+							border: "1px solid rgba(255,255,255,0.18)",
+							borderRadius: "2rem",
+							backdropFilter: "blur(16px)",
+							WebkitBackdropFilter: "blur(16px)",
+							boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+						}}
+					>
 						{/* Demo Content */}
 						<div className="relative aspect-video bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 							{/* Placeholder for actual demo video/gif */}
@@ -159,15 +169,20 @@ export default function Demo() {
 										? "shadow-lg"
 										: "border-gray-600 hover:border-gray-500"
 								}`}
-								style={
-									index === currentDemo
-										? {
-												borderColor: "var(--accent-ocean)",
-												boxShadow:
-													"0 0 0 4px var(--accent-ocean), 0 4px 24px 0 rgba(56,189,248,0.15)",
-										  }
-										: {}
-								}
+								style={{
+									background: "rgba(20, 30, 40, 0.35)",
+									border:
+										index === currentDemo
+											? "2px solid var(--accent-ocean)"
+											: "2px solid rgba(255,255,255,0.18)",
+									borderRadius: "1rem",
+									backdropFilter: "blur(16px)",
+									WebkitBackdropFilter: "blur(16px)",
+									boxShadow:
+										index === currentDemo
+											? "0 0 0 4px var(--accent-ocean), 0 4px 24px 0 rgba(56,189,248,0.15)"
+											: "0 4px 32px 0 rgba(0,0,0,0.12)",
+								}}
 							>
 								<div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 									<div className="text-center p-2">

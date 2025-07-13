@@ -79,7 +79,17 @@ export default function Hero() {
 					{/* Key Benefits */}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
 						{/* Semantic Search */}
-						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+						<div
+							className="rounded-lg p-6"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
+						>
 							<div
 								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
 								style={{ background: "var(--accent-ocean)" }}
@@ -92,7 +102,17 @@ export default function Hero() {
 							</p>
 						</div>
 						{/* YouTube Integration */}
-						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+						<div
+							className="rounded-lg p-6"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
+						>
 							<div
 								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
 								style={{ background: "var(--accent-orange)" }}
@@ -107,7 +127,17 @@ export default function Hero() {
 							</p>
 						</div>
 						{/* Bring Your Own */}
-						<div className="bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+						<div
+							className="rounded-lg p-6"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
+						>
 							<div
 								className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
 								style={{ background: "var(--accent-teal)" }}
@@ -176,7 +206,17 @@ export default function Hero() {
 					</div>
 					{/* Hero Demo Placeholder */}
 					<div className="mt-16 max-w-4xl mx-auto">
-						<div className="bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-700 p-8 text-center">
+						<div
+							className="rounded-xl p-8 text-center"
+							style={{
+								background: "rgba(20, 30, 40, 0.35)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								borderRadius: "1rem",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+							}}
+						>
 							<div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 mb-4">
 								<p className="text-gray-300 mb-4">
 									<Github className="w-6 h-6" /> Demo video coming soon!
