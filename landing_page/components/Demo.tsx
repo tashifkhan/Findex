@@ -56,7 +56,7 @@ export default function Demo() {
 		<section className="py-20 bg-gray-900 text-white">
 			<div className="container mx-auto px-6">
 				<div className="text-center mb-16">
-					<h2 className="text-4xl md:text-5xl font-bold mb-6">
+					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						See FindexAI in Action
 					</h2>
 					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -72,10 +72,10 @@ export default function Demo() {
 						<div className="relative aspect-video bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 							{/* Placeholder for actual demo video/gif */}
 							<div className="text-center p-8">
-								<div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+								<div className="w-24 h-24 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6">
 									<Play className="w-12 h-12 text-white ml-1" />
 								</div>
-								<h3 className="text-2xl font-bold mb-4">
+								<h3 className="text-2xl font-bold text-white mb-4">
 									{demos[currentDemo].title}
 								</h3>
 								<p className="text-gray-300 max-w-md mx-auto">
@@ -110,7 +110,7 @@ export default function Demo() {
 						<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
 							<div className="flex items-center justify-between">
 								<div>
-									<h4 className="font-semibold text-lg">
+									<h4 className="font-semibold text-lg text-white">
 										{demos[currentDemo].title}
 									</h4>
 									<p className="text-gray-300 text-sm">
@@ -138,10 +138,12 @@ export default function Demo() {
 							>
 								<div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
 									<div className="text-center p-2">
-										<div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
+										<div className="w-8 h-8 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-2">
 											<Play className="w-4 h-4 text-white ml-0.5" />
 										</div>
-										<div className="text-xs font-medium">{demo.title}</div>
+										<div className="text-xs font-medium text-white">
+											{demo.title}
+										</div>
 									</div>
 								</div>
 							</button>
@@ -155,7 +157,9 @@ export default function Demo() {
 						<div className="text-3xl mb-4">
 							<Zap className="w-6 h-6" />
 						</div>
-						<h4 className="font-semibold text-lg mb-2">Lightning Fast</h4>
+						<h4 className="font-semibold text-lg mb-2 text-white">
+							Lightning Fast
+						</h4>
 						<p className="text-gray-400 text-sm">
 							FAISS-powered vector search delivers results in milliseconds
 						</p>
@@ -164,7 +168,9 @@ export default function Demo() {
 						<div className="text-3xl mb-4">
 							<Cpu className="w-6 h-6" />
 						</div>
-						<h4 className="font-semibold text-lg mb-2">Contextually Aware</h4>
+						<h4 className="font-semibold text-lg mb-2 text-white">
+							Contextually Aware
+						</h4>
 						<p className="text-gray-400 text-sm">
 							AI understands meaning, not just keywords
 						</p>
@@ -173,7 +179,9 @@ export default function Demo() {
 						<div className="text-3xl mb-4">
 							<Shield className="w-6 h-6" />
 						</div>
-						<h4 className="font-semibold text-lg mb-2">Privacy First</h4>
+						<h4 className="font-semibold text-lg mb-2 text-white">
+							Privacy First
+						</h4>
 						<p className="text-gray-400 text-sm">
 							Your data stays private with BYOK approach
 						</p>

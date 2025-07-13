@@ -70,7 +70,7 @@ export default function Footer() {
 	};
 
 	return (
-		<footer className="bg-gray-900 text-white">
+		<footer className="bg-gray-900 text-white border-t border-gray-800">
 			{/* Main Footer */}
 			<div className="container mx-auto px-6 py-16">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -81,8 +81,8 @@ export default function Footer() {
 								FindexAI
 							</h3>
 							<p className="text-gray-400 mt-2 leading-relaxed">
-								Your Ctrl + F on steroids. AI-powered search, multi-agent
-								context, and real-time web results—all in your browser sidebar.
+								Your browser’s sidebar for instant, semantic answers. No more
+								endless scrolling—just ask and find.
 							</p>
 						</div>
 
@@ -97,7 +97,7 @@ export default function Footer() {
 								/>
 								<button
 									type="submit"
-									className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 rounded-lg font-medium transition-colors"
+									className="px-6 py-2 bg-gray-700 hover:bg-gray-600 border border-gray-700 rounded-lg font-medium transition-colors"
 								>
 									Subscribe
 								</button>

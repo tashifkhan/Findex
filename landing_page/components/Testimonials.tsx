@@ -67,13 +67,13 @@ export default function Testimonials() {
 	];
 
 	return (
-		<section className="py-20 bg-white">
+		<section className="py-20 bg-gray-900 text-white">
 			<div className="container mx-auto px-6">
 				<div className="text-center mb-16">
-					<h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						Loved by Knowledge Workers
 					</h2>
-					<p className="text-xl text-gray-600 max-w-3xl mx-auto">
+					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
 						Join thousands of users who've transformed their browsing and
 						research experience
 					</p>
@@ -82,14 +82,14 @@ export default function Testimonials() {
 				{/* Metrics */}
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 max-w-4xl mx-auto">
 					{metrics.map((metric, index) => (
-						<div key={index} className="text-center p-6 bg-gray-50 rounded-xl">
-							<div className="flex items-center justify-center text-purple-600 mb-2">
+						<div key={index} className="text-center p-6 bg-gray-800 rounded-xl">
+							<div className="flex items-center justify-center text-purple-400 mb-2">
 								{metric.icon}
 							</div>
-							<div className="text-2xl font-bold text-gray-900 mb-1">
+							<div className="text-2xl font-bold text-white mb-1">
 								{metric.value}
 							</div>
-							<div className="text-sm text-gray-600">{metric.label}</div>
+							<div className="text-sm text-gray-300">{metric.label}</div>
 						</div>
 					))}
 				</div>
@@ -99,7 +99,7 @@ export default function Testimonials() {
 					{testimonials.map((testimonial, index) => (
 						<div
 							key={index}
-							className="bg-white border border-gray-200 rounded-xl p-8 hover:shadow-lg transition-shadow duration-300"
+							className="bg-gray-800 border border-gray-700 rounded-xl p-8 hover:shadow-lg transition-shadow duration-300"
 						>
 							{/* Rating */}
 							<div className="flex items-center gap-1 mb-4">
@@ -112,20 +112,20 @@ export default function Testimonials() {
 							</div>
 
 							{/* Content */}
-							<blockquote className="text-gray-700 leading-relaxed mb-6 text-lg">
+							<blockquote className="text-gray-300 leading-relaxed mb-6 text-lg">
 								"{testimonial.content}"
 							</blockquote>
 
 							{/* Author */}
 							<div className="flex items-center gap-4">
-								<div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+								<div className="w-12 h-12 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center text-white font-bold">
 									{testimonial.avatar}
 								</div>
 								<div className="flex-1">
-									<div className="font-semibold text-gray-900">
+									<div className="font-semibold text-white">
 										{testimonial.name}
 									</div>
-									<div className="text-gray-600 text-sm">
+									<div className="text-gray-400 text-sm">
 										{testimonial.role}
 									</div>
 								</div>
@@ -143,11 +143,11 @@ export default function Testimonials() {
 
 				{/* Social Proof */}
 				<div className="mt-16 text-center">
-					<div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-8 max-w-4xl mx-auto">
-						<h3 className="text-2xl font-bold text-gray-900 mb-4">
+					<div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-8 max-w-4xl mx-auto">
+						<h3 className="text-2xl font-bold text-white mb-4">
 							Join the Community
 						</h3>
-						<p className="text-gray-600 mb-6">
+						<p className="text-gray-300 mb-6">
 							Connect with other FindexAI users, share tips, and get support
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">

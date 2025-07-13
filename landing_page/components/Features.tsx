@@ -47,13 +47,13 @@ export default function Features() {
 	];
 
 	return (
-		<section className="py-20 bg-white">
+		<section className="py-20 bg-gray-900 text-white">
 			<div className="container mx-auto px-6">
 				<div className="text-center mb-16">
-					<h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+					<h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
 						Deep Dive Features
 					</h2>
-					<p className="text-xl text-gray-600 max-w-3xl mx-auto">
+					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
 						Built for power users who need more than basic search. Every feature
 						designed with privacy, performance, and productivity in mind.
 					</p>
@@ -63,7 +63,7 @@ export default function Features() {
 					{features.map((feature, index) => (
 						<div
 							key={index}
-							className="group bg-white rounded-xl border border-gray-200 p-8 hover:shadow-xl transition-all duration-300 hover:border-gray-300 hover:-translate-y-1"
+							className="group bg-gray-800 rounded-xl border border-gray-700 p-8 hover:shadow-xl transition-all duration-300 hover:border-gray-500 hover:-translate-y-1"
 						>
 							<div
 								className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}
@@ -71,11 +71,11 @@ export default function Features() {
 								{feature.icon}
 							</div>
 
-							<h3 className="text-xl font-bold text-gray-900 mb-4">
+							<h3 className="text-xl font-bold text-white mb-4">
 								{feature.title}
 							</h3>
 
-							<p className="text-gray-600 leading-relaxed">
+							<p className="text-gray-300 leading-relaxed">
 								{feature.description}
 							</p>
 						</div>
@@ -83,7 +83,7 @@ export default function Features() {
 				</div>
 
 				{/* Tech Stack Info */}
-				<div className="mt-20 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 md:p-12 text-white">
+				<div className="mt-20 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-8 md:p-12 text-white">
 					<div className="text-center mb-8">
 						<h3 className="text-3xl font-bold mb-4">Built with Modern Tech</h3>
 						<p className="text-gray-300 text-lg">
@@ -92,24 +92,24 @@ export default function Features() {
 					</div>
 
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-						<div className="bg-white/10 rounded-lg p-4">
+						<div className="bg-gray-900 rounded-lg p-4">
 							<Cpu className="w-6 h-6 mb-2" />
-							<div className="font-semibold">LangChain</div>
+							<div className="font-semibold text-white">LangChain</div>
 							<div className="text-sm text-gray-400">AI Framework</div>
 						</div>
-						<div className="bg-white/10 rounded-lg p-4">
+						<div className="bg-gray-900 rounded-lg p-4">
 							<Zap className="w-6 h-6 mb-2" />
-							<div className="font-semibold">FastAPI</div>
+							<div className="font-semibold text-white">FastAPI</div>
 							<div className="text-sm text-gray-400">Backend</div>
 						</div>
-						<div className="bg-white/10 rounded-lg p-4">
+						<div className="bg-gray-900 rounded-lg p-4">
 							<Search className="w-6 h-6 mb-2" />
-							<div className="font-semibold">FAISS</div>
+							<div className="font-semibold text-white">FAISS</div>
 							<div className="text-sm text-gray-400">Vector Search</div>
 						</div>
-						<div className="bg-white/10 rounded-lg p-4">
+						<div className="bg-gray-900 rounded-lg p-4">
 							<Globe className="w-6 h-6 mb-2" />
-							<div className="font-semibold">WebExtension</div>
+							<div className="font-semibold text-white">WebExtension</div>
 							<div className="text-sm text-gray-400">Cross-browser</div>
 						</div>
 					</div>

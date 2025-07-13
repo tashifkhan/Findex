@@ -25,7 +25,7 @@ export default function HowItWorks() {
 	];
 
 	return (
-		<section className="py-20 bg-gray-50">
+		<section className="py-20 bg-gray-900 text-white">
 			<div className="container mx-auto px-6">
 				<div className="text-center mb-16">
 					<h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -46,22 +46,22 @@ export default function HowItWorks() {
 								</div>
 							)}
 
-							<div className="bg-white rounded-xl shadow-lg p-8 text-center relative z-10 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+							<div className="bg-gray-800 rounded-xl shadow-lg p-8 text-center relative z-10 border border-gray-700 hover:shadow-xl transition-shadow duration-300">
 								{/* Step Number */}
 								<div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
 									{index + 1}
 								</div>
 
 								{/* Icon */}
-								<div className="w-16 h-16 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 mt-4">
+								<div className="w-16 h-16 bg-gradient-to-r from-purple-700 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6 mt-4">
 									<div className="text-purple-600">{step.icon}</div>
 								</div>
 
 								{/* Content */}
-								<h3 className="text-xl font-bold text-gray-900 mb-4">
+								<h3 className="text-xl font-bold text-white mb-4">
 									{step.title}
 								</h3>
-								<p className="text-gray-600 mb-6 leading-relaxed">
+								<p className="text-gray-300 mb-6 leading-relaxed">
 									{step.description}
 								</p>
 
@@ -83,11 +83,11 @@ export default function HowItWorks() {
 
 				{/* Additional Info */}
 				<div className="text-center mt-16">
-					<div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-200">
-						<h3 className="text-2xl font-bold text-gray-900 mb-4">
+					<div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto border border-gray-700">
+						<h3 className="text-2xl font-bold text-white mb-4">
 							Powered by Advanced AI
 						</h3>
-						<p className="text-gray-600 leading-relaxed">
+						<p className="text-gray-300 leading-relaxed">
 							FindexAI uses multi-agent systems, FAISS vector search, and your
 							choice of LLMs (OpenAI, Anthropic, or local models) to understand
 							context and provide intelligent answers. All processing respects
