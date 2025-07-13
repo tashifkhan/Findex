@@ -3,7 +3,7 @@ class FixedFindTool {
     constructor() {
         try {
             console.log('FixedFindTool constructor called');
-            
+
             this.toolbar = null;
             this.input = null;
             this.status = null;
@@ -14,28 +14,28 @@ class FixedFindTool {
             this.caseSensitiveCheckbox = null;
             this.wholeWordCheckbox = null;
             this.searchInHTMLCheckbox = null;
-            
+
             this.searchTerm = '';
             this.matches = [];
             this.currentIndex = -1;
             this.highlights = [];
             this.isVisible = false;
             this.searchInHTML = false;
-            
+
             console.log('FixedFindTool properties initialized');
             this.init();
         } catch (error) {
             console.error('Error in FixedFindTool constructor:', error);
         }
     }
-    
+
     init() {
         try {
             // Create toolbar if it doesn't exist
             if (!document.getElementById('fixedFindToolbar')) {
                 this.createToolbar();
             }
-            
+
             // Wait a bit for the DOM to be ready
             setTimeout(() => {
                 // Check if toolbar was created successfully
@@ -53,7 +53,7 @@ class FixedFindTool {
             }, 100);
         }
     }
-    
+
     initializeElements(retryCount = 0) {
         try {
             // Limit retries to prevent infinite loops
@@ -61,7 +61,7 @@ class FixedFindTool {
                 console.error('FixedFindTool initialization failed after 20 retries');
                 return;
             }
-            
+
             this.toolbar = document.getElementById('fixedFindToolbar');
             this.input = document.getElementById('fixedFindInput');
             this.status = document.getElementById('fixedFindStatus');
@@ -72,10 +72,10 @@ class FixedFindTool {
             this.caseSensitiveCheckbox = document.getElementById('fixedFindCaseSensitive');
             this.wholeWordCheckbox = document.getElementById('fixedFindWholeWord');
             this.searchInHTMLCheckbox = document.getElementById('fixedFindInHTML');
-            
+
             // Check if all elements are found
-            if (!this.toolbar || !this.input || !this.status || !this.prevBtn || 
-                !this.nextBtn || !this.clearBtn || !this.closeBtn || 
+            if (!this.toolbar || !this.input || !this.status || !this.prevBtn ||
+                !this.nextBtn || !this.clearBtn || !this.closeBtn ||
                 !this.caseSensitiveCheckbox || !this.wholeWordCheckbox || !this.searchInHTMLCheckbox) {
                 console.log(`FixedFindTool elements not found, retrying... (attempt ${retryCount + 1}/20)`);
                 setTimeout(() => {
@@ -83,7 +83,7 @@ class FixedFindTool {
                 }, 100);
                 return;
             }
-            
+
             this.bindEvents();
             this.setupKeyboardShortcuts();
             console.log('FixedFindTool initialized successfully');
@@ -91,11 +91,11 @@ class FixedFindTool {
             console.error('Error initializing FixedFindTool elements:', error);
         }
     }
-    
+
     createToolbar() {
         try {
             console.log('Creating toolbar...');
-            
+
             // Check if DOM is ready
             if (!document.body) {
                 console.log('Document body not ready, waiting...');
@@ -104,7 +104,7 @@ class FixedFindTool {
                 }, 50);
                 return;
             }
-            
+
             // Add CSS if not already present
             if (!document.getElementById('fixedFindToolbarStyles')) {
                 const style = document.createElement('style');
@@ -124,6 +124,17 @@ class FixedFindTool {
                         font-size: 14px;
                         min-width: 320px;
                         display: none;
+                        transition: background 0.3s, border 0.3s, color 0.3s;
+                    }
+                    .fixed-find-toolbar.retro {
+                        background: #f4f1ee;
+                        border: 3px solid #222;
+                        border-radius: 0.75rem;
+                        box-shadow: 0 8px 32px #0008, 0 0 0 4px #f7d51d inset;
+                        font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
+                        color: #222;
+                        letter-spacing: 0.5px;
+                        text-shadow: 1px 1px 0 #fff, 2px 2px 0 #f7d51d;
                     }
                     .fixed-find-toolbar.show {
                         display: block;
@@ -146,6 +157,10 @@ class FixedFindTool {
                         align-items: center;
                         gap: 6px;
                     }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-title {
+                        color: #222;
+                        text-shadow: 1px 1px 0 #fff, 2px 2px 0 #f7d51d;
+                    }
                     .fixed-find-toolbar-shortcut {
                         font-size: 11px;
                         color: #6b7280;
@@ -153,6 +168,12 @@ class FixedFindTool {
                         padding: 2px 6px;
                         border-radius: 3px;
                         font-weight: normal;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-shortcut {
+                        background: #f7d51d;
+                        color: #222;
+                        border: 1px solid #222;
+                        font-family: inherit;
                     }
                     .fixed-find-toolbar-close {
                         background: none;
@@ -163,10 +184,22 @@ class FixedFindTool {
                         color: #6b7280;
                         font-size: 16px;
                         line-height: 1;
+                        transition: background 0.2s, color 0.2s;
                     }
                     .fixed-find-toolbar-close:hover {
                         background: #f3f4f6;
                         color: #374151;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-close {
+                        color: #222;
+                        border: 1px solid #222;
+                        background: #f7d51d;
+                        border-radius: 6px;
+                        font-size: 18px;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-close:hover {
+                        background: #fffbe6;
+                        color: #f7d51d;
                     }
                     .fixed-find-toolbar-input-group {
                         display: flex;
@@ -181,10 +214,23 @@ class FixedFindTool {
                         border-radius: 4px;
                         font-size: 14px;
                         outline: none;
+                        background: #fff;
+                        color: #222;
+                        font-family: inherit;
+                        transition: border 0.2s, box-shadow 0.2s;
                     }
                     .fixed-find-toolbar-input:focus {
                         border-color: #3b82f6;
                         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-input {
+                        border: 2px solid #222;
+                        border-radius: 0.5rem;
+                        background: #fffbe6;
+                        color: #222;
+                        font-family: inherit;
+                        font-size: 13px;
+                        box-shadow: 0 2px 0 #f7d51d inset;
                     }
                     .fixed-find-toolbar-options {
                         display: flex;
@@ -199,6 +245,11 @@ class FixedFindTool {
                         gap: 4px;
                         font-size: 12px;
                         color: #6b7280;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-checkbox {
+                        color: #222;
+                        font-family: inherit;
+                        font-size: 12px;
                     }
                     .fixed-find-toolbar-checkbox input { margin: 0; }
                     .fixed-find-toolbar-controls {
@@ -229,12 +280,31 @@ class FixedFindTool {
                         opacity: 0.5;
                         cursor: not-allowed;
                     }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-btn {
+                        border: 2px solid #222;
+                        background: #f7d51d;
+                        color: #222;
+                        border-radius: 0.5rem;
+                        font-family: inherit;
+                        font-size: 12px;
+                        box-shadow: 0 2px 0 #fffbe6 inset;
+                        text-shadow: none;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-btn:hover:not(:disabled) {
+                        background: #fffbe6;
+                        color: #f7d51d;
+                        border-color: #f7d51d;
+                    }
                     .fixed-find-toolbar-status {
                         font-size: 12px;
                         color: #6b7280;
                         text-align: right;
                     }
-                    
+                    .fixed-find-toolbar.retro .fixed-find-toolbar-status {
+                        color: #222;
+                        font-family: inherit;
+                        text-shadow: 1px 1px 0 #fff;
+                    }
                     /* Highlight styles */
                     .fixed-find-highlight {
                         background-color: #fef3c7;
@@ -247,7 +317,22 @@ class FixedFindTool {
                         border-color: #d97706;
                         box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
                     }
-                    
+                    .fixed-find-toolbar.retro .fixed-find-highlight {
+                        background-color: #f7d51d;
+                        border: 2px solid #222;
+                        color: #222;
+                        border-radius: 0.5rem;
+                        font-family: inherit;
+                        padding: 2px 4px;
+                        text-shadow: 1px 1px 0 #fff;
+                    }
+                    .fixed-find-toolbar.retro .fixed-find-highlight.current {
+                        background-color: #fffbe6;
+                        border-color: #f7d51d;
+                        box-shadow: 0 0 0 2px #222;
+                    }
+                    /* Retro font import */
+                    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
                     /* Responsive design */
                     @media (max-width: 768px) {
                         .fixed-find-toolbar {
@@ -265,51 +350,69 @@ class FixedFindTool {
                 `;
                 document.head.appendChild(style);
             }
-            
+
             // Build toolbar programmatically to avoid TrustedHTML issues
             const toolbarElement = document.createElement('div');
             toolbarElement.id = 'fixedFindToolbar';
             toolbarElement.className = 'fixed-find-toolbar';
-            
+
             // Create header
             const header = document.createElement('div');
             header.className = 'fixed-find-toolbar-header';
-            
+
             const title = document.createElement('div');
             title.className = 'fixed-find-toolbar-title';
             title.textContent = '🔍 DOM Search';
-            
+
             const shortcut = document.createElement('span');
             shortcut.className = 'fixed-find-toolbar-shortcut';
             shortcut.textContent = 'Ctrl+Shift+F';
             title.appendChild(shortcut);
-            
+
+            // Retro theme toggle button
+            const retroToggle = document.createElement('button');
+            retroToggle.className = 'fixed-find-toolbar-btn';
+            retroToggle.style.marginLeft = '10px';
+            retroToggle.style.fontFamily = 'inherit';
+            retroToggle.style.fontSize = '11px';
+            retroToggle.style.padding = '4px 10px';
+            retroToggle.style.background = '#f7d51d';
+            retroToggle.style.border = '2px solid #222';
+            retroToggle.style.borderRadius = '0.5rem';
+            retroToggle.style.cursor = 'pointer';
+            retroToggle.textContent = 'RETRO';
+            retroToggle.title = 'Toggle Retro Theme';
+            retroToggle.addEventListener('click', function () {
+                toolbarElement.classList.toggle('retro');
+            });
+            title.appendChild(retroToggle);
+
             const closeBtn = document.createElement('button');
             closeBtn.className = 'fixed-find-toolbar-close';
             closeBtn.id = 'fixedFindCloseBtn';
             closeBtn.title = 'Close (Esc)';
             closeBtn.textContent = '×';
-            
+
             header.appendChild(title);
             header.appendChild(closeBtn);
-            
+
             // Create input group
             const inputGroup = document.createElement('div');
             inputGroup.className = 'fixed-find-toolbar-input-group';
-            
+
             const input = document.createElement('input');
             input.type = 'text';
             input.id = 'fixedFindInput';
             input.className = 'fixed-find-toolbar-input';
             input.placeholder = 'Search in DOM...';
             input.autocomplete = 'off';
-            
+
             inputGroup.appendChild(input);
-            
+
             // Create options
             const options = document.createElement('div');
             options.className = 'fixed-find-toolbar-options';
-            
+
             const caseSensitiveLabel = document.createElement('label');
             caseSensitiveLabel.className = 'fixed-find-toolbar-checkbox';
             const caseSensitiveCheckbox = document.createElement('input');
@@ -317,7 +420,7 @@ class FixedFindTool {
             caseSensitiveCheckbox.id = 'fixedFindCaseSensitive';
             caseSensitiveLabel.appendChild(caseSensitiveCheckbox);
             caseSensitiveLabel.appendChild(document.createTextNode(' Case sensitive'));
-            
+
             const wholeWordLabel = document.createElement('label');
             wholeWordLabel.className = 'fixed-find-toolbar-checkbox';
             const wholeWordCheckbox = document.createElement('input');
@@ -325,7 +428,7 @@ class FixedFindTool {
             wholeWordCheckbox.id = 'fixedFindWholeWord';
             wholeWordLabel.appendChild(wholeWordCheckbox);
             wholeWordLabel.appendChild(document.createTextNode(' Whole word'));
-            
+
             const htmlLabel = document.createElement('label');
             htmlLabel.className = 'fixed-find-toolbar-checkbox';
             const htmlCheckbox = document.createElement('input');
@@ -333,96 +436,96 @@ class FixedFindTool {
             htmlCheckbox.id = 'fixedFindInHTML';
             htmlLabel.appendChild(htmlCheckbox);
             htmlLabel.appendChild(document.createTextNode(' Search in HTML'));
-            
+
             options.appendChild(caseSensitiveLabel);
             options.appendChild(wholeWordLabel);
             options.appendChild(htmlLabel);
-            
+
             // Create controls
             const controls = document.createElement('div');
             controls.className = 'fixed-find-toolbar-controls';
-            
+
             const nav = document.createElement('div');
             nav.className = 'fixed-find-toolbar-nav';
-            
+
             const prevBtn = document.createElement('button');
             prevBtn.className = 'fixed-find-toolbar-btn';
             prevBtn.id = 'fixedFindPrevBtn';
             prevBtn.title = 'Previous (Shift+Enter)';
             prevBtn.textContent = '↑ Prev';
-            
+
             const nextBtn = document.createElement('button');
             nextBtn.className = 'fixed-find-toolbar-btn';
             nextBtn.id = 'fixedFindNextBtn';
             nextBtn.title = 'Next (Enter)';
             nextBtn.textContent = '↓ Next';
-            
+
             const clearBtn = document.createElement('button');
             clearBtn.className = 'fixed-find-toolbar-btn';
             clearBtn.id = 'fixedFindClearBtn';
             clearBtn.title = 'Clear highlights';
             clearBtn.textContent = 'Clear';
-            
+
             nav.appendChild(prevBtn);
             nav.appendChild(nextBtn);
             nav.appendChild(clearBtn);
-            
+
             const status = document.createElement('div');
             status.className = 'fixed-find-toolbar-status';
             status.id = 'fixedFindStatus';
-            
+
             controls.appendChild(nav);
             controls.appendChild(status);
-            
+
             // Assemble toolbar
             toolbarElement.appendChild(header);
             toolbarElement.appendChild(inputGroup);
             toolbarElement.appendChild(options);
             toolbarElement.appendChild(controls);
-            
+
             document.body.appendChild(toolbarElement);
             console.log('Toolbar created successfully');
         } catch (error) {
             console.error('Error creating toolbar:', error);
         }
     }
-    
+
     bindEvents() {
         this.input.addEventListener('input', () => {
             this.searchTerm = this.input.value;
             this.performSearch();
         });
-        
+
         this.prevBtn.addEventListener('click', () => {
             this.goToPrevious();
         });
-        
+
         this.nextBtn.addEventListener('click', () => {
             this.goToNext();
         });
-        
+
         this.clearBtn.addEventListener('click', () => {
             this.clearHighlights();
         });
-        
+
         this.closeBtn.addEventListener('click', () => {
             this.hide();
         });
-        
+
         this.caseSensitiveCheckbox.addEventListener('change', () => {
             this.performSearch();
         });
-        
+
         this.wholeWordCheckbox.addEventListener('change', () => {
             this.performSearch();
         });
-        
+
         this.searchInHTMLCheckbox.addEventListener('change', () => {
             this.searchInHTML = this.searchInHTMLCheckbox.checked;
             this.performSearch();
         });
     }
-    
+
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Ctrl+Shift+F to show/hide
@@ -434,16 +537,16 @@ class FixedFindTool {
                     this.show();
                 }
             }
-            
+
             // Only handle other shortcuts when toolbar is visible
             if (!this.isVisible) return;
-            
+
             // Escape to close
             if (e.key === 'Escape') {
                 e.preventDefault();
                 this.hide();
             }
-            
+
             // Enter for next, Shift+Enter for previous
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -454,11 +557,11 @@ class FixedFindTool {
                 }
             }
         });
-        
+
         // Listen for messages from content script
         window.addEventListener('message', (event) => {
             if (event.source !== window) return;
-            
+
             switch (event.data.type) {
                 case 'FIXED_FIND_CHECK_READY':
                     // Respond with ready status
@@ -468,7 +571,7 @@ class FixedFindTool {
                         window.postMessage({ type: 'FIXED_FIND_NOT_READY' }, '*');
                     }
                     break;
-                    
+
                 case 'FIXED_FIND_TOGGLE':
                     // Toggle the tool visibility
                     if (this.isVisible) {
@@ -480,7 +583,7 @@ class FixedFindTool {
             }
         });
     }
-    
+
     show() {
         // Ensure elements are initialized before showing
         if (!this.toolbar || !this.input) {
@@ -491,23 +594,23 @@ class FixedFindTool {
             }, 50);
             return;
         }
-        
+
         this.isVisible = true;
         this.toolbar.classList.add('show');
         this.input.focus();
         this.input.select();
     }
-    
+
     hide() {
         if (!this.toolbar) {
             return;
         }
-        
+
         this.isVisible = false;
         this.toolbar.classList.remove('show');
         this.clearHighlights();
     }
-    
+
     performSearch() {
         // Ensure elements are initialized
         if (!this.caseSensitiveCheckbox || !this.wholeWordCheckbox || !this.searchInHTMLCheckbox) {
@@ -518,34 +621,34 @@ class FixedFindTool {
             }, 50);
             return;
         }
-        
+
         this.clearHighlights();
         this.matches = [];
         this.currentIndex = -1;
-        
+
         if (!this.searchTerm.trim()) {
             this.updateStatus();
             this.updateButtons();
             return;
         }
-        
+
         const caseSensitive = this.caseSensitiveCheckbox.checked;
         const wholeWord = this.wholeWordCheckbox.checked;
         const regex = this.createSearchRegex(this.searchTerm, caseSensitive, wholeWord);
-        
+
         // Search in text content and HTML
         this.searchInDOM(regex);
-        
+
         if (this.matches.length > 0) {
             this.currentIndex = 0;
             this.highlightMatches();
             this.goToMatch(0);
         }
-        
+
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     searchInDOM(regex) {
         const walker = document.createTreeWalker(
             document.body,
@@ -567,7 +670,7 @@ class FixedFindTool {
                 }
             }
         );
-        
+
         let node;
         while (node = walker.nextNode()) {
             if (node.nodeType === Node.TEXT_NODE) {
@@ -604,7 +707,7 @@ class FixedFindTool {
             }
         }
     }
-    
+
     createSearchRegex(searchText, caseSensitive, wholeWord) {
         let pattern = this.escapeRegex(searchText);
         if (wholeWord) {
@@ -613,14 +716,14 @@ class FixedFindTool {
         const flags = caseSensitive ? 'g' : 'gi';
         return new RegExp(pattern, flags);
     }
-    
+
     escapeRegex(text) {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-    
+
     highlightMatches() {
         this.highlights = [];
-        
+
         this.matches.forEach((match, index) => {
             if (match.type === 'text') {
                 const highlight = this.createTextHighlight(match, index);
@@ -631,26 +734,26 @@ class FixedFindTool {
             }
         });
     }
-    
+
     createTextHighlight(match, index) {
         const textNode = match.node;
         const parent = textNode.parentNode;
         const text = textNode.textContent;
-        
+
         // Create wrapper span
         const wrapper = document.createElement('span');
         wrapper.className = `fixed-find-highlight ${index === this.currentIndex ? 'current' : ''}`;
         wrapper.dataset.findIndex = index;
-        
+
         // Split text and create text nodes
         const beforeText = text.substring(0, match.start);
         const matchText = text.substring(match.start, match.end);
         const afterText = text.substring(match.end);
-        
+
         if (beforeText) {
             wrapper.appendChild(document.createTextNode(beforeText));
         }
-        
+
         const matchSpan = document.createElement('span');
         matchSpan.textContent = matchText;
         matchSpan.style.backgroundColor = index === this.currentIndex ? '#fbbf24' : '#fef3c7';
@@ -658,20 +761,20 @@ class FixedFindTool {
         matchSpan.style.borderRadius = '2px';
         matchSpan.style.padding = '1px 2px';
         wrapper.appendChild(matchSpan);
-        
+
         if (afterText) {
             wrapper.appendChild(document.createTextNode(afterText));
         }
-        
+
         parent.replaceChild(wrapper, textNode);
         return wrapper;
     }
-    
+
     createAttributeHighlight(match, index) {
         const element = match.node;
         const attrName = match.attribute;
         const attrValue = element.getAttribute(attrName);
-        
+
         // Create a visual indicator for attribute matches
         const indicator = document.createElement('div');
         indicator.className = `fixed-find-highlight ${index === this.currentIndex ? 'current' : ''}`;
@@ -686,20 +789,20 @@ class FixedFindTool {
         indicator.style.borderRadius = '4px';
         indicator.style.pointerEvents = 'none';
         indicator.style.zIndex = '9999';
-        
+
         // Make element position relative if it's not already
         const computedStyle = window.getComputedStyle(element);
         if (computedStyle.position === 'static') {
             element.style.position = 'relative';
         }
-        
+
         element.appendChild(indicator);
         return indicator;
     }
-    
+
     goToMatch(index) {
         if (index < 0 || index >= this.matches.length) return;
-        
+
         this.currentIndex = index;
         this.removeCurrentHighlight();
         this.addCurrentHighlight();
@@ -707,19 +810,19 @@ class FixedFindTool {
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     goToNext() {
         if (this.matches.length === 0) return;
         const nextIndex = (this.currentIndex + 1) % this.matches.length;
         this.goToMatch(nextIndex);
     }
-    
+
     goToPrevious() {
         if (this.matches.length === 0) return;
         const prevIndex = this.currentIndex === 0 ? this.matches.length - 1 : this.currentIndex - 1;
         this.goToMatch(prevIndex);
     }
-    
+
     removeCurrentHighlight() {
         this.highlights.forEach(highlight => {
             highlight.classList.remove('current');
@@ -729,7 +832,7 @@ class FixedFindTool {
             }
         });
     }
-    
+
     addCurrentHighlight() {
         if (this.currentIndex >= 0 && this.currentIndex < this.highlights.length) {
             const highlight = this.highlights[this.currentIndex];
@@ -740,12 +843,12 @@ class FixedFindTool {
             }
         }
     }
-    
+
     scrollToMatch() {
         if (this.currentIndex >= 0 && this.currentIndex < this.matches.length) {
             const match = this.matches[this.currentIndex];
             const element = match.type === 'text' ? match.node.parentNode : match.node;
-            
+
             element.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
@@ -753,7 +856,7 @@ class FixedFindTool {
             });
         }
     }
-    
+
     clearHighlights() {
         this.highlights.forEach(highlight => {
             if (highlight.parentNode) {
@@ -767,31 +870,31 @@ class FixedFindTool {
                 }
             }
         });
-        
+
         this.highlights = [];
         this.matches = [];
         this.currentIndex = -1;
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     updateStatus() {
         if (!this.status) {
             return;
         }
-        
+
         if (this.matches.length === 0) {
             this.status.textContent = this.searchTerm ? 'No results found' : '';
         } else {
             this.status.textContent = `${this.currentIndex + 1} of ${this.matches.length} results`;
         }
     }
-    
+
     updateButtons() {
         if (!this.prevBtn || !this.nextBtn || !this.clearBtn) {
             return;
         }
-        
+
         const hasResults = this.matches.length > 0;
         this.prevBtn.disabled = !hasResults;
         this.nextBtn.disabled = !hasResults;
@@ -803,11 +906,11 @@ class FixedFindTool {
 try {
     console.log('Creating FixedFindTool instance...');
     const fixedFindTool = new FixedFindTool();
-    
+
     // Make it globally accessible
     window.fixedFindTool = fixedFindTool;
     console.log('FixedFindTool instance created and assigned to window.fixedFindTool');
-    
+
     // Export for module systems
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = FixedFindTool;
@@ -817,8 +920,8 @@ try {
     // Create a minimal fallback object
     window.fixedFindTool = {
         isVisible: false,
-        show: function() { console.error('FixedFindTool not properly initialized'); },
-        hide: function() { console.error('FixedFindTool not properly initialized'); },
-        init: function() { console.error('FixedFindTool not properly initialized'); }
+        show: function () { console.error('FixedFindTool not properly initialized'); },
+        hide: function () { console.error('FixedFindTool not properly initialized'); },
+        init: function () { console.error('FixedFindTool not properly initialized'); }
     };
 } 
