@@ -2,15 +2,17 @@
 from fastapi import APIRouter, HTTPException
 from app.core import get_logger
 from app.models import YTVideoInfo
-from app.prompts.youtube import youtube_chain
+from app.prompts.youtube import youtube_chain, get_answer
 from app.models.requests.ask import AskRequest
 
 router = APIRouter()
 logger = get_logger(__name__)
 
-result=youtube_chain.invoke({"question": "What is this video discussing", "url": 'https://www.youtube.com/watch?v=sBm_s2f6V9s'})
-
-print(result)
+chain= youtube_chain
+print(get_answer(chain,
+    question="What is this video discussing",
+    url="https://www.youtube.com/watch?v=sBm_s2f6V9s"
+))
 
 # async def generate_answer(
 #     video_info: YTVideoInfo,
