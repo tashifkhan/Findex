@@ -612,6 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     searchButton.addEventListener("click", () => {
+      console.log("searchButton clicked")
       // Open find-in-page toolbar in the current page
       if (window.findInPage) {
         window.findInPage.show();
