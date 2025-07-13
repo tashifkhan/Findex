@@ -38,9 +38,17 @@
   "commands": {
     "toggle-fixed-find": {
       "suggested_key": {
-        "default": "Ctrl+Shift+F"
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
       },
       "description": "Toggle the fixed find tool"
+    },
+    "toggle-page-search": {
+      "suggested_key": {
+        "default": "Ctrl+F",
+        "mac": "Command+F"
+      },
+      "description": "Toggle the page search tool"
     }
   }
 }

@@ -264,11 +264,15 @@ class FindInPage {
 
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // Ctrl+F to show toolbar
-            if (e.ctrlKey && e.key === 'f' && !e.metaKey) {
-                e.preventDefault();
-                this.show();
-                return;
+            // Ctrl+F to show toolbar (only if not already handled by page-search)
+            if (e.ctrlKey && e.key === 'f' && !e.metaKey && !e.shiftKey) {
+                // Check if page-search is already handling this
+                if (!window.pageSearch || !window.pageSearch.isVisible) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.show();
+                    return;
+                }
             }
 
             // Only handle shortcuts when toolbar is visible
@@ -277,6 +281,7 @@ class FindInPage {
             // Escape to close
             if (e.key === 'Escape') {
                 e.preventDefault();
+                e.stopPropagation();
                 this.hide();
                 return;
             }
@@ -284,6 +289,7 @@ class FindInPage {
             // Enter for next, Shift+Enter for previous
             if (e.key === 'Enter') {
                 e.preventDefault();
+                e.stopPropagation();
                 if (e.shiftKey) {
                     this.goToPrevious();
                 } else {

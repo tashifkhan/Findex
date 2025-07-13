@@ -13,17 +13,17 @@ class PageSearch {
         this.searchResults = [];
         this.currentIndex = 0;
         this.originalNodesRef = []; // Store original nodes for cleanup
-        
+
         this.init();
     }
-    
+
     init() {
         this.createSearchBox();
         this.bindEvents();
         this.setupKeyboardShortcuts();
         this.setupMessageListener();
     }
-    
+
     createSearchBox() {
         const searchBoxHTML = `
             <div id="pageSearchBox" class="page-search-box">
@@ -68,7 +68,7 @@ class PageSearch {
                 </div>
             </div>
         `;
-        
+
         // Add CSS if not already present
         if (!document.getElementById('pageSearchStyles')) {
             const style = document.createElement('style');
@@ -374,9 +374,9 @@ class PageSearch {
             `;
             document.head.appendChild(style);
         }
-        
+
         document.body.insertAdjacentHTML('beforeend', searchBoxHTML);
-        
+
         // Get references to elements
         this.searchBox = document.getElementById('pageSearchBox');
         this.searchInput = document.getElementById('pageSearchInput');
@@ -391,19 +391,19 @@ class PageSearch {
         this.aiCloseBtn = document.getElementById('pageSearchAiCloseBtn');
         this.aiContent = document.getElementById('pageSearchAiContent');
     }
-    
+
     bindEvents() {
         // Input events with debouncing
         let debounceTimer;
         this.searchInput.addEventListener('input', (e) => {
             clearTimeout(debounceTimer);
             this.searchTerm = e.target.value;
-            
+
             debounceTimer = setTimeout(() => {
                 this.highlightText(this.searchTerm);
             }, 300); // Same debounce as useSearch hook
         });
-        
+
         // Button events
         this.prevBtn.addEventListener('click', () => this.prevResult());
         this.nextBtn.addEventListener('click', () => this.nextResult());
@@ -411,11 +411,11 @@ class PageSearch {
         this.closeBtn.addEventListener('click', () => this.hide());
         this.aiBtn.addEventListener('click', () => this.askAI());
         this.aiCloseBtn.addEventListener('click', () => this.hideAIResponse());
-        
+
         // Prevent search box from closing when clicking inside it
         this.searchBox.addEventListener('click', (e) => e.stopPropagation());
     }
-    
+
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Ctrl+Shift+F to show search box
@@ -424,17 +424,17 @@ class PageSearch {
                 this.show();
                 return;
             }
-            
+
             // Only handle shortcuts when search box is visible
             if (!this.isVisible) return;
-            
+
             // Escape to close
             if (e.key === 'Escape') {
                 e.preventDefault();
                 this.hide();
                 return;
             }
-            
+
             // Enter for next, Shift+Enter for previous
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -447,7 +447,7 @@ class PageSearch {
             }
         });
     }
-    
+
     setupMessageListener() {
         // Listen for messages from React components
         window.addEventListener('message', (event) => {
@@ -456,20 +456,20 @@ class PageSearch {
             }
         });
     }
-    
+
     show() {
         this.isVisible = true;
         this.searchBox.classList.add('show');
         this.searchInput.focus();
         this.searchInput.select();
-        
+
         // If there's a previous search term, restore it
         if (this.searchTerm) {
             this.searchInput.value = this.searchTerm;
             this.highlightText(this.searchTerm);
         }
     }
-    
+
     hide() {
         this.isVisible = false;
         this.searchBox.classList.remove('show');
@@ -477,7 +477,7 @@ class PageSearch {
         this.hideAIResponse();
         this.searchInput.blur();
     }
-    
+
     // Clear all highlights by restoring the original text nodes
     clearHighlights() {
         this.originalNodesRef.forEach(({ parent, node }) => {
@@ -493,7 +493,7 @@ class PageSearch {
         this.searchResults = [];
         this.currentIndex = 0;
     }
-    
+
     // The safe highlighting function that avoids innerHTML - same as useSearch hook
     highlightText(term) {
         this.clearHighlights();
@@ -569,11 +569,11 @@ class PageSearch {
         if (results.length > 0) {
             this.scrollToResult(0);
         }
-        
+
         this.updateStatus();
         this.updateButtons();
     }
-    
+
     scrollToResult(index) {
         if (this.searchResults.length === 0) return;
 
@@ -589,7 +589,7 @@ class PageSearch {
             result.element.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
-    
+
     nextResult() {
         if (this.searchResults.length === 0) return;
         const newIndex = (this.currentIndex + 1) % this.searchResults.length;
@@ -597,7 +597,7 @@ class PageSearch {
         this.scrollToResult(newIndex);
         this.updateStatus();
     }
-    
+
     prevResult() {
         if (this.searchResults.length === 0) return;
         const newIndex = this.currentIndex === 0 ? this.searchResults.length - 1 : this.currentIndex - 1;
@@ -605,7 +605,7 @@ class PageSearch {
         this.scrollToResult(newIndex);
         this.updateStatus();
     }
-    
+
     clearSearch() {
         this.clearHighlights();
         this.searchTerm = '';
@@ -613,7 +613,7 @@ class PageSearch {
         this.updateStatus('');
         this.updateButtons();
     }
-    
+
     updateStatus() {
         if (this.searchResults.length === 0) {
             if (this.searchTerm.trim()) {
@@ -628,25 +628,25 @@ class PageSearch {
             this.status.classList.remove('no-results');
         }
     }
-    
+
     updateButtons() {
         const hasMatches = this.searchResults.length > 0;
         const hasHighlights = this.originalNodesRef.length > 0;
-        
+
         this.prevBtn.disabled = !hasMatches;
         this.nextBtn.disabled = !hasMatches;
         this.clearBtn.disabled = !hasHighlights;
     }
-    
+
     askAI() {
         if (!this.searchTerm.trim()) {
             this.showAIResponse('Please enter a search term first.');
             return;
         }
-        
+
         // Show loading state
         this.showAIResponse('<div class="page-search-ai-loading">Asking AI...</div>');
-        
+
         // Mock AI response based on search results
         setTimeout(() => {
             if (this.searchResults.length > 0) {
@@ -670,12 +670,12 @@ class PageSearch {
             }
         }, 1500);
     }
-    
+
     showAIResponse(content) {
         this.aiContent.innerHTML = content;
         this.aiResponseContainer.classList.add('show');
     }
-    
+
     hideAIResponse() {
         this.aiResponseContainer.classList.remove('show');
         this.aiContent.innerHTML = '<p class="page-search-ai-placeholder">Ask AI about content not found on this page...</p>';

@@ -687,10 +687,6 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (type) {
       case "setVideoData":
         updateVideoInfo(data)
-        // Refresh search results if overlay is open
-        // if (isSearchOverlayOpen && searchTerm) { // This line is removed as per the edit hint
-        //   performSearch(searchTerm)
-        // }
         break
       case "addMessage":
         addMessage(data.content, data.type)
@@ -737,7 +733,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         break
       case "openSearch":
-        // openSearchOverlay() // This line is removed as per the edit hint
+        // Search functionality removed as per comments
         break
     }
   })
@@ -765,6 +761,14 @@ document.addEventListener("DOMContentLoaded", () => {
           <li>"How does this extension work?"</li>
           <li>"What features are available?"</li>
           <li>"Tell me about the search functionality"</li>
+        `
+    } else {
+      welcomeTitle.textContent = "Ask about this video"
+      welcomeDescription.textContent = "I can help you understand the content, find specific topics, or answer questions about what's discussed."
+      welcomeExamples.innerHTML = `
+          <li>• "What is this video about?"</li>
+          <li>• "Summarize the main points"</li>
+          <li>• "What does the speaker say about..."</li>
         `
     }
   }
