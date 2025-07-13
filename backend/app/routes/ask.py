@@ -8,11 +8,12 @@ from app.models.requests.ask import AskRequest
 router = APIRouter()
 logger = get_logger(__name__)
 
-chain= youtube_chain
-print(get_answer(chain,
-    question="What is this video discussing",
-    url="https://www.youtube.com/watch?v=sBm_s2f6V9s"
-))
+if __name__=="__main__":
+    chain= youtube_chain
+    print(get_answer(chain,
+        question="What is this video discussing",
+        url="https://www.youtube.com/watch?v=sBm_s2f6V9s"
+    ))
 
 # async def generate_answer(
 #     video_info: YTVideoInfo,
