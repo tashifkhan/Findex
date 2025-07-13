@@ -1,6 +1,5 @@
-def main():
-    print("Hello from backend!")
+from app.main import mainfn as server
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == __name__:
+    # server()
+    ...
