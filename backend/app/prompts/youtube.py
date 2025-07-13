@@ -196,6 +196,6 @@ def get_answer(
         {
             "question": question,
             "url": url,
-            "chat_history": chat_history,
+            "chat_history": str(chat_history),
         }
     )

@@ -20,7 +20,7 @@ async def generate_crawler_answer(question: str, chat_history: list) -> str:
         chat_history_str = json.dumps(chat_history)
         response = get_answer(
             chain,
-            f"what was previously discussed+ {chat_history_str}",
+            f"what was previously discussed:\n{chat_history_str}",
             crawled_web_data,
         )
 
