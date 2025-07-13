@@ -22,6 +22,9 @@ class PageSearch {
         this.bindEvents();
         this.setupKeyboardShortcuts();
         this.setupMessageListener();
+        
+        // Expose the instance to window for other scripts to check
+        window.pageSearch = this;
     }
     
     createSearchBox() {
@@ -421,6 +424,15 @@ class PageSearch {
             // Ctrl+Shift+F to show search box
             if (e.ctrlKey && e.shiftKey && e.key === 'F') {
                 e.preventDefault();
+                e.stopPropagation();
+                this.show();
+                return;
+            }
+            
+            // Ctrl+F to show search box (alternative shortcut)
+            if (e.ctrlKey && e.key === 'f' && !e.shiftKey && !e.metaKey) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.show();
                 return;
             }
@@ -431,6 +443,7 @@ class PageSearch {
             // Escape to close
             if (e.key === 'Escape') {
                 e.preventDefault();
+                e.stopPropagation();
                 this.hide();
                 return;
             }
@@ -438,6 +451,7 @@ class PageSearch {
             // Enter for next, Shift+Enter for previous
             if (e.key === 'Enter') {
                 e.preventDefault();
+                e.stopPropagation();
                 if (e.shiftKey) {
                     this.prevResult();
                 } else {
@@ -453,6 +467,20 @@ class PageSearch {
         window.addEventListener('message', (event) => {
             if (event.source === window && event.data.type === 'OPEN_PAGE_SEARCH') {
                 this.show();
+            }
+        });
+
+        // Listen for messages from the extension background script
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.action === 'togglePageSearch') {
+                // Toggle the page search tool
+                if (this.isVisible) {
+                    this.hide();
+                } else {
+                    this.show();
+                }
+                sendResponse({ success: true });
+                return true;
             }
         });
     }
