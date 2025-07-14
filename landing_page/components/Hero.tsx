@@ -194,11 +194,18 @@ export default function Hero() {
 						</form>
 						<div className="flex items-center gap-4 text-sm text-gray-400">
 							<a
-								href="https://github.com/yourusername/findexai"
+								href="https://github.com/tashifkhan/Findex"
 								className="flex items-center gap-2 hover:text-white transition-colors"
 							>
 								<Github className="w-4 h-4" />
 								View on GitHub
+							</a>
+							<span>•</span>
+							<a
+								href="/docs"
+								className="flex items-center gap-2 hover:text-white transition-colors"
+							>
+								Documentation
 							</a>
 							<span>•</span>
 							<span>Free & Open Source</span>
