@@ -1,54 +1,51 @@
 {
-  "manifest_version": 3,
-  "name": "Findex Sidebar Extension",
-  "version": "1.0",
-  "description": "AI-powered search and Q&A for web pages",
-  "permissions": ["sidePanel", "storage", "activeTab"],
-  "side_panel": {
-    "default_path": "sidebar/sidebar.html"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content-scripts/page-search.js"],
-      "run_at": "document_end"
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content-scripts/fixed-find-injector.js"],
-      "run_at": "document_end"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["fixed-find-tool.js"],
-      "matches": ["<all_urls>"]
-    }
-  ],
-  "action": {
-    "default_title": "Click to open sidebar"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "options_ui": {
-    "page": "options/options.html",
-    "open_in_tab": true
-  },
-  "commands": {
-    "toggle-fixed-find": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+F",
-        "mac": "Command+Shift+F"
-      },
-      "description": "Toggle the fixed find tool"
-    },
-    "toggle-page-search": {
-      "suggested_key": {
-        "default": "Ctrl+F",
-        "mac": "Command+F"
-      },
-      "description": "Toggle the page search tool"
-    }
-  }
+	"manifest_version": 3,
+	"name": "Findex Sidebar Extension",
+	"version": "1.0",
+	"description": "AI-powered search and Q&A for web pages",
+	"permissions": ["storage", "activeTab", "scripting"],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content-scripts/page-search.js"],
+			"run_at": "document_end"
+		},
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content-scripts/fixed-find-injector.js"],
+			"run_at": "document_end"
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["fixed-find-tool.js", "content-scripts/inject-sidebar.js"],
+			"matches": ["<all_urls>"]
+		}
+	],
+	"action": {
+		"default_title": "Click to open sidebar"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"options_ui": {
+		"page": "options/options.html",
+		"open_in_tab": true
+	},
+	"commands": {
+		"toggle-fixed-find": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+F",
+				"mac": "Command+Shift+F"
+			},
+			"description": "Toggle the fixed find tool"
+		},
+		"toggle-page-search": {
+			"suggested_key": {
+				"default": "Ctrl+F",
+				"mac": "Command+F"
+			},
+			"description": "Toggle the page search tool"
+		}
+	}
 }
