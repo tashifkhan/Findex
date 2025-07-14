@@ -7,13 +7,25 @@ export default function Navigation() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
-		<nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+		<nav
+			className="fixed top-0 left-0 right-0 z-50 border-b"
+			style={{
+				background: "rgba(20, 30, 40, 0.35)",
+				border: "1px solid rgba(255,255,255,0.18)",
+				backdropFilter: "blur(16px)",
+				WebkitBackdropFilter: "blur(16px)",
+				boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
+			}}
+		>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="flex justify-between items-center h-16">
 					{/* Logo */}
 					<div className="flex items-center">
 						<a href="/" className="flex items-center space-x-2">
-							<div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+							<div
+								className="w-8 h-8 rounded-lg flex items-center justify-center"
+								style={{ background: "var(--accent-gradient)" }}
+							>
 								<span className="text-white font-bold text-sm">F</span>
 							</div>
 							<span className="text-xl font-bold text-white">FindexAI</span>
@@ -40,13 +52,15 @@ export default function Navigation() {
 						</a>
 						<a
 							href="/chrome"
-							className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+							className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+							style={{ background: "var(--accent-ocean)" }}
 						>
 							Install for Chrome
 						</a>
 						<a
 							href="/firefox"
-							className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+							className="text-white px-4 py-2 rounded-lg font-medium transition-colors"
+							style={{ background: "var(--accent-orange)" }}
 						>
 							Install for Firefox
 						</a>
@@ -70,7 +84,15 @@ export default function Navigation() {
 				{/* Mobile Navigation */}
 				{isOpen && (
 					<div className="md:hidden">
-						<div className="px-2 pt-2 pb-3 space-y-1 bg-white/10 backdrop-blur-md rounded-lg mt-2">
+						<div
+							className="px-2 pt-2 pb-3 space-y-1 rounded-lg mt-2"
+							style={{
+								background: "rgba(20, 30, 40, 0.45)",
+								border: "1px solid rgba(255,255,255,0.18)",
+								backdropFilter: "blur(16px)",
+								WebkitBackdropFilter: "blur(16px)",
+							}}
+						>
 							<a
 								href="/docs"
 								className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
@@ -89,13 +111,15 @@ export default function Navigation() {
 							</a>
 							<a
 								href="/chrome"
-								className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md font-medium transition-colors"
+								className="block text-white px-3 py-2 rounded-md font-medium transition-colors"
+								style={{ background: "var(--accent-ocean)" }}
 							>
 								Install for Chrome
 							</a>
 							<a
 								href="/firefox"
-								className="block bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-md font-medium transition-colors"
+								className="block text-white px-3 py-2 rounded-md font-medium transition-colors"
+								style={{ background: "var(--accent-orange)" }}
 							>
 								Install for Firefox
 							</a>
