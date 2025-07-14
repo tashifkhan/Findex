@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, Github, BookOpen } from "lucide-react";
+import { Menu, X, Github, BookOpen, Search } from "lucide-react";
 import Link from "next/link";
 
 export default function Navigation() {
@@ -27,7 +27,9 @@ export default function Navigation() {
 								className="w-8 h-8 rounded-lg flex items-center justify-center"
 								style={{ background: "var(--accent-gradient)" }}
 							>
-								<span className="text-white font-bold text-sm">F</span>
+								<span className="text-white font-bold text-sm">
+									<Search />
+								</span>
 							</div>
 							<span className="text-xl font-bold text-white">FindexAI</span>
 						</Link>
