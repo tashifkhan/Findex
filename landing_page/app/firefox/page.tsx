@@ -82,7 +82,7 @@ export default function FirefoxInstallPage() {
 									Download the Extension
 								</h3>
 								<p className="text-gray-300 mb-3">
-									First, you'll need to build the extension from source or
+									First, you&apos;ll need to build the extension from source or
 									download the latest release.
 								</p>
 								<div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
@@ -109,7 +109,7 @@ export default function FirefoxInstallPage() {
 									Open Firefox Debugging
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Navigate to Firefox's debugging page for add-ons.
+									Navigate to Firefox&apos;s debugging page for add-ons.
 								</p>
 								<div
 									className="p-4 rounded-lg"
@@ -118,6 +118,7 @@ export default function FirefoxInstallPage() {
 										border: "1px solid rgba(255, 120, 0, 0.3)",
 									}}
 								>
+									{" "}
 									<p className="text-orange-300 font-medium">
 										Open Firefox and go to:
 									</p>
@@ -140,7 +141,8 @@ export default function FirefoxInstallPage() {
 									Select This Firefox
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Click on the "This Firefox" tab in the debugging page.
+									Click on the &quot;This Firefox&quot; tab in the debugging
+									page.
 								</p>
 								<div
 									className="p-4 rounded-lg"
@@ -169,7 +171,8 @@ export default function FirefoxInstallPage() {
 									Load Temporary Add-on
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Click "Load Temporary Add-on" and select the manifest file.
+									Click &quot;Load Temporary Add-on&quot; and select the
+									manifest file.
 								</p>
 								<div
 									className="p-4 rounded-lg"
@@ -356,9 +359,9 @@ export default function FirefoxInstallPage() {
 								Temporary Add-on
 							</h3>
 							<p className="text-gray-300">
-								Extensions loaded via "Load Temporary Add-on" are removed when
-								Firefox is closed. You'll need to reload the extension each time
-								you restart Firefox.
+								Extensions loaded via &quot;Load Temporary Add-on&quot; are
+								removed when Firefox is closed. You&apos;ll need to reload the
+								extension each time you restart Firefox.
 							</p>
 						</div>
 						<div
@@ -386,9 +389,9 @@ export default function FirefoxInstallPage() {
 								Developer Mode
 							</h3>
 							<p className="text-gray-300">
-								Unlike Chrome, Firefox doesn't require a special "developer
-								mode" to be enabled. The about:debugging page is always
-								available for loading temporary add-ons.
+								Unlike Chrome, Firefox doesn&apos;t require a special
+								&quot;developer mode&quot; to be enabled. The about:debugging
+								page is always available for loading temporary add-ons.
 							</p>
 						</div>
 					</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, BookOpen, Download, Chrome, Code, Globe } from "lucide-react";
+import { Github, Download, Chrome, Code, Globe } from "lucide-react";
 
 const Documentation = () => {
 	return (
@@ -116,12 +116,12 @@ const Documentation = () => {
 				>
 					<h2 className="text-3xl font-bold text-white mb-6">Overview</h2>
 					<p className="text-gray-300 mb-6">
-						FindexAI transforms the traditional "Ctrl+F" search into a semantic,
-						multi-agent, and vector-based discovery engine. Whether you're
-						searching through long articles, YouTube videos, or live web
-						content, FindexAI leverages advanced language models, vector search,
-						and a modular architecture to help you find information faster and
-						more intelligently.
+						FindexAI transforms the traditional &quot;Ctrl+F&quot; search into a
+						semantic, multi-agent, and vector-based discovery engine. Whether
+						you&apos;re searching through long articles, YouTube videos, or live
+						web content, FindexAI leverages advanced language models, vector
+						search, and a modular architecture to help you find information
+						faster and more intelligently.
 					</p>
 
 					<div className="grid md:grid-cols-3 gap-6 mt-8">

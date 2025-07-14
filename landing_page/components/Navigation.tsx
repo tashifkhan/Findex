@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Menu, X, Github, BookOpen } from "lucide-react";
+import Link from "next/link";
 
 export default function Navigation() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Navigation() {
 				<div className="flex justify-between items-center h-16">
 					{/* Logo */}
 					<div className="flex items-center">
-						<a href="/" className="flex items-center space-x-2">
+						<Link href="/" className="flex items-center space-x-2">
 							<div
 								className="w-8 h-8 rounded-lg flex items-center justify-center"
 								style={{ background: "var(--accent-gradient)" }}
@@ -29,7 +30,7 @@ export default function Navigation() {
 								<span className="text-white font-bold text-sm">F</span>
 							</div>
 							<span className="text-xl font-bold text-white">FindexAI</span>
-						</a>
+						</Link>
 					</div>
 
 					{/* Desktop Navigation */}

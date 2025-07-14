@@ -82,7 +82,7 @@ export default function ChromeInstallPage() {
 									Download the Extension
 								</h3>
 								<p className="text-gray-300 mb-3">
-									First, you'll need to build the extension from source or
+									First, you&apos;ll need to build the extension from source or
 									download the latest release.
 								</p>
 								<div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
@@ -109,7 +109,7 @@ export default function ChromeInstallPage() {
 									Open Chrome Extensions
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Navigate to Chrome's extension management page.
+									Navigate to Chrome&apos;s extension management page.
 								</p>
 								<div
 									className="p-4 rounded-lg"
@@ -140,8 +140,8 @@ export default function ChromeInstallPage() {
 									Enable Developer Mode
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Toggle the "Developer mode" switch in the top-right corner of
-									the extensions page.
+									Toggle the &quot;Developer mode&quot; switch in the top-right
+									corner of the extensions page.
 								</p>
 								<div
 									className="p-4 rounded-lg"
@@ -170,7 +170,8 @@ export default function ChromeInstallPage() {
 									Load the Extension
 								</h3>
 								<p className="text-gray-300 mb-3">
-									Click "Load unpacked" and select the extension directory.
+									Click &quot;Load unpacked&quot; and select the extension
+									directory.
 								</p>
 								<div
 									className="p-4 rounded-lg"

@@ -95,7 +95,7 @@ export default function Testimonials() {
 						Loved by Knowledge Workers
 					</h2>
 					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
-						Join thousands of users who've transformed their browsing and
+						Join thousands of users who&apos;ve transformed their browsing and
 						research experience
 					</p>
 				</div>
@@ -142,7 +142,7 @@ export default function Testimonials() {
 
 							{/* Content */}
 							<blockquote className="text-gray-300 leading-relaxed mb-6 text-lg">
-								"{testimonial.content}"
+								&quot;{testimonial.content}&quot;
 							</blockquote>
 
 							{/* Author */}

@@ -85,8 +85,8 @@ export default function UseCases() {
 						Built For Everyone
 					</h2>
 					<p className="text-xl text-gray-300 max-w-3xl mx-auto">
-						Whether you're studying, coding, researching, or creating—FindexAI
-						adapts to your workflow
+						Whether you&apos;re studying, coding, researching, or
+						creating—FindexAI adapts to your workflow
 					</p>
 				</div>
 
@@ -139,7 +139,9 @@ export default function UseCases() {
 											className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
 											style={{ background: "var(--accent-gradient)" }}
 										></div>
-										<p className="text-gray-300 text-sm italic">"{example}"</p>
+										<p className="text-gray-300 text-sm italic">
+											&quot;{example}&quot;
+										</p>
 									</div>
 								))}
 							</div>
@@ -173,7 +175,7 @@ export default function UseCases() {
 							Stop Scrolling, Start Finding
 						</h3>
 						<p className="text-gray-300 text-lg">
-							Join thousands of users who've transformed their browsing
+							Join thousands of users who&apos;ve transformed their browsing
 							experience
 						</p>
 					</div>
