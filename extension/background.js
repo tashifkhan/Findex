@@ -1,21 +1,44 @@
-// Enable opening the sidebar when clicking the extension icon
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
-  .catch((error) => console.error(error));
+// Handle extension icon click - inject persistent sidebar
+chrome.action.onClicked.addListener((tab) => {
+  console.log('Extension icon clicked for tab:', tab.id, tab.url);
+  
+  // Check if the tab supports content scripts
+  if (tab.url && !tab.url.startsWith('chrome://') && !tab.url.startsWith('chrome-extension://')) {
+    console.log('Tab supports content scripts, injecting sidebar...');
+    
+    // Try to inject the script directly first
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ['content-scripts/inject-sidebar.js']
+    }).then(() => {
+      console.log('Sidebar script injected successfully');
+      // Send message to trigger the sidebar
+      setTimeout(() => {
+        chrome.tabs.sendMessage(tab.id, { action: 'injectPersistentSidebar' })
+          .catch((error) => {
+            console.log('Failed to send message to content script:', error.message);
+          });
+      }, 100);
+    }).catch(err => {
+      console.error('Failed to inject sidebar script:', err);
+    });
+  } else {
+    console.log('Content scripts not supported for this tab type:', tab.url);
+  }
+});
 
 // Handle messages from content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'openSidePanel') {
-    // Open the side panel
-    chrome.sidePanel.open({ windowId: chrome.windows.WINDOW_ID_CURRENT })
-      .then(() => {
-        console.log('Side panel opened successfully');
-        sendResponse({ success: true });
-      })
-      .catch((error) => {
-        console.error('Failed to open side panel:', error);
-        sendResponse({ success: false, error: error.message });
-      });
-    return true; // Keep the message channel open for async response
+  if (request.type === "request_current_url") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs[0] && tabs[0].url) {
+        chrome.runtime.sendMessage({
+          type: "current_url_update",
+          url: tabs[0].url,
+          tabId: tabs[0].id
+        });
+      }
+    });
   }
 });
 
@@ -46,3 +69,11 @@ chrome.commands.onCommand.addListener((command) => {
     }
   });
 });
+
+
+
+
+
+
+
+
