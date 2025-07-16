@@ -40,7 +40,17 @@ async def ask(request: AskRequest):
     try:
         url = request.url
         question = request.question
-        chat_history = request.chat_history or ""
+        chat_history_list = request.chat_history or []
+
+        chat_history_str = ""
+        if chat_history_list:
+            for entry in chat_history_list:
+                if isinstance(entry, dict):
+                    role = entry.get("role", "")
+                    content = entry.get("content", "")
+                    chat_history_str += f"{role}: {content}\n"
+                else:
+                    chat_history_str += f"{entry}\n"
 
         if not url or not question:
             raise HTTPException(
@@ -63,7 +73,7 @@ async def ask(request: AskRequest):
         #     )
 
         # answer
-        answer = await generate_answer(url, question, chat_history)
+        answer = await generate_answer(url, question, chat_history_str)
 
         return {
             "answer": answer,

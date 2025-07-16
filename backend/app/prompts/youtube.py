@@ -108,15 +108,21 @@ parallel_chain = RunnableParallel(
     }
 )
 
-main_chain = (
-    parallel_chain
-    | RunnableLambda(
-        lambda d: d["vector_store"]
-        .as_retriever(search_type="mmr", search_kwargs={"k": 2})
-        .invoke(d["question"])
-    )
-    | RunnableLambda(format_docs)
-)  # | prompt | llm | parser
+
+def get_context(d):
+    """Get context from vector store or return empty string if no transcript available"""
+    vector_store = d["vector_store"]
+
+    if hasattr(vector_store, "as_retriever"):
+        retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 2})
+        retrieved_docs = retriever.invoke(d["question"])
+        return format_docs(retrieved_docs)
+
+    else:
+        return "No transcript available for this video."
+
+
+main_chain = parallel_chain | RunnableLambda(get_context)  # | prompt | llm | parser
 
 prompt_templet_string = """
 System:
