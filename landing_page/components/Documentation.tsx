@@ -513,9 +513,12 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;status&quot;: &quot;healthy&quot;,</div>
 									<div>
-										&nbsp;&nbsp;&quot;message&quot;: &quot;FindexAI backend is running&quot;
+										&nbsp;&nbsp;&quot;status&quot;: &quot;healthy&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;message&quot;: &quot;FindexAI backend is
+										running&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -547,7 +550,8 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /video-info</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;&quot;url&quot;: &quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;
+										&nbsp;&nbsp;&quot;url&quot;:
+										&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -558,12 +562,22 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;title&quot;: &quot;Video Title&quot;,</div>
-									<div>&nbsp;&nbsp;&quot;description&quot;: &quot;Video description...&quot;,</div>
-									<div>&nbsp;&nbsp;&quot;uploader&quot;: &quot;Channel Name&quot;,</div>
+									<div>
+										&nbsp;&nbsp;&quot;title&quot;: &quot;Video Title&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;description&quot;: &quot;Video
+										description...&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;uploader&quot;: &quot;Channel Name&quot;,
+									</div>
 									<div>&nbsp;&nbsp;&quot;duration&quot;: 180,</div>
 									<div>&nbsp;&nbsp;&quot;view_count&quot;: 1000000,</div>
-									<div>&nbsp;&nbsp;&quot;tags&quot;: [&quot;tag1&quot;, &quot;tag2&quot;]</div>
+									<div>
+										&nbsp;&nbsp;&quot;tags&quot;: [&quot;tag1&quot;,
+										&quot;tag2&quot;]
+									</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -608,7 +622,8 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;&quot;subtitles&quot;: &quot;Complete subtitle text...&quot;
+										&nbsp;&nbsp;&quot;subtitles&quot;: &quot;Complete subtitle
+										text...&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -645,7 +660,8 @@ const Documentation = () => {
 										&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;,
 									</div>
 									<div>
-										&nbsp;&nbsp;&quot;question&quot;: &quot;What is the main topic discussed?&quot;
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What is the main
+										topic discussed?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -656,9 +672,18 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;The main topic is...&quot;,</div>
-									<div>&nbsp;&nbsp;&quot;video_title&quot;: &quot;Sample Video Title&quot;,</div>
-									<div>&nbsp;&nbsp;&quot;video_channel&quot;: &quot;Channel Name&quot;,</div>
+									<div>
+										&nbsp;&nbsp;&quot;answer&quot;: &quot;The main topic
+										is...&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;video_title&quot;: &quot;Sample Video
+										Title&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;video_channel&quot;: &quot;Channel
+										Name&quot;,
+									</div>
 									<div>&nbsp;&nbsp;&quot;video_duration&quot;: 180</div>
 									<div>{`}`}</div>
 								</div>
@@ -690,9 +715,13 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div className="text-blue-400 mb-1">POST /website</div>
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;url&quot;: &quot;https://example.com/article&quot;,</div>
 									<div>
-										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the key points mentioned?&quot;
+										&nbsp;&nbsp;&quot;url&quot;:
+										&quot;https://example.com/article&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the key
+										points mentioned?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -703,10 +732,17 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;The key points are...&quot;,</div>
-									<div>&nbsp;&nbsp;&quot;page_title&quot;: &quot;Article Title&quot;,</div>
 									<div>
-										&nbsp;&nbsp;&quot;page_url&quot;: &quot;https://example.com/article&quot;
+										&nbsp;&nbsp;&quot;answer&quot;: &quot;The key points
+										are...&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;page_title&quot;: &quot;Article
+										Title&quot;,
+									</div>
+									<div>
+										&nbsp;&nbsp;&quot;page_url&quot;:
+										&quot;https://example.com/article&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -739,8 +775,8 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /crawller</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the latest AI
-										developments?&quot;
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the latest
+										AI developments?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -751,12 +787,17 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;Based on recent sources...&quot;,</div>
+									<div>
+										&nbsp;&nbsp;&quot;answer&quot;: &quot;Based on recent
+										sources...&quot;,
+									</div>
 									<div>&nbsp;&nbsp;&quot;sources&quot;: [</div>
 									<div>
 										&nbsp;&nbsp;&nbsp;&nbsp;&quot;https://example.com/news1&quot;,
 									</div>
-									<div>&nbsp;&nbsp;&nbsp;&nbsp;&quot;https://example.com/news2&quot;</div>
+									<div>
+										&nbsp;&nbsp;&nbsp;&nbsp;&quot;https://example.com/news2&quot;
+									</div>
 									<div>&nbsp;&nbsp;]</div>
 									<div>{`}`}</div>
 								</div>
@@ -776,7 +817,10 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-red-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;&quot;detail&quot;: &quot;Invalid URL format&quot;</div>
+									<div>
+										&nbsp;&nbsp;&quot;detail&quot;: &quot;Invalid URL
+										format&quot;
+									</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -787,7 +831,8 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-red-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;&quot;detail&quot;: &quot;Internal server error occurred&quot;
+										&nbsp;&nbsp;&quot;detail&quot;: &quot;Internal server error
+										occurred&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
