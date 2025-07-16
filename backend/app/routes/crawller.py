@@ -16,7 +16,12 @@ async def generate_crawler_answer(
 ) -> str:
 
     try:
-        crawled_web_data = web_search_pipeline(question)
+        og_question = (
+            question
+            if not chat_history
+            else f"{chat_history[0]['content'] if chat_history[0]['role'] == 'user' else question}"
+        )
+        crawled_web_data = web_search_pipeline(og_question)
         print(f"Crawled web data: {crawled_web_data}")
         print(f"Number of results: {len(crawled_web_data) if crawled_web_data else 0}")
 
