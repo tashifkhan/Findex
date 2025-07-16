@@ -35,7 +35,7 @@ export default function Footer() {
 			},
 			{
 				name: "API Reference",
-				href: "/api",
+				href: "/docs#api",
 				icon: <Shield className="w-4 h-4" />,
 			},
 		],
