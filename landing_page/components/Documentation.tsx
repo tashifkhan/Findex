@@ -1,6 +1,14 @@
 "use client";
 
-import { Github, Download, Chrome, Code, Globe } from "lucide-react";
+import {
+	Github,
+	Download,
+	Chrome,
+	Code,
+	Globe,
+	CheckCircle,
+	Settings,
+} from "lucide-react";
 
 const Documentation = () => {
 	return (
@@ -1034,8 +1042,9 @@ const Documentation = () => {
 
 					<div className="grid md:grid-cols-2 gap-8">
 						<div>
-							<h3 className="text-xl font-semibold text-white mb-4">
-								✅ Completed
+							<h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+								<CheckCircle className="w-5 h-5 text-green-400" />
+								Completed
 							</h3>
 							<ul className="space-y-2 text-gray-300">
 								<li>• LangChain setup with SearchXNG integration</li>
@@ -1047,8 +1056,9 @@ const Documentation = () => {
 							</ul>
 						</div>
 						<div>
-							<h3 className="text-xl font-semibold text-white mb-4">
-								🚧 In Progress
+							<h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+								<Settings className="w-5 h-5 text-blue-400 animate-spin" />
+								In Progress
 							</h3>
 							<ul className="space-y-2 text-gray-300">
 								<li>• FAISS vector DB integration</li>
