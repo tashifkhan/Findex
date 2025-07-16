@@ -70,6 +70,7 @@ def fetch_transcript(video_url):
 
     if raw_transcript and not is_actual_error:
         cleaned_transcript = processed_transcript(raw_transcript)
+
     else:
         cleaned_transcript = ""
 
