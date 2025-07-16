@@ -513,9 +513,9 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"status": "healthy",</div>
+									<div>&nbsp;&nbsp;&quot;status&quot;: &quot;healthy&quot;,</div>
 									<div>
-										&nbsp;&nbsp;"message": "FindexAI backend is running"
+										&nbsp;&nbsp;&quot;message&quot;: &quot;FindexAI backend is running&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -547,7 +547,7 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /video-info</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"url": "https://youtube.com/watch?v=dQw4w9WgXcQ"
+										&nbsp;&nbsp;&quot;url&quot;: &quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -558,12 +558,12 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"title": "Video Title",</div>
-									<div>&nbsp;&nbsp;"description": "Video description...",</div>
-									<div>&nbsp;&nbsp;"uploader": "Channel Name",</div>
-									<div>&nbsp;&nbsp;"duration": 180,</div>
-									<div>&nbsp;&nbsp;"view_count": 1000000,</div>
-									<div>&nbsp;&nbsp;"tags": ["tag1", "tag2"]</div>
+									<div>&nbsp;&nbsp;&quot;title&quot;: &quot;Video Title&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;description&quot;: &quot;Video description...&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;uploader&quot;: &quot;Channel Name&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;duration&quot;: 180,</div>
+									<div>&nbsp;&nbsp;&quot;view_count&quot;: 1000000,</div>
+									<div>&nbsp;&nbsp;&quot;tags&quot;: [&quot;tag1&quot;, &quot;tag2&quot;]</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -594,10 +594,10 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /subs</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"url":
-										"https://youtube.com/watch?v=dQw4w9WgXcQ",
+										&nbsp;&nbsp;&quot;url&quot;:
+										&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;,
 									</div>
-									<div>&nbsp;&nbsp;"lang": "en"</div>
+									<div>&nbsp;&nbsp;&quot;lang&quot;: &quot;en&quot;</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -608,7 +608,7 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"subtitles": "Complete subtitle text..."
+										&nbsp;&nbsp;&quot;subtitles&quot;: &quot;Complete subtitle text...&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -641,11 +641,11 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /ask</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"url":
-										"https://youtube.com/watch?v=dQw4w9WgXcQ",
+										&nbsp;&nbsp;&quot;url&quot;:
+										&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;,
 									</div>
 									<div>
-										&nbsp;&nbsp;"question": "What is the main topic discussed?"
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What is the main topic discussed?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -656,10 +656,10 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"answer": "The main topic is...",</div>
-									<div>&nbsp;&nbsp;"video_title": "Sample Video Title",</div>
-									<div>&nbsp;&nbsp;"video_channel": "Channel Name",</div>
-									<div>&nbsp;&nbsp;"video_duration": 180</div>
+									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;The main topic is...&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;video_title&quot;: &quot;Sample Video Title&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;video_channel&quot;: &quot;Channel Name&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;video_duration&quot;: 180</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -690,9 +690,9 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div className="text-blue-400 mb-1">POST /website</div>
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"url": "https://example.com/article",</div>
+									<div>&nbsp;&nbsp;&quot;url&quot;: &quot;https://example.com/article&quot;,</div>
 									<div>
-										&nbsp;&nbsp;"question": "What are the key points mentioned?"
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the key points mentioned?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -703,10 +703,10 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"answer": "The key points are...",</div>
-									<div>&nbsp;&nbsp;"page_title": "Article Title",</div>
+									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;The key points are...&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;page_title&quot;: &quot;Article Title&quot;,</div>
 									<div>
-										&nbsp;&nbsp;"page_url": "https://example.com/article"
+										&nbsp;&nbsp;&quot;page_url&quot;: &quot;https://example.com/article&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -739,8 +739,8 @@ const Documentation = () => {
 									<div className="text-blue-400 mb-1">POST /crawller</div>
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"question": "What are the latest AI
-										developments?"
+										&nbsp;&nbsp;&quot;question&quot;: &quot;What are the latest AI
+										developments?&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -751,12 +751,12 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"answer": "Based on recent sources...",</div>
-									<div>&nbsp;&nbsp;"sources": [</div>
+									<div>&nbsp;&nbsp;&quot;answer&quot;: &quot;Based on recent sources...&quot;,</div>
+									<div>&nbsp;&nbsp;&quot;sources&quot;: [</div>
 									<div>
-										&nbsp;&nbsp;&nbsp;&nbsp;"https://example.com/news1",
+										&nbsp;&nbsp;&nbsp;&nbsp;&quot;https://example.com/news1&quot;,
 									</div>
-									<div>&nbsp;&nbsp;&nbsp;&nbsp;"https://example.com/news2"</div>
+									<div>&nbsp;&nbsp;&nbsp;&nbsp;&quot;https://example.com/news2&quot;</div>
 									<div>&nbsp;&nbsp;]</div>
 									<div>{`}`}</div>
 								</div>
@@ -776,7 +776,7 @@ const Documentation = () => {
 								</h4>
 								<div className="bg-gray-900 text-red-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
-									<div>&nbsp;&nbsp;"detail": "Invalid URL format"</div>
+									<div>&nbsp;&nbsp;&quot;detail&quot;: &quot;Invalid URL format&quot;</div>
 									<div>{`}`}</div>
 								</div>
 							</div>
@@ -787,7 +787,7 @@ const Documentation = () => {
 								<div className="bg-gray-900 text-red-400 p-3 rounded-lg font-mono text-sm">
 									<div>{`{`}</div>
 									<div>
-										&nbsp;&nbsp;"detail": "Internal server error occurred"
+										&nbsp;&nbsp;&quot;detail&quot;: &quot;Internal server error occurred&quot;
 									</div>
 									<div>{`}`}</div>
 								</div>
@@ -943,8 +943,8 @@ const Documentation = () => {
 									</h4>
 									<ul className="text-gray-300 text-sm space-y-1">
 										<li>• Go to chrome://extensions/</li>
-										<li>• Enable "Developer mode"</li>
-										<li>• Click "Load unpacked"</li>
+										<li>• Enable &quot;Developer mode&quot;</li>
+										<li>• Click &quot;Load unpacked&quot;</li>
 										<li>• Select the extension folder</li>
 									</ul>
 								</div>
@@ -954,7 +954,7 @@ const Documentation = () => {
 									</h4>
 									<ul className="text-gray-300 text-sm space-y-1">
 										<li>• Go to about:debugging#/runtime/this-firefox</li>
-										<li>• Click "Load Temporary Add-on"</li>
+										<li>• Click &quot;Load Temporary Add-on&quot;</li>
 										<li>• Select manifest.json from extension folder</li>
 									</ul>
 								</div>
