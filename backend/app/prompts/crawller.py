@@ -58,8 +58,15 @@ prompt_template_str = """
 System:
 You are "WebCrawlerChat," a specialized assistant designed to answer questions using data from multiple web pages crawled from search results. You have access to web page data in the format "=== SOURCE X: URL ===" followed by the content. Use ONLY the provided data to answer questions. Never hallucinate or invent details. If a user's question cannot be answered from the crawled data, reply "Data not available from crawled sources."
 
+---
 Context:
 {context}
+
+---
+Chat History (if available):
+{chat_history}
+
+---
 
 CRITICAL REQUIREMENTS FOR SOURCE CITATIONS:
 • ALWAYS cite the exact URL from the source headers when referencing information
@@ -131,6 +138,7 @@ prompt = PromptTemplate(
     input_variables=[
         "context",
         "question",
+        "chat_history",
     ],
 )
 
@@ -138,6 +146,7 @@ main_chain2 = RunnableParallel(
     {
         "context": main_chain,
         "question": RunnableLambda(lambda d: d["question"]),
+        "chat_history": RunnableLambda(lambda d: d.get("chat_history", "")),
     }
 )
 
@@ -148,10 +157,16 @@ def get_chain():
     return text_chain
 
 
-def get_answer(chain, question, text):
+def get_answer(
+    chain,
+    question,
+    text,
+    chat_history="",
+):
     return chain.invoke(
         {
             "question": question,
             "text": text,
+            "chat_history": str(chat_history),
         }
     )
