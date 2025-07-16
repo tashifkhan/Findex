@@ -30,11 +30,18 @@ async def generate_crawler_answer(
 
         # preserves source URLs
         structured_content = []
+
         for item in crawled_web_data:
             url = item.get("url", "Unknown URL")
             content = item.get("md_body_content", "")
+
             if content.strip():
-                structured_content.append({"url": url, "content": content})
+                structured_content.append(
+                    {
+                        "url": url,
+                        "content": content,
+                    }
+                )
 
         if not structured_content:
             return "I couldn't find any relevant information from web search results."
@@ -90,6 +97,7 @@ async def crawller(request: CrawlerRequest):
                 status_code=400,
                 detail="question is required",
             )
+
         answer = await generate_crawler_answer(question, chat_history)
         return {
             "answer": answer,
