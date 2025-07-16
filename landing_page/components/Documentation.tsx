@@ -64,7 +64,7 @@ const Documentation = () => {
 				{/* Mobile sidebar toggle */}
 				<button
 					onClick={() => setSidebarOpen(!sidebarOpen)}
-					className="fixed top-4 left-4 z-50 lg:hidden bg-gray-800 text-white p-2 rounded-lg shadow-lg"
+					className="fixed top-20 left-4 z-50 lg:hidden bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg shadow-lg"
 				>
 					{sidebarOpen ? (
 						<X className="w-6 h-6" />
@@ -76,7 +76,7 @@ const Documentation = () => {
 				{/* Desktop sidebar toggle */}
 				<button
 					onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-					className="fixed top-4 left-4 z-50 hidden lg:block bg-gray-800 text-white p-2 rounded-lg shadow-lg transition-all duration-300"
+					className="fixed top-20 z-50 hidden lg:block bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-lg shadow-lg transition-all duration-300"
 					style={{ left: sidebarCollapsed ? "1rem" : "17rem" }}
 				>
 					{sidebarCollapsed ? (
