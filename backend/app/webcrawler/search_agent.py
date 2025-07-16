@@ -2,7 +2,7 @@ import os
 import sys
 import requests
 import googlesearch
-from typing import List, Optional
+from typing import Optional
 
 try:
     from app.website_context import html_md_convertor
@@ -51,7 +51,7 @@ def search_urls(
     query: str,
     search_url: Optional[str] = None,
     max_results: int = 5,
-) -> List[str]:
+) -> list[str]:
     """
     Search for URLs using Google search (synchronously).
     Returns a list of result URLs.
@@ -94,7 +94,7 @@ def html_to_markdown(html: str) -> str:
         return html
 
 
-def get_cleaned_texts(urls: List[str]) -> List[dict]:
+def get_cleaned_texts(urls: list[str]) -> list[dict]:
     """
     Fetch and clean text from multiple URLs synchronously.
     Returns a list of dictionaries with url and md_body_content.
@@ -124,7 +124,7 @@ def web_search_pipeline(
     query: str,
     search_url: Optional[str] = None,
     max_results: int = 5,
-) -> List[dict]:
+) -> list[dict]:
     """
     Run the full web search and extraction pipeline synchronously:
     1. Search for URLs using the query.
@@ -159,5 +159,6 @@ if __name__ == "__main__":
             print(f"  {i+1}. URL: {result['url']}")
             print(f"     Content preview: {result['md_body_content'][:100]}...")
             print()
+
     else:
         print("No URLs found or an error occurred.")

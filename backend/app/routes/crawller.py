@@ -10,19 +10,56 @@ router = APIRouter()
 logger = get_logger(__name__)
 chain = get_chain()
 
-# Remove test code and variables
 
+async def generate_crawler_answer(
+    question: str,
+    chat_history: list,
+) -> str:
 
-async def generate_crawler_answer(question: str, chat_history: list) -> str:
     try:
         crawled_web_data = web_search_pipeline(question)
-        # Format chat_history as a string for get_answer
-        chat_history_str = json.dumps(chat_history)
+        print(f"Crawled web data: {crawled_web_data}")
+        print(f"Number of results: {len(crawled_web_data) if crawled_web_data else 0}")
+
+        if not crawled_web_data:
+            return "I couldn't find any relevant information from web search results."
+
+        # Create a structured format that preserves source URLs
+        structured_content = []
+        for item in crawled_web_data:
+            url = item.get("url", "Unknown URL")
+            content = item.get("md_body_content", "")
+            if content.strip():  # Only include non-empty content
+                structured_content.append({"url": url, "content": content})
+
+        if not structured_content:
+            return "I couldn't find any relevant information from web search results."
+
+        # Format the content in a way that preserves source information
+        formatted_content = ""
+        for i, item in enumerate(structured_content, 1):
+            formatted_content += f"=== SOURCE {i}: {item['url']} ===\n"
+            formatted_content += f"URL: {item['url']}\n"
+            formatted_content += f"CONTENT:\n{item['content']}\n\n"
+
+        print(f"Number of sources with content: {len(structured_content)}")
+        print(f"Formatted content preview: {formatted_content[:800]}...")
+
+        if chat_history:
+            chat_history_str = json.dumps(chat_history)
+            full_question = f"Previous conversation context:\n{chat_history_str}\n\nCurrent question: {question}"
+
+        else:
+            full_question = question
+
         response = get_answer(
             chain,
-            f"what was previously discussed:\n{chat_history_str}",
-            crawled_web_data,
+            full_question,
+            formatted_content,
         )
+
+        print(f"LLM response type: {type(response)}")
+        print(f"LLM response: {response}")
 
         if isinstance(response, str):
             return response
