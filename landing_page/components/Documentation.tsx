@@ -39,7 +39,7 @@ const Documentation = () => {
 	};
 	return (
 		<div
-			className="min-h-screen text-white overflow-hidden py-16"
+			className="min-h-screen text-white overflow-hidden py-16 pt-24"
 			style={{
 				background:
 					"radial-gradient(ellipse 80% 60% at 60% 20%, var(--accent-ocean) 0%, transparent 60%)," +
@@ -99,11 +99,11 @@ const Documentation = () => {
 					}`}
 				>
 					<div
-						className={`p-4 h-full overflow-y-auto ${
+						className={`p-4 h-full overflow-y-auto pt-20 ${
 							sidebarCollapsed ? "lg:hidden" : ""
 						}`}
 					>
-						<div className="mb-6 pt-12 lg:pt-4">
+						<div className="mb-6 pt-4 lg:pt-4">
 							<h3 className="text-white font-semibold text-lg">
 								Documentation
 							</h3>
