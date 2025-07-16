@@ -8,9 +8,34 @@ import {
 	Globe,
 	CheckCircle,
 	Settings,
+	Menu,
+	X,
 } from "lucide-react";
+import { useState } from "react";
 
 const Documentation = () => {
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+
+	const sections = [
+		{ id: "overview", title: "Overview" },
+		{ id: "quick-start", title: "Quick Start" },
+		{ id: "features", title: "Key Features" },
+		{ id: "docker", title: "Docker Self-Hosting" },
+		{ id: "architecture", title: "Architecture" },
+		{ id: "api", title: "API Reference" },
+		{ id: "use-cases", title: "Use Cases" },
+		{ id: "installation", title: "Installation Guide" },
+		{ id: "roadmap", title: "Roadmap" },
+		{ id: "github", title: "GitHub Repository" },
+	];
+
+	const scrollToSection = (id: string) => {
+		const element = document.getElementById(id);
+		if (element) {
+			element.scrollIntoView({ behavior: "smooth" });
+		}
+		setSidebarOpen(false);
+	};
 	return (
 		<div
 			className="min-h-screen text-white overflow-hidden py-16"
@@ -35,6 +60,48 @@ const Documentation = () => {
 			></div>
 
 			<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+				{/* Mobile sidebar toggle */}
+				<button
+					onClick={() => setSidebarOpen(!sidebarOpen)}
+					className="fixed top-4 left-4 z-50 lg:hidden bg-gray-800 text-white p-2 rounded-lg shadow-lg"
+				>
+					{sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+				</button>
+
+				{/* Sidebar */}
+				<div
+					className={`fixed top-0 left-0 h-full w-64 bg-gray-900/95 backdrop-blur-sm z-40 transition-transform duration-300 ${
+						sidebarOpen ? "translate-x-0" : "-translate-x-full"
+					} lg:translate-x-0 lg:sticky lg:top-4 lg:h-fit lg:max-h-screen lg:overflow-y-auto lg:bg-gray-800/30 lg:rounded-xl lg:p-4`}
+				>
+					<div className="p-4 lg:p-0">
+						<h3 className="text-white font-semibold mb-4 lg:text-lg">
+							Documentation
+						</h3>
+						<nav className="space-y-2">
+							{sections.map((section) => (
+								<button
+									key={section.id}
+									onClick={() => scrollToSection(section.id)}
+									className="block w-full text-left px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-colors text-sm"
+								>
+									{section.title}
+								</button>
+							))}
+						</nav>
+					</div>
+				</div>
+
+				{/* Overlay for mobile */}
+				{sidebarOpen && (
+					<div
+						className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+						onClick={() => setSidebarOpen(false)}
+					/>
+				)}
+
+				{/* Main content */}
+				<div className="lg:ml-72">
 				{/* Header */}
 				<div className="text-center mb-16">
 					<h1
@@ -57,6 +124,7 @@ const Documentation = () => {
 
 				{/* Quick Start Section */}
 				<section
+					id="quick-start"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -113,6 +181,7 @@ const Documentation = () => {
 
 				{/* Overview Section */}
 				<section
+					id="overview"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -181,6 +250,7 @@ const Documentation = () => {
 
 				{/* Features Section */}
 				<section
+					id="features"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -244,6 +314,7 @@ const Documentation = () => {
 
 				{/* Docker Self-Hosting Section */}
 				<section
+					id="docker"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -364,6 +435,7 @@ const Documentation = () => {
 
 				{/* Architecture Section */}
 				<section
+					id="architecture"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -457,6 +529,7 @@ const Documentation = () => {
 
 				{/* API Documentation Section */}
 				<section
+					id="api"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -875,6 +948,7 @@ const Documentation = () => {
 
 				{/* Use Cases Section */}
 				<section
+					id="use-cases"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -937,6 +1011,7 @@ const Documentation = () => {
 
 				{/* Installation Guide Section */}
 				<section
+					id="installation"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -1028,6 +1103,7 @@ const Documentation = () => {
 
 				{/* Roadmap Section */}
 				<section
+					id="roadmap"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -1075,6 +1151,7 @@ const Documentation = () => {
 
 				{/* GitHub Repository Section */}
 				<section
+					id="github"
 					className="rounded-xl p-8 mb-12"
 					style={{
 						background: "rgba(20, 30, 40, 0.35)",
@@ -1186,6 +1263,7 @@ const Documentation = () => {
 						</a>
 					</div>
 				</section>
+				</div>
 			</div>
 		</div>
 	);
