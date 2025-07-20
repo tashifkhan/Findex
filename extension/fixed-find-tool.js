@@ -1123,23 +1123,33 @@ class FixedFindTool {
         })
         .then(data => {
             if (data.answer && data.answer.trim() === 'Data not available.') {
-                this.aiContent.innerHTML = 'Data not available. <button id="fixedFindAICrawlBtn">Crawl the web?</button>';
-                const crawlBtn = document.getElementById('fixedFindAICrawlBtn');
-                crawlBtn.onclick = async () => {
-                    this.aiContent.innerHTML = '<div class="fixed-find-toolbar-ai-loading">Crawling the web...</div>';
-                    try {
-                        const crawlResp = await fetch('http://localhost:5454/crawller', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ question, chat_history: [] })
-                        });
-                        if (!crawlResp.ok) throw new Error('Backend error');
-                        const crawlData = await crawlResp.json();
-                        this.aiContent.textContent = crawlData.answer || 'No answer received from web search.';
-                    } catch (err) {
-                        this.aiContent.textContent = 'Error contacting backend (web search): ' + err.message;
+                this.aiContent.innerHTML = 'Data not available. <button id="fixedFindAICrawlBtn" style="margin-left:8px;">Yes</button> <button id="fixedFindAINoBtn" style="margin-left:4px;">No</button>';
+                setTimeout(() => {
+                    const crawlBtn = document.getElementById('fixedFindAICrawlBtn');
+                    const noBtn = document.getElementById('fixedFindAINoBtn');
+                    if (crawlBtn) {
+                        crawlBtn.onclick = async () => {
+                            this.aiContent.innerHTML = '<div class="fixed-find-toolbar-ai-loading">Crawling the web...</div>';
+                            try {
+                                const crawlResp = await fetch('http://localhost:5454/crawller', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ question, chat_history: [] })
+                                });
+                                if (!crawlResp.ok) throw new Error('Backend error');
+                                const crawlData = await crawlResp.json();
+                                this.aiContent.textContent = crawlData.answer || 'No answer received from web search.';
+                            } catch (err) {
+                                this.aiContent.textContent = 'Error contacting backend (web search): ' + err.message;
+                            }
+                        };
                     }
-                };
+                    if (noBtn) {
+                        noBtn.onclick = () => {
+                            this.aiContent.textContent = 'Okay, not crawling the web.';
+                        };
+                    }
+                }, 0);
             } else {
                 this.aiContent.textContent = data.answer || 'No answer received.';
             }

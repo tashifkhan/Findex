@@ -673,23 +673,33 @@ class PageSearch {
         })
         .then(data => {
             if (data.answer && data.answer.trim() === 'Data not available.') {
-                this.showAIResponse('Data not available. <button id="pageSearchAICrawlBtn">Crawl the web?</button>');
-                const crawlBtn = document.getElementById('pageSearchAICrawlBtn');
-                crawlBtn.onclick = async () => {
-                    this.showAIResponse('<div class="page-search-ai-loading">Crawling the web...</div>');
-                    try {
-                        const crawlResp = await fetch('http://localhost:5454/crawller', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ question, chat_history: [] })
-                        });
-                        if (!crawlResp.ok) throw new Error('Backend error');
-                        const crawlData = await crawlResp.json();
-                        this.showAIResponse(crawlData.answer || 'No answer received from web search.');
-                    } catch (err) {
-                        this.showAIResponse('Error contacting backend (web search): ' + err.message);
+                this.showAIResponse('Data not available. <button id="pageSearchAICrawlBtn" style="margin-left:8px;">Yes</button> <button id="pageSearchAINoBtn" style="margin-left:4px;">No</button>');
+                setTimeout(() => {
+                    const crawlBtn = document.getElementById('pageSearchAICrawlBtn');
+                    const noBtn = document.getElementById('pageSearchAINoBtn');
+                    if (crawlBtn) {
+                        crawlBtn.onclick = async () => {
+                            this.showAIResponse('<div class="page-search-ai-loading">Crawling the web...</div>');
+                            try {
+                                const crawlResp = await fetch('http://localhost:5454/crawller', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ question, chat_history: [] })
+                                });
+                                if (!crawlResp.ok) throw new Error('Backend error');
+                                const crawlData = await crawlResp.json();
+                                this.showAIResponse(crawlData.answer || 'No answer received from web search.');
+                            } catch (err) {
+                                this.showAIResponse('Error contacting backend (web search): ' + err.message);
+                            }
+                        };
                     }
-                };
+                    if (noBtn) {
+                        noBtn.onclick = () => {
+                            this.showAIResponse('Okay, not crawling the web.');
+                        };
+                    }
+                }, 0);
             } else {
                 this.showAIResponse(data.answer || 'No answer received.');
             }
