@@ -1,3 +1,4 @@
+from codecs import charmap_build
 from fastapi import APIRouter, HTTPException
 from app.core import get_logger
 from app.prompts.website import text_chain, get_answer, get_chain
@@ -17,7 +18,8 @@ async def generate_website_answer(
 ) -> str:
     try:
         markdown_page_info = markdown_fetcher(url)
-        # print(f"Markdown page info: {markdown_page_info}")
+        print(f"Markdown page info: {markdown_page_info}")
+
 
         chat_history_str = ""
         if chat_history:

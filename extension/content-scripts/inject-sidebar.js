@@ -482,11 +482,78 @@
                             renderMessages();
                         }
                     } else {
-                        setTimeout(() => {
-                            messages.push({ type: 'ai', content: `This is a demo response to: "${message}". In a real implementation, this would connect to your AI backend.` });
+                        // --- Normal website logic ---
+                        try {
+                            const response = await fetch('http://localhost:5454/website', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    url: window.location.href,
+                                    question: message,
+                                    chat_history: []
+                                })
+                            });
+                            if (!response.ok) throw new Error('Backend error');
+                            const data = await response.json();
+                            if (data.answer && data.answer.trim() === 'Data not available.') {
+                                // Prompt user for web search
+                                messages.push({ type: 'ai', content: 'Data not available. Would you like to perform a web search to try to answer this question?', searchPrompt: true, originalQuestion: message });
+                                isLoading = false;
+                                renderMessages();
+                                // Add Yes/No buttons
+                                const messagesContainer = document.querySelector('#findex-messages');
+                                if (messagesContainer) {
+                                    const promptDiv = document.createElement('div');
+                                    promptDiv.style.cssText = 'margin: 0 auto 0 0; max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; margin-bottom: 12px; background: #f5f7fa; color: #374151; border: 1px solid #e5e7eb; display: flex; gap: 8px; align-items: center;';
+                                    const yesBtn = document.createElement('button');
+                                    yesBtn.textContent = 'Yes';
+                                    yesBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #4a90e2; color: #fff; cursor: pointer; font-size: 14px;';
+                                    const noBtn = document.createElement('button');
+                                    noBtn.textContent = 'No';
+                                    noBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #e5e7eb; color: #374151; cursor: pointer; font-size: 14px;';
+                                    promptDiv.appendChild(yesBtn);
+                                    promptDiv.appendChild(noBtn);
+                                    messagesContainer.appendChild(promptDiv);
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                    yesBtn.onclick = async () => {
+                                        promptDiv.remove();
+                                        isLoading = true;
+                                        renderMessages();
+                                        try {
+                                            const crawllerResp = await fetch('http://localhost:5454/crawller', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({
+                                                    question: message,
+                                                    chat_history: []
+                                                })
+                                            });
+                                            if (!crawllerResp.ok) throw new Error('Backend error');
+                                            const crawllerData = await crawllerResp.json();
+                                            messages.push({ type: 'ai', content: crawllerData.answer || 'No answer received from web search.' });
+                                        } catch (err) {
+                                            messages.push({ type: 'ai', content: 'Error contacting backend (web search): ' + err.message });
+                                        } finally {
+                                            isLoading = false;
+                                            renderMessages();
+                                        }
+                                    };
+                                    noBtn.onclick = () => {
+                                        promptDiv.remove();
+                                        messages.push({ type: 'ai', content: 'Okay, not performing a web search.' });
+                                        renderMessages();
+                                    };
+                                }
+                            } else {
+                                messages.push({ type: 'ai', content: data.answer || 'No answer received.' });
+                                isLoading = false;
+                                renderMessages();
+                            }
+                        } catch (err) {
+                            messages.push({ type: 'ai', content: 'Error contacting backend: ' + err.message });
                             isLoading = false;
                             renderMessages();
-                        }, 1000);
+                        }
                     }
                 }
             };
