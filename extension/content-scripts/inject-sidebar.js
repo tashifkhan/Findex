@@ -82,8 +82,10 @@
     let currentTheme = localStorage.getItem('findexSidebarTheme') || 'default';
     let isCollapsed = localStorage.getItem('findexSidebarCollapsed') === 'true';
     let messages = [];
+    let chatHistory = [];
     let isLoading = false;
     let lastUrl = window.location.href;
+    let nextMessageId = 0;
 
     // --- Utility functions ---
     function applyTheme(sidebar, themeKey) {
@@ -398,17 +400,30 @@
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (message && !isLoading) {
+                    // Add user message to messages and chatHistory
                     messages.push({ type: 'user', content: message });
+                    chatHistory.push({ id: nextMessageId++, role: 'user', content: message });
                     chatInput.value = '';
                     isLoading = true;
                     renderMessages();
 
-                    // --- YouTube video detection ---
                     const isYouTubeVideo =
                         (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') &&
                         window.location.pathname === '/watch' &&
                         !!(new URLSearchParams(window.location.search).get('v'));
 
+                    // Helper to add bot message to both messages and chatHistory
+                    function addBotMessage(content) {
+                        messages.push({ type: 'ai', content });
+                        chatHistory.push({ id: nextMessageId++, role: 'bot', content });
+                    }
+
+                    // Helper to add bot message to messages only (for crawller prompt)
+                    function addBotMessageNoHistory(content) {
+                        messages.push({ type: 'ai', content });
+                    }
+
+                    // --- YouTube video logic ---
                     if (isYouTubeVideo) {
                         try {
                             const response = await fetch('http://localhost:5454/ask', {
@@ -417,14 +432,13 @@
                                 body: JSON.stringify({
                                     url: window.location.href,
                                     question: message,
-                                    chat_history: []
+                                    chat_history: chatHistory.slice(0, chatHistory.length - 1) // exclude current user message
                                 })
                             });
                             if (!response.ok) throw new Error('Backend error');
                             const data = await response.json();
                             if (data.answer && data.answer.trim() === 'Data not available.') {
-                                // Prompt user for web search
-                                messages.push({ type: 'ai', content: 'Data not available. Would you like to perform a web search to try to answer this question?', searchPrompt: true, originalQuestion: message });
+                                addBotMessageNoHistory('Data not available. Would you like to perform a web search to try to answer this question?');
                                 isLoading = false;
                                 renderMessages();
                                 // Add Yes/No buttons
@@ -457,9 +471,9 @@
                                             });
                                             if (!crawllerResp.ok) throw new Error('Backend error');
                                             const crawllerData = await crawllerResp.json();
-                                            messages.push({ type: 'ai', content: crawllerData.answer || 'No answer received from web search.' });
+                                            addBotMessage(crawllerData.answer || 'No answer received from web search.');
                                         } catch (err) {
-                                            messages.push({ type: 'ai', content: 'Error contacting backend (web search): ' + err.message });
+                                            addBotMessage('Error contacting backend (web search): ' + err.message);
                                         } finally {
                                             isLoading = false;
                                             renderMessages();
@@ -467,17 +481,17 @@
                                     };
                                     noBtn.onclick = () => {
                                         promptDiv.remove();
-                                        messages.push({ type: 'ai', content: 'Okay, not performing a web search.' });
+                                        addBotMessage('Okay, not performing a web search.');
                                         renderMessages();
                                     };
                                 }
                             } else {
-                                messages.push({ type: 'ai', content: data.answer || 'No answer received.' });
+                                addBotMessage(data.answer || 'No answer received.');
                                 isLoading = false;
                                 renderMessages();
                             }
                         } catch (err) {
-                            messages.push({ type: 'ai', content: 'Error contacting backend: ' + err.message });
+                            addBotMessage('Error contacting backend: ' + err.message);
                             isLoading = false;
                             renderMessages();
                         }
@@ -490,14 +504,13 @@
                                 body: JSON.stringify({
                                     url: window.location.href,
                                     question: message,
-                                    chat_history: []
+                                    chat_history: chatHistory.slice(0, chatHistory.length - 1) // exclude current user message
                                 })
                             });
                             if (!response.ok) throw new Error('Backend error');
                             const data = await response.json();
                             if (data.answer && data.answer.trim() === 'Data not available.') {
-                                // Prompt user for web search
-                                messages.push({ type: 'ai', content: 'Data not available. Would you like to perform a web search to try to answer this question?', searchPrompt: true, originalQuestion: message });
+                                addBotMessageNoHistory('Data not available. Would you like to perform a web search to try to answer this question?');
                                 isLoading = false;
                                 renderMessages();
                                 // Add Yes/No buttons
@@ -530,9 +543,9 @@
                                             });
                                             if (!crawllerResp.ok) throw new Error('Backend error');
                                             const crawllerData = await crawllerResp.json();
-                                            messages.push({ type: 'ai', content: crawllerData.answer || 'No answer received from web search.' });
+                                            addBotMessage(crawllerData.answer || 'No answer received from web search.');
                                         } catch (err) {
-                                            messages.push({ type: 'ai', content: 'Error contacting backend (web search): ' + err.message });
+                                            addBotMessage('Error contacting backend (web search): ' + err.message);
                                         } finally {
                                             isLoading = false;
                                             renderMessages();
@@ -540,17 +553,17 @@
                                     };
                                     noBtn.onclick = () => {
                                         promptDiv.remove();
-                                        messages.push({ type: 'ai', content: 'Okay, not performing a web search.' });
+                                        addBotMessage('Okay, not performing a web search.');
                                         renderMessages();
                                     };
                                 }
                             } else {
-                                messages.push({ type: 'ai', content: data.answer || 'No answer received.' });
+                                addBotMessage(data.answer || 'No answer received.');
                                 isLoading = false;
                                 renderMessages();
                             }
                         } catch (err) {
-                            messages.push({ type: 'ai', content: 'Error contacting backend: ' + err.message });
+                            addBotMessage('Error contacting backend: ' + err.message);
                             isLoading = false;
                             renderMessages();
                         }
