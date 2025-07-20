@@ -129,15 +129,31 @@ def get_chain():
 
 
 def get_answer(
-    chain,
+    chain,  # kept for compatibility, but not used
     question,
     text,
     chat_history="",
 ):
-    return chain.invoke(
-        {
+    # 1. Chunk the text
+    chunks = create_chunks(text)
+    # 2. Create the vector store
+    vector_store = embedding_generation(chunks)
+    try:
+        # 3. Retrieve relevant docs
+        retrieved_docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 3}).invoke(question)
+        # 4. Format docs
+        context = format_docs(retrieved_docs)
+        # 5. Prepare prompt
+        prompt_input = {
+            "context": context,
             "question": question,
-            "text": text,
             "chat_history": str(chat_history),
-        },
-    )
+        }
+        # 6. Generate answer
+        answer = prompt | llm.client | parser
+        return answer.invoke(prompt_input)
+    
+    finally:
+        # 7. Delete the vector DB
+        if hasattr(vector_store, "delete_collection"):
+            vector_store.delete_collection()
