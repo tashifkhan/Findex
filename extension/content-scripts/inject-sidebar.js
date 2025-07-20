@@ -394,7 +394,7 @@
             // Chat form
             const chatForm = sidebarContent.querySelector('#findex-chat-form');
             const chatInput = sidebarContent.querySelector('#findex-chat-input');
-            chatForm.onsubmit = (e) => {
+            chatForm.onsubmit = async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
                 if (message && !isLoading) {
@@ -402,11 +402,40 @@
                     chatInput.value = '';
                     isLoading = true;
                     renderMessages();
-                    setTimeout(() => {
-                        messages.push({ type: 'ai', content: `This is a demo response to: "${message}". In a real implementation, this would connect to your AI backend.` });
-                        isLoading = false;
-                        renderMessages();
-                    }, 1000);
+
+                    // --- YouTube video detection ---
+                    const isYouTubeVideo =
+                        (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') &&
+                        window.location.pathname === '/watch' &&
+                        !!(new URLSearchParams(window.location.search).get('v'));
+
+                    if (isYouTubeVideo) {
+                        try {
+                            const response = await fetch('http://localhost:5454/ask', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    url: window.location.href,
+                                    question: message,
+                                    chat_history: []
+                                })
+                            });
+                            if (!response.ok) throw new Error('Backend error');
+                            const data = await response.json();
+                            messages.push({ type: 'ai', content: data.answer || 'No answer received.' });
+                        } catch (err) {
+                            messages.push({ type: 'ai', content: 'Error contacting backend: ' + err.message });
+                        } finally {
+                            isLoading = false;
+                            renderMessages();
+                        }
+                    } else {
+                        setTimeout(() => {
+                            messages.push({ type: 'ai', content: `This is a demo response to: "${message}". In a real implementation, this would connect to your AI backend.` });
+                            isLoading = false;
+                            renderMessages();
+                        }, 1000);
+                    }
                 }
             };
 
