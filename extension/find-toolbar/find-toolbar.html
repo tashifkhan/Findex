@@ -302,13 +302,15 @@
                     <span class="text-xs font-medium">Find:</span>
                 </div>
                 
-                <div class="find-input-container">
+                <div class="find-input-container flex items-center gap-2">
                     <input
-                        id="findInput"
                         type="text"
-                        placeholder="Search in transcript..."
-                        class="find-input focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        id="findInput"
+                        class="find-toolbar-input"
+                        placeholder="Search for text..."
+                        autocomplete="off"
                     />
+                    <button class="find-toolbar-btn primary" id="findAskAIBtn" title="Ask AI about this page">Ask AI</button>
                 </div>
                 
                 <div class="flex items-center gap-1">
@@ -320,9 +322,14 @@
                     </button>
                 </div>
                 
-                <div id="findResults" class="find-results text-xs">
-                    0 of 0
+                <div class="find-toolbar-controls flex items-center justify-between mt-2">
+                    <div class="find-toolbar-nav flex items-center gap-2">
+                        <button class="find-toolbar-btn" id="findPrevButton" title="Previous (Shift+Enter)">Prev</button>
+                        <button class="find-toolbar-btn" id="findNextButton" title="Next (Enter)">Next</button>
+                    </div>
+                    <div class="find-toolbar-status" id="findResults"></div>
                 </div>
+                <div class="find-toolbar-status" id="findAIStatus" style="margin-top: 8px;"></div>
             </div>
             
             <!-- Right side - Options and close -->

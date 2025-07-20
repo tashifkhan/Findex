@@ -59,6 +59,7 @@ class FindInPage {
                         placeholder="Search for text..."
                         autocomplete="off"
                     >
+                    <button class="find-toolbar-btn" id="findAskAIBtn" title="Ask AI about this page">Ask AI</button>
                 </div>
                 
                 <div class="find-toolbar-options">
@@ -80,6 +81,7 @@ class FindInPage {
                     </div>
                     <div class="find-toolbar-status" id="findStatus"></div>
                 </div>
+                <div class="find-toolbar-status" id="findAIStatus" style="margin-top: 8px;"></div>
             </div>
         `;
 
@@ -253,6 +255,59 @@ class FindInPage {
         this.nextBtn.addEventListener('click', () => this.goToNext());
         this.clearBtn.addEventListener('click', () => this.clearHighlights());
         this.closeBtn.addEventListener('click', () => this.hide());
+
+        // Ask AI button event
+        this.askAIBtn = document.getElementById('findAskAIBtn');
+        this.aiStatus = document.getElementById('findAIStatus');
+        this.askAIBtn.addEventListener('click', async () => {
+            this.aiStatus.textContent = '';
+            if (this.matches.length > 0) {
+                this.aiStatus.textContent = 'Content found on the page. Try refining your search or use Ask AI for something not present.';
+                return;
+            }
+            if (!this.searchTerm.trim()) {
+                this.aiStatus.textContent = 'Please enter a question or topic.';
+                return;
+            }
+            this.aiStatus.textContent = 'Thinking...';
+            const url = window.location.href;
+            const question = this.searchTerm.trim();
+            const isYouTube = (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') && window.location.pathname === '/watch' && !!(new URLSearchParams(window.location.search).get('v'));
+            let endpoint = isYouTube ? 'ask' : 'website';
+            let payload = { url, question, chat_history: [] };
+            try {
+                const resp = await fetch(`http://localhost:5454/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!resp.ok) throw new Error('Backend error');
+                const data = await resp.json();
+                if (data.answer && data.answer.trim() === 'Data not available.') {
+                    this.aiStatus.innerHTML = 'Data not available. <button id="findAICrawlBtn">Crawl the web?</button>';
+                    const crawlBtn = document.getElementById('findAICrawlBtn');
+                    crawlBtn.onclick = async () => {
+                        this.aiStatus.textContent = 'Crawling the web...';
+                        try {
+                            const crawlResp = await fetch('http://localhost:5454/crawller', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ question, chat_history: [] })
+                            });
+                            if (!crawlResp.ok) throw new Error('Backend error');
+                            const crawlData = await crawlResp.json();
+                            this.aiStatus.textContent = crawlData.answer || 'No answer received from web search.';
+                        } catch (err) {
+                            this.aiStatus.textContent = 'Error contacting backend (web search): ' + err.message;
+                        }
+                    };
+                } else {
+                    this.aiStatus.textContent = data.answer || 'No answer received.';
+                }
+            } catch (err) {
+                this.aiStatus.textContent = 'Error contacting backend: ' + err.message;
+            }
+        });
 
         // Option changes
         this.caseSensitiveCheckbox.addEventListener('change', () => this.performSearch());

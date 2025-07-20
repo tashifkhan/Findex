@@ -1096,29 +1096,57 @@ class FixedFindTool {
         this.aiResponseContainer.classList.add('show');
         this.aiContent.innerHTML = '<div class="fixed-find-toolbar-ai-loading">Asking AI...</div>';
 
-        // Simulate AI response based on search results
-        setTimeout(() => {
-            if (this.matches.length > 0) {
-                this.aiContent.innerHTML = `
-                    <p><strong>Found ${this.matches.length} matches for "${this.searchTerm}" in the DOM.</strong></p>
-                    <p>The term appears in various contexts throughout the page content. You can use the navigation buttons to browse through each occurrence.</p>
-                    <p><em>Current position: ${this.currentIndex + 1} of ${this.matches.length}</em></p>
-                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide contextual analysis and insights about the search term.</em></p>
-                `;
+        // Backend integration
+        if (this.matches.length > 0) {
+            this.aiContent.innerHTML = `
+                <p><strong>Found ${this.matches.length} matches for "${this.searchTerm}" in the DOM.</strong></p>
+                <p>The term appears in various contexts throughout the page content. You can use the navigation buttons to browse through each occurrence.</p>
+                <p><em>Current position: ${this.currentIndex + 1} of ${this.matches.length}</em></p>
+            `;
+            return;
+        }
+
+        // No matches, call backend
+        const url = window.location.href;
+        const question = this.searchTerm.trim();
+        const isYouTube = (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') && window.location.pathname === '/watch' && !!(new URLSearchParams(window.location.search).get('v'));
+        let endpoint = isYouTube ? 'ask' : 'website';
+        let payload = { url, question, chat_history: [] };
+        fetch(`http://localhost:5454/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(resp => {
+            if (!resp.ok) throw new Error('Backend error');
+            return resp.json();
+        })
+        .then(data => {
+            if (data.answer && data.answer.trim() === 'Data not available.') {
+                this.aiContent.innerHTML = 'Data not available. <button id="fixedFindAICrawlBtn">Crawl the web?</button>';
+                const crawlBtn = document.getElementById('fixedFindAICrawlBtn');
+                crawlBtn.onclick = async () => {
+                    this.aiContent.innerHTML = '<div class="fixed-find-toolbar-ai-loading">Crawling the web...</div>';
+                    try {
+                        const crawlResp = await fetch('http://localhost:5454/crawller', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ question, chat_history: [] })
+                        });
+                        if (!crawlResp.ok) throw new Error('Backend error');
+                        const crawlData = await crawlResp.json();
+                        this.aiContent.textContent = crawlData.answer || 'No answer received from web search.';
+                    } catch (err) {
+                        this.aiContent.textContent = 'Error contacting backend (web search): ' + err.message;
+                    }
+                };
             } else {
-                this.aiContent.innerHTML = `
-                    <p><strong>No exact matches found for "${this.searchTerm}" in the DOM.</strong></p>
-                    <p>Here are some suggestions:</p>
-                    <ul>
-                        <li>Try different keywords or synonyms</li>
-                        <li>Check for spelling variations</li>
-                        <li>Use broader search terms</li>
-                        <li>Consider related concepts</li>
-                    </ul>
-                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide intelligent suggestions and alternative search strategies.</em></p>
-                `;
+                this.aiContent.textContent = data.answer || 'No answer received.';
             }
-        }, 1500); // Simulate a 1.5-second loading time
+        })
+        .catch(err => {
+            this.aiContent.textContent = 'Error contacting backend: ' + err.message;
+        });
     }
 
     openSidebar() {

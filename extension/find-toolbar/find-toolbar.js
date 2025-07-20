@@ -33,6 +33,60 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Apply initial theme
     applyTheme(currentTheme);
+
+    const findAskAIBtn = document.getElementById('findAskAIBtn');
+    const findAIStatus = document.getElementById('findAIStatus');
+    if (findAskAIBtn && findAIStatus) {
+        findAskAIBtn.addEventListener('click', async () => {
+            findAIStatus.textContent = '';
+            if (searchResults.length > 0) {
+                findAIStatus.textContent = 'Content found on the page. Try refining your search or use Ask AI for something not present.';
+                return;
+            }
+            if (!findInput.value.trim()) {
+                findAIStatus.textContent = 'Please enter a question or topic.';
+                return;
+            }
+            findAIStatus.textContent = 'Thinking...';
+            const url = window.location.href;
+            const question = findInput.value.trim();
+            const isYouTube = (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') && window.location.pathname === '/watch' && !!(new URLSearchParams(window.location.search).get('v'));
+            let endpoint = isYouTube ? 'ask' : 'website';
+            let payload = { url, question, chat_history: [] };
+            try {
+                const resp = await fetch(`http://localhost:5454/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!resp.ok) throw new Error('Backend error');
+                const data = await resp.json();
+                if (data.answer && data.answer.trim() === 'Data not available.') {
+                    findAIStatus.innerHTML = 'Data not available. <button id="findAICrawlBtn">Crawl the web?</button>';
+                    const crawlBtn = document.getElementById('findAICrawlBtn');
+                    crawlBtn.onclick = async () => {
+                        findAIStatus.textContent = 'Crawling the web...';
+                        try {
+                            const crawlResp = await fetch('http://localhost:5454/crawller', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ question, chat_history: [] })
+                            });
+                            if (!crawlResp.ok) throw new Error('Backend error');
+                            const crawlData = await crawlResp.json();
+                            findAIStatus.textContent = crawlData.answer || 'No answer received from web search.';
+                        } catch (err) {
+                            findAIStatus.textContent = 'Error contacting backend (web search): ' + err.message;
+                        }
+                    };
+                } else {
+                    findAIStatus.textContent = data.answer || 'No answer received.';
+                }
+            } catch (err) {
+                findAIStatus.textContent = 'Error contacting backend: ' + err.message;
+            }
+        });
+    }
 });
 
 function setupEventListeners() {

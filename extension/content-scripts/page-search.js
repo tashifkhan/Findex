@@ -647,28 +647,56 @@ class PageSearch {
         // Show loading state
         this.showAIResponse('<div class="page-search-ai-loading">Asking AI...</div>');
 
-        // Mock AI response based on search results
-        setTimeout(() => {
-            if (this.searchResults.length > 0) {
-                this.showAIResponse(`
-                    <p><strong>Found ${this.searchResults.length} matches for "${this.searchTerm}" on this page.</strong></p>
-                    <p>The term appears in various contexts throughout the content. You can use the navigation buttons to browse through each occurrence.</p>
-                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide contextual analysis and insights about the search term.</em></p>
-                `);
+        // Backend integration
+        if (this.searchResults.length > 0) {
+            this.showAIResponse(`
+                <p><strong>Found ${this.searchResults.length} matches for "${this.searchTerm}" on this page.</strong></p>
+                <p>The term appears in various contexts throughout the content. You can use the navigation buttons to browse through each occurrence.</p>
+            `);
+            return;
+        }
+
+        // No matches, call backend
+        const url = window.location.href;
+        const question = this.searchTerm.trim();
+        const isYouTube = (window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com') && window.location.pathname === '/watch' && !!(new URLSearchParams(window.location.search).get('v'));
+        let endpoint = isYouTube ? 'ask' : 'website';
+        let payload = { url, question, chat_history: [] };
+        fetch(`http://localhost:5454/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(resp => {
+            if (!resp.ok) throw new Error('Backend error');
+            return resp.json();
+        })
+        .then(data => {
+            if (data.answer && data.answer.trim() === 'Data not available.') {
+                this.showAIResponse('Data not available. <button id="pageSearchAICrawlBtn">Crawl the web?</button>');
+                const crawlBtn = document.getElementById('pageSearchAICrawlBtn');
+                crawlBtn.onclick = async () => {
+                    this.showAIResponse('<div class="page-search-ai-loading">Crawling the web...</div>');
+                    try {
+                        const crawlResp = await fetch('http://localhost:5454/crawller', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ question, chat_history: [] })
+                        });
+                        if (!crawlResp.ok) throw new Error('Backend error');
+                        const crawlData = await crawlResp.json();
+                        this.showAIResponse(crawlData.answer || 'No answer received from web search.');
+                    } catch (err) {
+                        this.showAIResponse('Error contacting backend (web search): ' + err.message);
+                    }
+                };
             } else {
-                this.showAIResponse(`
-                    <p><strong>No exact matches found for "${this.searchTerm}" on this page.</strong></p>
-                    <p>Here are some suggestions:</p>
-                    <ul>
-                        <li>Try different keywords or synonyms</li>
-                        <li>Check for spelling variations</li>
-                        <li>Use broader search terms</li>
-                        <li>Consider related concepts</li>
-                    </ul>
-                    <p><em>Note: This is a mock AI response. In a real implementation, this would provide intelligent suggestions and alternative search strategies.</em></p>
-                `);
+                this.showAIResponse(data.answer || 'No answer received.');
             }
-        }, 1500);
+        })
+        .catch(err => {
+            this.showAIResponse('Error contacting backend: ' + err.message);
+        });
     }
 
     showAIResponse(content) {
