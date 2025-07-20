@@ -349,7 +349,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 style="margin: 0; font-weight: 600; font-size: 16px;">YouTube Q&A</h3>
+                            <h3 style="margin: 0; font-weight: 600; font-size: 16px;">FindexAl</h3>
                             <p id="findex-status-text" style="margin: 0; font-size: 12px; opacity: 0.75;">Ready to help</p>
                         </div>
                     </div>
@@ -560,9 +560,9 @@
                         <div style="margin-top: 24px; text-align: left; padding: 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '12px'}; font-size: 14px; ${currentTheme === 'neobrutal' ? 'background: #fef3c7; border: 2px solid black;' : currentTheme === 'nintendo' ? 'background: #fee2e2; border: 1px solid #fca5a5;' : currentTheme === 'orange' ? 'background: #ffedd5; border: 1px solid #fdba74;' : currentTheme === 'orangeDark' ? 'background: #7c2d12; border: 1px solid #9a3412;' : currentTheme === 'blueLight' ? 'background: #dbeafe; border: 1px solid #bfdbfe;' : currentTheme === 'blueDark' ? 'background: #1e40af; border: 1px solid #1e3a8a;' : currentTheme === 'xp' ? 'background: #f1f5f9; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' : currentTheme === 'macos' ? 'background: #f3f4f6; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' : 'background: #f0f9ff; border: 1px solid #bae6fd;'}">
                             <p style="margin: 0 0 12px 0; font-weight: 500;">Try asking:</p>
                             <div style="margin: 0; line-height: 1.5; opacity: 0.8;">
-                                <div style="margin-bottom: 6px;">• "What is this video about?"</div>
+                                <div style="margin-bottom: 6px;">• "What is this video/ website about?"</div>
                                 <div style="margin-bottom: 6px;">• "Summarize the main points"</div>
-                                <div style="margin-bottom: 6px;">• "What does the speaker say about..."</div>
+                                <div style="margin-bottom: 6px;">• "Who what how..."</div>
                             </div>
                         </div>
                     `;
@@ -850,12 +850,12 @@
                 chatInput.disabled = false;
                 chatInput.placeholder = 'Ask about this video...';
                 sendButton.disabled = false;
-                statusText.textContent = 'Ready to help';
+                statusText.textContent = 'Your Agentic Comapnion';
             } else {
                 chatInput.disabled = false; // Enable for demo/development
                 chatInput.placeholder = 'Ask about this website...';
                 sendButton.disabled = false;
-                statusText.textContent = 'Demo mode';
+                statusText.textContent = 'Your Agentic Comapnion';
             }
 
             // Update video info if available
