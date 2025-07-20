@@ -4,79 +4,107 @@
 
     // --- Theme definitions ---
     const THEMES = {
-        default: {
-            name: 'Default',
-            sidebar: 'background: #f5f7fa; color: #374151;',
-            header: 'background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); color: white;',
-            bubbleUser: 'background: #4a90e2; color: #fff;',
-            bubbleAI: 'background: white; color: #374151; border: 1px solid #e5e7eb;',
-            input: 'background: white; color: #374151; border: 2px solid #e2e8f0;',
-            button: 'background: #4a90e2; color: #fff;',
-        },
-        xp: {
-            name: 'Windows XP',
-            sidebar: 'background: linear-gradient(to bottom, #e0e7ff, #f1f5f9); color: #111827;',
-            header: 'background: #2563eb; color: #fff;',
-            bubbleUser: 'background: #2563eb; color: #fff;',
-            bubbleAI: 'background: #fff; color: #1e40af; border: 1px solid #2563eb;',
-            input: 'background: #fff; color: #111827; border: 1.5px solid #2563eb;',
-            button: 'background: #2563eb; color: #fff;',
-        },
-        macos: {
-            name: 'macOS Classic',
-            sidebar: 'background: #e5e7eb; color: #111827;',
-            header: 'background: #c3c3c3; color: #111827;',
-            bubbleUser: 'background: #fff; color: #111827; border: 1px solid #6e6e6e;',
-            bubbleAI: 'background: #f3f4f6; color: #111827;',
-            input: 'background: #fff; color: #111827; border: 1.5px solid #6e6e6e;',
-            button: 'background: #6e6e6e; color: #fff;',
-        },
-        neobrutal: {
-            name: 'Neobrutal',
-            sidebar: 'background: #fde047; color: #111827;',
-            header: 'background: #fde047; color: #000;',
-            bubbleUser: 'background: #000; color: #fde047; border: 2px solid #000;',
-            bubbleAI: 'background: #fff; color: #000; border: 2px solid #000;',
-            input: 'background: #fff; color: #000; border: 2px solid #000;',
-            button: 'background: #fde047; color: #000; border: 2px solid #000;',
-        },
-        nintendo: {
-            name: 'Nintendo',
-            sidebar: 'background: #ef4444; color: #fff;',
-            header: 'background: #ef4444; color: #fff;',
-            bubbleUser: 'background: #fff; color: #dc2626; border: 1px solid #fca5a5;',
-            bubbleAI: 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;',
-            input: 'background: #fff; color: #dc2626; border: 1.5px solid #dc2626;',
-            button: 'background: #dc2626; color: #fff;',
-        },
-        orange: {
-            name: 'Orange Bright',
-            sidebar: 'background: #f97316; color: #fff;',
-            header: 'background: #f97316; color: #fff;',
-            bubbleUser: 'background: #fff; color: #ea580c; border: 1px solid #fdba74;',
-            bubbleAI: 'background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa;',
-            input: 'background: #fff; color: #ea580c; border: 1.5px solid #ea580c;',
-            button: 'background: #ea580c; color: #fff;',
-        },
-        blueLight: {
-            name: 'Cute Blue Light',
-            sidebar: 'background: #dbeafe; color: #1e3a8a;',
-            header: 'background: #dbeafe; color: #1e3a8a;',
-            bubbleUser: 'background: #3b82f6; color: #fff;',
-            bubbleAI: 'background: #fff; color: #1e40af; border: 1px solid #bfdbfe;',
-            input: 'background: #fff; color: #1e3a8a; border: 1.5px solid #bfdbfe;',
-            button: 'background: #2563eb; color: #fff;',
-        },
-        blueDark: {
-            name: 'Cute Blue Dark',
-            sidebar: 'background: #1e3a8a; color: #dbeafe;',
-            header: 'background: #1e3a8a; color: #dbeafe;',
-            bubbleUser: 'background: #2563eb; color: #fff;',
-            bubbleAI: 'background: #1e40af; color: #dbeafe; border: 1px solid #1e3a8a;',
-            input: 'background: #1e3a8a; color: #dbeafe; border: 1.5px solid #1e40af;',
-            button: 'background: #1e40af; color: #dbeafe;',
-        },
+        default: { name: "Default" },
+        xp: { name: "Windows XP" },
+        macos: { name: "macOS Classic" },
+        neobrutal: { name: "Neobrutal" },
+        nintendo: { name: "Nintendo" },
+        orange: { name: "Orange Bright" },
+        orangeDark: { name: "Orange Dark" },
+        blueLight: { name: "Cute Blue Light" },
+        blueDark: { name: "Cute Blue Dark" },
     };
+
+    // --- Inject Tailwind CSS CDN ---
+    function injectTailwindCSS() {
+        // Check if Tailwind CSS is already loaded
+        if (document.querySelector('script[src*="tailwindcss"]') || 
+            document.querySelector('#findex-tailwind-css')) {
+            return; // Already loaded
+        }
+
+        // Create and inject Tailwind CSS CDN script
+        const tailwindScript = document.createElement('script');
+        tailwindScript.id = 'findex-tailwind-css';
+        tailwindScript.src = 'https://cdn.tailwindcss.com';
+        tailwindScript.async = false; // Load synchronously to ensure styles are available
+        
+        // Configure Tailwind to work with our classes
+        tailwindScript.onload = () => {
+            console.log('Tailwind CSS loaded for Findex sidebar');
+            
+            // Configure Tailwind for our specific use case
+            if (window.tailwind) {
+                window.tailwind.config = {
+                    corePlugins: {
+                        preflight: false, // Disable preflight to avoid conflicts with page styles
+                    },
+                    important: '#findex-persistent-sidebar-container', // Scope to our container
+                    content: ['#findex-persistent-sidebar-container *'], // Only scan our content
+                    theme: {
+                        extend: {
+                            fontFamily: {
+                                'pixel': ['monospace'],
+                            },
+                            animation: {
+                                'bounce': 'bounce 0.5s ease infinite',
+                            }
+                        }
+                    }
+                };
+            }
+        };
+        
+        // Inject into document head
+        (document.head || document.documentElement).appendChild(tailwindScript);
+        
+        // Also add some custom CSS for animations and theme-specific styles
+        const customStyles = document.createElement('style');
+        customStyles.id = 'findex-custom-styles';
+        customStyles.textContent = `
+            @keyframes bounce {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-25%); }
+            }
+            
+            #findex-persistent-sidebar-container .pixel-font {
+                font-family: monospace;
+                image-rendering: pixelated;
+            }
+            
+            /* Ensure our sidebar styles take precedence */
+            #findex-persistent-sidebar-container * {
+                box-sizing: border-box;
+            }
+            
+            /* Fallback styles in case Tailwind CSS doesn't load immediately */
+            #findex-sidebar {
+                background-color: white !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            }
+            
+            /* Tailwind utility overrides for better compatibility */
+            #findex-persistent-sidebar-container .transition-all {
+                transition: all 0.15s ease !important;
+            }
+            
+            #findex-persistent-sidebar-container .duration-300 {
+                transition-duration: 0.3s !important;
+            }
+            
+            /* Theme-specific background fallbacks */
+            #findex-sidebar.bg-gray-300 { background-color: #d1d5db !important; }
+            #findex-sidebar.bg-yellow-300 { background-color: #fde047 !important; }
+            #findex-sidebar.bg-red-500 { background-color: #ef4444 !important; }
+            #findex-sidebar.bg-orange-500 { background-color: #f97316 !important; }
+            #findex-sidebar.bg-orange-900 { background-color: #7c2d12 !important; }
+            #findex-sidebar.bg-blue-100 { background-color: #dbeafe !important; }
+            #findex-sidebar.bg-blue-900 { background-color: #1e3a8a !important; }
+            #findex-sidebar.bg-white { background-color: white !important; }
+        `;
+        (document.head || document.documentElement).appendChild(customStyles);
+    }
 
     // --- State ---
     let currentTheme = localStorage.getItem('findexSidebarTheme') || 'default';
@@ -86,29 +114,115 @@
     let isLoading = false;
     let lastUrl = window.location.href;
     let nextMessageId = 0;
+    let videoData = null;
 
-    // --- Utility functions ---
-    function applyTheme(sidebar, themeKey) {
-        const theme = THEMES[themeKey] || THEMES.default;
-        const sidebarElement = sidebar.querySelector('.findex-sidebar') || sidebar;
-        sidebarElement.style.cssText = sidebarElement.style.cssText.replace(/background:[^;]+;/, '') + theme.sidebar;
-        
-        const header = sidebar.querySelector('.findex-header');
-        if (header) header.style.cssText = header.style.cssText.replace(/background:[^;]+;/, '') + theme.header;
-        
-        const input = sidebar.querySelector('.findex-input');
-        if (input) input.style.cssText = input.style.cssText.replace(/background:[^;]+;|border:[^;]+;/, '') + theme.input;
-        
-        sidebar.querySelectorAll('.findex-bubble.user').forEach(b => {
-            b.style.cssText = b.style.cssText.replace(/background:[^;]+;|color:[^;]+;/, '') + theme.bubbleUser;
-        });
-        sidebar.querySelectorAll('.findex-bubble.ai').forEach(b => {
-            b.style.cssText = b.style.cssText.replace(/background:[^;]+;|color:[^;]+;|border:[^;]+;/, '') + theme.bubbleAI;
-        });
-        sidebar.querySelectorAll('.findex-send-btn').forEach(b => {
-            b.style.cssText = b.style.cssText.replace(/background:[^;]+;/, '') + theme.button;
-        });
-    }
+    // Utility functions
+    const formatDuration = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const formatViews = (count) => {
+        if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
+        if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+        return count?.toLocaleString() || "0";
+    };
+
+    // Theme utility functions
+    const getHeaderClasses = (theme) => {
+        switch (theme) {
+            case "xp":
+                return "flex items-center justify-between p-1 border-b-2 border-black bg-blue-800 text-white";
+            case "macos":
+                return "flex items-center justify-between px-3 py-1 border-b-2 border-b-[#6e6e6e] bg-[#e0e0e0] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-none";
+            case "neobrutal":
+                return "flex items-center justify-between p-4 border-b-4 border-black bg-yellow-400";
+            case "nintendo":
+                return "flex items-center justify-between p-4 border-b border-red-700 bg-red-600 pixel-font";
+            case "orange":
+                return "flex items-center justify-between p-4 border-b border-orange-600 bg-orange-600";
+            case "orangeDark":
+                return "flex items-center justify-between p-4 border-b border-orange-800 bg-orange-800";
+            case "blueLight":
+                return "flex items-center justify-between p-4 border-b border-blue-200 bg-blue-200";
+            case "blueDark":
+                return "flex items-center justify-between p-4 border-b border-blue-800 bg-blue-800";
+            default:
+                return "flex items-center justify-between p-4 border-b border-gray-200 bg-blue-50";
+        }
+    };
+
+    const getInputContainerClasses = (theme) => {
+        switch (theme) {
+            case "xp":
+                return "p-4 border-t border-blue-300 bg-blue-50";
+            case "macos":
+                return "p-4 border-t border-gray-300 bg-gray-50";
+            case "neobrutal":
+                return "p-4 border-t-4 border-black bg-yellow-200";
+            case "nintendo":
+                return "p-4 border-t border-red-300 bg-red-100";
+            case "orange":
+                return "p-4 border-t border-orange-300 bg-orange-100";
+            case "orangeDark":
+                return "p-4 border-t border-orange-700 bg-orange-800";
+            case "blueLight":
+                return "p-4 border-t border-blue-200 bg-blue-50";
+            case "blueDark":
+                return "p-4 border-t border-blue-700 bg-blue-800";
+            default:
+                return "p-4 border-t border-gray-200 bg-white";
+        }
+    };
+
+    const getButtonClasses = (theme) => {
+        const baseClasses = "p-2 rounded-lg transition-all duration-150";
+        switch (theme) {
+            case "xp":
+                return `p-1 rounded-none bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black hover:bg-gray-400 active:border-t-black active:border-l-black active:border-r-gray-100 active:border-b-gray-100`;
+            case "macos":
+                return "px-2 py-1 rounded-none border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] bg-[#e0e0e0] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-none hover:bg-[#d0d0d0] active:border-t-[#6e6e6e] active:border-l-[#6e6e6e] active:border-b-white active:border-r-white";
+            case "neobrutal":
+                return `${baseClasses} hover:bg-yellow-200 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-[0px_0px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px]`;
+            case "nintendo":
+                return `${baseClasses} hover:bg-red-400 border border-red-300 pixel-font text-xs`;
+            case "orange":
+                return `${baseClasses} hover:bg-orange-400 border border-orange-300`;
+            case "orangeDark":
+                return `${baseClasses} hover:bg-orange-800 border border-orange-700`;
+            case "blueLight":
+                return `${baseClasses} hover:bg-blue-200 border border-blue-300`;
+            case "blueDark":
+                return `${baseClasses} hover:bg-blue-800 border border-blue-700`;
+            default:
+                return `${baseClasses} hover:bg-blue-100`;
+        }
+    };
+
+    const getSidebarBaseClasses = (theme) => {
+        const base = "fixed right-0 top-0 h-full z-[2147483647] flex flex-col transition-all duration-300";
+        switch (theme) {
+            case "xp":
+                return `${base} bg-gray-300 border-2 border-t-gray-100 border-l-gray-100 border-r-black border-b-black text-black shadow-2xl`;
+            case "macos":
+                return `${base} bg-[#c3c3c3] border-2 border-t-white border-l-white border-b-[#6e6e6e] border-r-[#6e6e6e] text-black font-['Segoe_UI',system-ui,sans-serif] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)]`;
+            case "neobrutal":
+                return `${base} bg-yellow-300 border-4 border-black text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]`;
+            case "nintendo":
+                return `${base} bg-red-500 border-red-700 text-white pixel-font`;
+            case "orange":
+                return `${base} bg-orange-500 border-orange-600 text-white`;
+            case "orangeDark":
+                return `${base} bg-orange-900 border-orange-800 text-orange-100`;
+            case "blueLight":
+                return `${base} bg-blue-100 border-blue-200 text-blue-900`;
+            case "blueDark":
+                return `${base} bg-blue-900 border-blue-800 text-blue-100`;
+            default:
+                return `${base} bg-white border-gray-200 text-gray-900 shadow-2xl`;
+        }
+    };
 
     function saveTheme(themeKey) {
         localStorage.setItem('findexSidebarTheme', themeKey);
@@ -118,6 +232,9 @@
     }
 
     function renderSidebar() {
+        // Inject Tailwind CSS first
+        injectTailwindCSS();
+        
         // Print the current URL in the console
         console.log('Sidebar loaded on URL:', window.location.href);
         // Remove old sidebar if exists
@@ -182,63 +299,138 @@
         if (!isCollapsed) {
             const sidebarContent = document.createElement('div');
             sidebarContent.id = 'findex-sidebar';
-            sidebarContent.className = 'findex-sidebar';
+            sidebarContent.className = getSidebarBaseClasses(currentTheme);
             sidebarContent.style.cssText = `
                 width: 400px;
                 height: 100vh;
                 display: flex;
                 flex-direction: column;
-                background: #f5f7fa;
-                box-sizing: border-box;
-                box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: ${currentTheme === 'xp' ? '#d1d5db' : 
+                                  currentTheme === 'macos' ? '#c3c3c3' : 
+                                  currentTheme === 'neobrutal' ? '#fde047' : 
+                                  currentTheme === 'nintendo' ? '#ef4444' : 
+                                  currentTheme === 'orange' ? '#f97316' : 
+                                  currentTheme === 'orangeDark' ? '#7c2d12' : 
+                                  currentTheme === 'blueLight' ? '#dbeafe' : 
+                                  currentTheme === 'blueDark' ? '#1e3a8a' : 
+                                  'white'} !important;
+                border: ${currentTheme === 'xp' ? '2px solid #374151' : 
+                         currentTheme === 'macos' ? '2px solid #6e6e6e' : 
+                         currentTheme === 'neobrutal' ? '4px solid black' : 
+                         currentTheme === 'nintendo' ? '1px solid #b91c1c' : 
+                         currentTheme === 'orange' ? '1px solid #ea580c' : 
+                         currentTheme === 'orangeDark' ? '1px solid #9a3412' : 
+                         currentTheme === 'blueLight' ? '1px solid #3b82f6' : 
+                         currentTheme === 'blueDark' ? '1px solid #1e40af' : 
+                         '1px solid #e5e7eb'} !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
             `;
+            
+            // Apply theme-specific font styles
+            if (currentTheme === "nintendo") {
+                sidebarContent.style.fontFamily = "monospace";
+                sidebarContent.style.imageRendering = "pixelated";
+            } else if (currentTheme === "xp") {
+                sidebarContent.style.fontFamily = 'Tahoma, "MS Sans Serif", sans-serif';
+            } else if (currentTheme === "macos") {
+                sidebarContent.style.fontFamily = "'Segoe UI', system-ui, sans-serif";
+            }
+            
             sidebarContent.innerHTML = `
-                <div class="findex-header" style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); color: white; padding: 16px; display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                                <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z"/>
-                                <path d="M14 2V8H20" stroke="white" stroke-width="2" fill="none"/>
+                <!-- Header -->
+                <div id="findex-header" class="${getHeaderClasses(currentTheme)}">
+                    <div id="findex-header-content" style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 32px; height: 32px; background: ${currentTheme === 'default' ? '#3b82f6' : currentTheme === 'neobrutal' ? '#000' : currentTheme === 'nintendo' ? '#fff' : currentTheme === 'orange' || currentTheme === 'orangeDark' ? '#ea580c' : currentTheme === 'blueLight' ? '#2563eb' : currentTheme === 'blueDark' ? '#1e40af' : currentTheme === 'xp' ? '#1e40af' : currentTheme === 'macos' ? '#6e6e6e' : '#3b82f6'}; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; display: flex; align-items: center; justify-content: center;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="${currentTheme === 'nintendo' ? '#dc2626' : 'white'}">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                                <path d="M2 17L12 22L22 17"/>
+                                <path d="M2 12L12 17L22 12"/>
                             </svg>
                         </div>
                         <div>
-                            <h3 style="margin: 0; font-weight: 600; font-size: 16px;">FindexAI</h3>
-                            <p style="margin: 0; font-size: 12px; opacity: 0.8;">your agentic companion</p>
+                            <h3 style="margin: 0; font-weight: 600; font-size: 16px;">YouTube Q&A</h3>
+                            <p id="findex-status-text" style="margin: 0; font-size: 12px; opacity: 0.75;">Ready to help</p>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <button class="findex-settings-btn" title="Settings" style="padding: 8px; border-radius: 6px; border: none; cursor: pointer; background: rgba(255,255,255,0.1); transition: background 0.2s;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"/>
-                                <path d="M19.4 15C19.2669 15.3016 19.2272 15.6362 19.286 15.9606C19.3448 16.285 19.4995 16.5843 19.73 16.82L19.79 16.88C19.976 17.0657 20.1235 17.2863 20.2241 17.5291C20.3248 17.7719 20.3766 18.0322 20.3766 18.295C20.3766 18.5578 20.3248 18.8181 20.2241 19.0609C20.1235 19.3037 19.976 19.5243 19.79 19.71C19.6043 19.896 19.3837 20.0435 19.1409 20.1441C18.8981 20.2448 18.6378 20.2966 18.375 20.2966C18.1122 20.2966 17.8519 20.2448 17.6091 20.1441C17.3663 20.0435 17.1457 19.896 16.96 19.71L16.9 19.65C16.6643 19.4195 16.365 19.2648 16.0406 19.206C15.7162 19.1472 15.3816 19.1869 15.08 19.32C14.7842 19.4468 14.532 19.6572 14.3543 19.9255C14.1766 20.1938 14.0813 20.5082 14.08 20.83V21C14.08 21.5304 13.8693 22.0391 13.4942 22.4142C13.1191 22.7893 12.6104 23 12.08 23C11.5496 23 11.0409 22.7893 10.6658 22.4142C10.2907 22.0391 10.08 21.5304 10.08 21V20.91C10.0723 20.579 9.96512 20.2589 9.77251 19.9896C9.5799 19.7202 9.31074 19.5143 9 19.4C8.69838 19.2669 8.36381 19.2272 8.03941 19.286C7.71502 19.3448 7.41568 19.4995 7.18 19.73L7.12 19.79C6.93425 19.976 6.71368 20.1235 6.47088 20.2241C6.22808 20.3248 5.96783 20.3766 5.705 20.3766C5.44217 20.3766 5.18192 20.3248 4.93912 20.2241C4.69632 20.1235 4.47575 19.976 4.29 19.79C4.10405 19.6043 3.95653 19.3837 3.85588 19.1409C3.75523 18.8981 3.70343 18.6378 3.70343 18.375C3.70343 18.1122 3.75523 17.8519 3.85588 17.6091C3.95653 17.3663 4.10405 17.1457 4.29 16.96L4.35 16.9C4.58054 16.6643 4.73519 16.365 4.794 16.0406C4.85282 15.7162 4.81312 15.3816 4.68 15.08C4.55324 14.7842 4.34276 14.532 4.07447 14.3543C3.80618 14.1766 3.49179 14.0813 3.17 14.08H3C2.46957 14.08 1.96086 13.8693 1.58579 13.4942C1.21071 13.1191 1 12.6104 1 12.08C1 11.5496 1.21071 11.0409 1.58579 10.6658C1.96086 10.2907 2.46957 10.08 3 10.08H3.09C3.42099 10.0723 3.74102 9.96512 4.01040 9.77251C4.27977 9.5799 4.48571 9.31074 4.6 9C4.73312 8.69838 4.77282 8.36381 4.714 8.03941C4.65519 7.71502 4.50054 7.41568 4.27 7.18L4.21 7.12C4.02405 6.93425 3.87653 6.71368 3.77588 6.47088C3.67523 6.22808 3.62343 5.96783 3.62343 5.705C3.62343 5.44217 3.67523 5.18192 3.77588 4.93912C3.87653 4.69632 4.02405 4.47575 4.21 4.29C4.39575 4.10405 4.61632 3.95653 4.85912 3.85588C5.10192 3.75523 5.36217 3.70343 5.625 3.70343C5.88783 3.70343 6.14808 3.75523 6.39088 3.85588C6.63368 3.95653 6.85425 4.10405 7.04 4.29L7.1 4.35C7.33568 4.58054 7.63502 4.73519 7.95941 4.794C8.28381 4.85282 8.61838 4.81312 8.92 4.68H9C9.29577 4.55324 9.54802 4.34276 9.72569 4.07447C9.90337 3.80618 9.99872 3.49179 10 3.17V3C10 2.46957 10.2107 1.96086 10.5858 1.58579C10.9609 1.21071 11.4696 1 12 1C12.5304 1 13.0391 1.21071 13.4142 1.58579C13.7893 1.96086 14 2.46957 14 3V3.09C14.0013 3.41179 14.0966 3.72618 14.2743 3.99447C14.452 4.26276 14.7042 4.47324 15 4.6C15.3016 4.73312 15.6362 4.77282 15.9606 4.714C16.285 4.65519 16.5843 4.50054 16.82 4.27L16.88 4.21C17.0657 4.02405 17.2863 3.87653 17.5291 3.77588C17.7719 3.67523 18.0322 3.62343 18.295 3.62343C18.5578 3.62343 18.8181 3.67523 19.0609 3.77588C19.3037 3.87653 19.5243 4.02405 19.71 4.21C19.896 4.39575 20.0435 4.61632 20.1441 4.85912C20.2448 5.10192 20.2966 5.36217 20.2966 5.625C20.2966 5.88783 20.2448 6.14808 20.1441 6.39088C20.0435 6.63368 19.896 6.85425 19.71 7.04L19.65 7.1C19.4195 7.33568 19.2648 7.63502 19.206 7.95941C19.1472 8.28381 19.1869 8.61838 19.32 8.92V9C19.4468 9.29577 19.6572 9.54802 19.9255 9.72569C20.1938 9.90337 20.5082 9.99872 20.83 10H21C21.5304 10 22.0391 10.2107 22.4142 10.5858C22.7893 10.9609 23 11.4696 23 12C23 12.5304 22.7893 13.0391 22.4142 13.4142C22.0391 13.7893 21.5304 14 21 14H20.91C20.5882 14.0013 20.2738 14.0966 20.0055 14.2743C19.7372 14.452 19.5268 14.7042 19.4 15Z"/>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <!-- Theme Dropdown Toggle Button -->
+                        <div style="position: relative;" id="findex-theme-dropdown-container">
+                            <button id="findex-theme-button" class="${getButtonClasses(currentTheme)}" title="Change theme">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3ZM12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15V9Z"/>
+                                </svg>
+                            </button>
+                            <div id="findex-theme-dropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; width: 12rem; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 50; background: white; overflow: hidden; ${currentTheme === 'neobrutal' ? 'border: 2px solid black; box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1); background: #fde047;' : currentTheme === 'xp' ? 'border-radius: 0; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black; background: #d1d5db;' : currentTheme === 'macos' ? 'border-radius: 0; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e; background: #e0e0e0;' : currentTheme === 'nintendo' ? 'background: #fee2e2; border: 1px solid #fca5a5;' : currentTheme === 'orange' ? 'background: #ffedd5; border: 1px solid #fdba74;' : currentTheme === 'orangeDark' ? 'background: #9a3412; border: 1px solid #7c2d12;' : currentTheme === 'blueLight' ? 'background: #dbeafe; border: 1px solid #bfdbfe;' : currentTheme === 'blueDark' ? 'background: #1e40af; border: 1px solid #1e3a8a;' : 'background: white; border: 1px solid #e5e7eb;'}">
+                                <div style="padding: 8px; display: flex; flex-direction: column; gap: 4px;">
+                                    <!-- Theme options will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search Button -->
+                        <button id="findex-search-button" class="${getButtonClasses(currentTheme)}" title="Search in transcript (Ctrl+F)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
                             </svg>
                         </button>
-                        <button class="findex-search-btn" title="Search" style="padding: 8px; border-radius: 6px; border: none; cursor: pointer; background: rgba(255,255,255,0.1); transition: background 0.2s;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="M21 21L16.65 16.65"/>
-                            </svg>
+
+                        <!-- Minimize Button -->
+                        <button id="findex-minimize-button" class="${getButtonClasses(currentTheme)}" title="Minimize sidebar">
+                            <div style="width: 16px; height: 16px; border: 2px solid currentColor; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '4px'}; transition: transform 0.2s;"></div>
                         </button>
-                        <button class="findex-refresh-btn" title="Refresh" style="padding: 8px; border-radius: 6px; border: none; cursor: pointer; background: rgba(255,255,255,0.1); transition: background 0.2s;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                <path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C9.61588 21 7.49055 20.0185 5.97992 18.4622"/>
-                                <path d="M3 12L7 8L3 4"/>
-                            </svg>
-                        </button>
-                        <button class="findex-close-btn" title="Close" style="padding: 8px; border-radius: 6px; border: none; cursor: pointer; background: rgba(255,255,255,0.1); transition: background 0.2s;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
+
+                        <!-- Close Sidebar Button -->
+                        <button id="findex-close-button" class="${getButtonClasses(currentTheme)}" title="Close sidebar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
                             </svg>
                         </button>
                     </div>
                 </div>
-                <div id="findex-messages" style="flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; background: #f5f7fa;"></div>
-                <div style="padding: 20px; background: #f5f7fa; border-top: 1px solid #e2e8f0;">
-                    <form id="findex-chat-form" style="display: flex; gap: 12px; align-items: center;">
-                        <input id="findex-chat-input" class="findex-input" type="text" placeholder="Ask anything about the video" style="flex: 1; padding: 12px 16px; border-radius: 24px; font-size: 14px; outline: none; border: 2px solid #e2e8f0; background: white; transition: all 0.15s ease;" autocomplete="off">
-                        <button type="submit" class="findex-send-btn" style="width: 48px; height: 48px; border-radius: 50%; border: none; cursor: pointer; background: #4a90e2; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                
+                <!-- Video Info -->
+                <div id="findex-video-info" style="display: none; padding: 16px; ${currentTheme === 'xp' ? 'background: #f1f5f9; border-bottom: 1px solid #2563eb;' : currentTheme === 'macos' ? 'background: #f3f4f6; border-bottom: 1px solid #6e6e6e;' : currentTheme === 'neobrutal' ? 'background: #fef3c7; border-bottom: 4px solid black;' : currentTheme === 'nintendo' ? 'background: #fee2e2; border-bottom: 1px solid #dc2626;' : currentTheme === 'orange' ? 'background: #ffedd5; border-bottom: 1px solid #ea580c;' : currentTheme === 'orangeDark' ? 'background: #7c2d12; border-bottom: 1px solid #9a3412;' : currentTheme === 'blueLight' ? 'background: #dbeafe; border-bottom: 1px solid #2563eb;' : currentTheme === 'blueDark' ? 'background: #1e3a8a; border-bottom: 1px solid #1e40af;' : 'background: #f9fafb; border-bottom: 1px solid #e5e7eb;'}">
+                    <h4 id="findex-video-title" style="margin: 0 0 8px 0; font-weight: 500; font-size: 14px; line-height: 1.4;"></h4>
+                    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12px; opacity: 0.75;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12ZM12 14C8.13401 14 1 15.9317 1 19.8V22H23V19.8C23 15.9317 15.866 14 12 14Z"/>
+                            </svg>
+                            <span id="findex-video-uploader"></span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            <span id="findex-video-duration"></span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8S1 12 1 12Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <span id="findex-video-views"></span>
+                        </div>
+                    </div>
+                    <div id="findex-transcript-badge" style="display: none; margin-top: 8px; font-size: 12px; padding: 4px 8px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '4px'}; ${currentTheme === 'neobrutal' ? 'color: black; background: #22c55e; border: 1px solid black;' : 'color: #059669; background: #d1fae5;'}">
+                        ✓ Transcript available (<span id="findex-transcript-length">0</span> chars)
+                    </div>
+                </div>
+                
+                <!-- Messages -->
+                <div id="findex-messages" style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+                </div>
+                
+                <!-- Input -->
+                <div id="findex-input-container" class="${getInputContainerClasses(currentTheme)}">
+                    <form id="findex-chat-form" style="display: flex; gap: 8px;">
+                        <input type="text" id="findex-chat-input" placeholder="Ask about this video..." autocomplete="off" style="flex: 1; padding: 8px 12px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; outline: none; transition: all 0.15s ease; font-size: 14px; ${currentTheme === 'xp' ? 'background: white; border: 2px solid; border-top-color: black; border-left-color: black; border-right-color: white; border-bottom-color: white; color: black;' : currentTheme === 'macos' ? 'background: white; border: 2px solid; border-top-color: #6e6e6e; border-left-color: #6e6e6e; border-right-color: white; border-bottom-color: white; color: black;' : currentTheme === 'neobrutal' ? 'background: white; border: 2px solid black; color: black; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);' : currentTheme === 'nintendo' ? 'background: white; border: 1px solid #dc2626; color: #dc2626;' : currentTheme === 'orange' ? 'background: white; border: 1px solid #ea580c; color: #ea580c;' : currentTheme === 'orangeDark' ? 'background: #7c2d12; border: 1px solid #9a3412; color: #fed7aa;' : currentTheme === 'blueLight' ? 'background: white; border: 1px solid #2563eb; color: #1e3a8a;' : currentTheme === 'blueDark' ? 'background: #1e3a8a; border: 1px solid #1e40af; color: #dbeafe;' : 'background: white; border: 1px solid #d1d5db; color: #374151;'}" disabled>
+                        <button type="submit" style="padding: 8px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; ${currentTheme === 'xp' ? 'background: #2563eb; color: white; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' : currentTheme === 'macos' ? 'background: #e0e0e0; color: black; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' : currentTheme === 'neobrutal' ? 'background: black; color: #fde047; border: 2px solid black; box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 1);' : currentTheme === 'nintendo' ? 'background: #dc2626; color: white; border: 1px solid #b91c1c;' : currentTheme === 'orange' ? 'background: #ea580c; color: white; border: 1px solid #c2410c;' : currentTheme === 'orangeDark' ? 'background: #9a3412; color: #fed7aa; border: 1px solid #7c2d12;' : currentTheme === 'blueLight' ? 'background: #2563eb; color: white; border: 1px solid #1d4ed8;' : currentTheme === 'blueDark' ? 'background: #1e40af; color: #dbeafe; border: 1px solid #1e3a8a;' : 'background: #3b82f6; color: white; border: 1px solid #2563eb;'}" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M22 2L11 13"/>
                                 <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
                             </svg>
@@ -248,154 +440,196 @@
             `;
             sidebarContainer.appendChild(sidebarContent);
 
-            // --- Theme Dropdown ---
-            const themeDropdownBtn = sidebarContent.querySelector('.findex-settings-btn');
-            const themeDropdown = document.createElement('div');
-            themeDropdown.className = 'findex-theme-list';
-            themeDropdown.style.cssText = `
-                display: none;
-                position: absolute;
-                right: 16px;
-                top: 60px;
-                background: #fff;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-                z-index: 1000;
-                min-width: 180px;
-                padding: 8px;
-            `;
-            sidebarContent.appendChild(themeDropdown);
-            
-            themeDropdownBtn.addEventListener('click', (e) => {
+            // Get DOM elements
+            const themeButton = sidebarContent.querySelector('#findex-theme-button');
+            const themeDropdown = sidebarContent.querySelector('#findex-theme-dropdown');
+            const themeDropdownContainer = sidebarContent.querySelector('#findex-theme-dropdown-container');
+            const minimizeButton = sidebarContent.querySelector('#findex-minimize-button');
+            const closeButton = sidebarContent.querySelector('#findex-close-button');
+            const searchButton = sidebarContent.querySelector('#findex-search-button');
+            const messagesContainer = sidebarContent.querySelector('#findex-messages');
+            const chatForm = sidebarContent.querySelector('#findex-chat-form');
+            const chatInput = sidebarContent.querySelector('#findex-chat-input');
+            const sendButton = chatForm.querySelector('button[type="submit"]');
+            const videoInfo = sidebarContent.querySelector('#findex-video-info');
+            const videoTitle = sidebarContent.querySelector('#findex-video-title');
+            const videoUploader = sidebarContent.querySelector('#findex-video-uploader');
+            const videoDuration = sidebarContent.querySelector('#findex-video-duration');
+            const videoViews = sidebarContent.querySelector('#findex-video-views');
+            const transcriptBadge = sidebarContent.querySelector('#findex-transcript-badge');
+            const transcriptLength = sidebarContent.querySelector('#findex-transcript-length');
+            const statusText = sidebarContent.querySelector('#findex-status-text');
+
+            // Theme dropdown functionality
+            const populateThemeDropdown = () => {
+                const themeContent = themeDropdown.querySelector('div');
+                if (!themeContent) return;
+                themeContent.innerHTML = '';
+                Object.entries(THEMES).forEach(([key, theme]) => {
+                    const button = document.createElement('button');
+                    const isSelected = currentTheme === key;
+                    button.style.cssText = `
+                        width: 100%; 
+                        text-align: left; 
+                        padding: 8px 12px; 
+                        border: none; 
+                        background: ${isSelected ? (currentTheme === 'neobrutal' ? 'black' : currentTheme === 'nintendo' ? '#dc2626' : currentTheme === 'orange' ? '#ea580c' : currentTheme === 'orangeDark' ? '#9a3412' : currentTheme === 'blueLight' ? '#2563eb' : currentTheme === 'blueDark' ? '#1e40af' : currentTheme === 'xp' ? '#1e40af' : currentTheme === 'macos' ? '#6e6e6e' : '#3b82f6') : 'transparent'}; 
+                        color: ${isSelected ? (currentTheme === 'neobrutal' ? '#fde047' : 'white') : 'inherit'}; 
+                        cursor: pointer; 
+                        font-size: 14px; 
+                        border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '4px'}; 
+                        transition: all 0.15s ease;
+                    `;
+                    button.textContent = theme.name;
+                    button.onmouseover = () => {
+                        if (!isSelected) {
+                            button.style.backgroundColor = currentTheme === 'neobrutal' ? '#fef3c7' : currentTheme === 'nintendo' ? '#fee2e2' : currentTheme === 'orange' ? '#ffedd5' : currentTheme === 'orangeDark' ? '#7c2d12' : currentTheme === 'blueLight' ? '#dbeafe' : currentTheme === 'blueDark' ? '#1e40af' : currentTheme === 'xp' ? '#f1f5f9' : currentTheme === 'macos' ? '#f3f4f6' : '#f3f4f6';
+                        }
+                    };
+                    button.onmouseout = () => {
+                        if (!isSelected) {
+                            button.style.backgroundColor = 'transparent';
+                        }
+                    };
+                    button.onclick = () => {
+                        currentTheme = key;
+                        saveTheme(key);
+                        renderSidebar();
+                    };
+                    themeContent.appendChild(button);
+                });
+            };
+
+            // Theme dropdown toggle
+            themeButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                themeDropdown.style.display = themeDropdown.style.display === 'block' ? 'none' : 'block';
-                if (themeDropdown.style.display === 'block') {
-                    themeDropdown.innerHTML = Object.entries(THEMES).map(([key, theme]) =>
-                        `<button data-theme="${key}" style="display: block; width: 100%; text-align: left; padding: 10px 14px; border: none; background: ${currentTheme === key ? '#4a90e2' : 'none'}; color: ${currentTheme === key ? '#fff' : '#333'}; cursor: pointer; font-size: 14px; border-radius: 8px; margin-bottom: 4px; transition: all 0.2s;">${theme.name}</button>`
-                    ).join('');
-                    themeDropdown.querySelectorAll('button').forEach(btn => {
-                        btn.onclick = (ev) => {
-                            const themeKey = btn.getAttribute('data-theme');
-                            currentTheme = themeKey;
-                            saveTheme(themeKey);
-                            renderSidebar();
-                        };
-                    });
+                const isVisible = themeDropdown.style.display === 'block';
+                themeDropdown.style.display = isVisible ? 'none' : 'block';
+                if (!isVisible) {
+                    populateThemeDropdown();
                 }
             });
+
+            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
-                if (!themeDropdown.contains(e.target) && e.target !== themeDropdownBtn) {
+                if (!themeDropdownContainer.contains(e.target)) {
                     themeDropdown.style.display = 'none';
                 }
             });
 
-            // --- Close Sidebar (X) ---
-            sidebarContent.querySelector('.findex-close-btn').onclick = () => {
+            // Minimize button
+            minimizeButton.addEventListener('click', () => {
                 isCollapsed = true;
                 saveCollapsed(isCollapsed);
                 renderSidebar();
-            };
-
-            // --- Copy URL ---
-            sidebarContent.querySelectorAll('.findex-copy-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    try {
-                        await navigator.clipboard.writeText(window.location.href);
-                        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17L4 12"/></svg>`;
-                        setTimeout(() => { 
-                            btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M16 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6C4 4.89543 4.89543 4 6 4H8M16 4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4M16 4C16 5.10457 15.1046 6 14 6H10C8.89543 6 8 5.10457 8 4"/></svg>`; 
-                        }, 1000);
-                    } catch (err) {
-                        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-                        setTimeout(() => { 
-                            btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M16 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6C4 4.89543 4.89543 4 6 4H8M16 4C16 2.89543 15.1046 2 14 2H10C8.89543 2 8 2.89543 8 4M16 4C16 5.10457 15.1046 6 14 6H10C8.89543 6 8 5.10457 8 4"/></svg>`; 
-                        }, 1000);
-                    }
-                };
             });
 
-            // --- Chat ---
-            const messagesContainer = sidebarContent.querySelector('#findex-messages');
+            // Close button
+            closeButton.addEventListener('click', () => {
+                isCollapsed = true;
+                saveCollapsed(isCollapsed);
+                renderSidebar();
+            });
+
+            // Search button
+            searchButton.addEventListener('click', () => {
+                // Open find-in-page functionality
+                if (window.findInPage) {
+                    window.findInPage.show();
+                }
+            });
+
+            // Message rendering
             function renderMessages() {
                 messagesContainer.innerHTML = '';
+                
                 if (messages.length === 0) {
-                    messagesContainer.innerHTML = `
-                        <div style="text-align: center; margin-top: 60px; opacity: 0.75;">
-                            <div style="margin: 0 auto 24px auto; opacity: 0.3;">
-                                <svg width="64" height="64" viewBox="0 0 24 24" fill="#9ca3af">
-                                    <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
-                                    <path d="M2 17L12 22L22 17"/>
-                                    <path d="M2 12L12 17L22 12"/>
-                                </svg>
-                            </div>
-                            <h3 style="margin: 0 0 8px 0; font-weight: 600; font-size: 18px; color: #374151;">Ask anything about the video</h3>
-                            <p style="margin: 0 0 24px 0; font-size: 14px; color: #6b7280;">Ask me anything.</p>
-                            <div style="margin-top: 24px; text-align: left; padding: 16px; border-radius: 12px; background: white; font-size: 14px; border: 1px solid #e5e7eb;">
-                                <p style="margin: 0 0 12px 0; font-weight: 500; color: #374151;">Try asking:</p>
-                                <div style="margin: 0; color: #6b7280; line-height: 1.5;">
-                                    <div style="margin-bottom: 6px;">"What is the video about?"</div>
-                                    <div style="margin-bottom: 6px;">"What is the website all about?"</div>
-                                    <div style="margin-bottom: 6px;">"How to do ..."</div>
-                                </div>
+                    // Welcome message
+                    const welcomeDiv = document.createElement('div');
+                    welcomeDiv.style.cssText = 'text-align: center; margin-top: 60px; opacity: 0.75;';
+                    welcomeDiv.innerHTML = `
+                        <div style="margin: 0 auto 24px auto; opacity: 0.3;">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.5;">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                                <path d="M2 17L12 22L22 17"/>
+                                <path d="M2 12L12 17L22 12"/>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0 0 8px 0; font-weight: 600; font-size: 18px;">Ask about this video</h3>
+                        <p style="margin: 0 0 24px 0; font-size: 14px; opacity: 0.8;">I can help you understand the content, find specific topics, or answer questions about what's discussed.</p>
+                        <div style="margin-top: 24px; text-align: left; padding: 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '12px'}; font-size: 14px; ${currentTheme === 'neobrutal' ? 'background: #fef3c7; border: 2px solid black;' : currentTheme === 'nintendo' ? 'background: #fee2e2; border: 1px solid #fca5a5;' : currentTheme === 'orange' ? 'background: #ffedd5; border: 1px solid #fdba74;' : currentTheme === 'orangeDark' ? 'background: #7c2d12; border: 1px solid #9a3412;' : currentTheme === 'blueLight' ? 'background: #dbeafe; border: 1px solid #bfdbfe;' : currentTheme === 'blueDark' ? 'background: #1e40af; border: 1px solid #1e3a8a;' : currentTheme === 'xp' ? 'background: #f1f5f9; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' : currentTheme === 'macos' ? 'background: #f3f4f6; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' : 'background: #f0f9ff; border: 1px solid #bae6fd;'}">
+                            <p style="margin: 0 0 12px 0; font-weight: 500;">Try asking:</p>
+                            <div style="margin: 0; line-height: 1.5; opacity: 0.8;">
+                                <div style="margin-bottom: 6px;">• "What is this video about?"</div>
+                                <div style="margin-bottom: 6px;">• "Summarize the main points"</div>
+                                <div style="margin-bottom: 6px;">• "What does the speaker say about..."</div>
                             </div>
                         </div>
                     `;
+                    messagesContainer.appendChild(welcomeDiv);
                 } else {
+                    // Render messages
                     messages.forEach(msg => {
-                        const msgDiv = document.createElement('div');
-                        msgDiv.className = 'findex-bubble ' + (msg.type === 'user' ? 'user' : 'ai');
-                        msgDiv.style.cssText = `
-                            margin: ${msg.type === 'user' ? '0 0 0 auto' : '0 auto 0 0'};
-                            max-width: 85%;
-                            padding: 12px 16px;
-                            border-radius: 18px;
-                            font-size: 14px;
-                            margin-bottom: 12px;
-                            line-height: 1.4;
+                        const messageDiv = document.createElement('div');
+                        messageDiv.style.cssText = `display: flex; ${msg.type === 'user' ? 'justify-content: flex-end;' : 'justify-content: flex-start;'}`;
+                        
+                        const bubble = document.createElement('div');
+                        bubble.style.cssText = `
+                            max-width: 85%; 
+                            padding: 12px 16px; 
+                            border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '16px'}; 
+                            font-size: 14px; 
+                            line-height: 1.4; 
+                            word-wrap: break-word;
                             ${msg.type === 'user' ? 
-                                'background: #4a90e2; color: white;' : 
-                                'background: white; color: #374151; border: 1px solid #e5e7eb;'
+                                (currentTheme === 'xp' ? 'background: white; color: black; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' :
+                                currentTheme === 'macos' ? 'background: white; color: black; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' :
+                                currentTheme === 'neobrutal' ? 'background: black; color: #fde047; border: 2px solid black; box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);' :
+                                currentTheme === 'nintendo' ? 'background: white; color: #dc2626; border: 1px solid #fca5a5;' :
+                                currentTheme === 'orange' ? 'background: white; color: #ea580c; border: 1px solid #fdba74;' :
+                                currentTheme === 'orangeDark' ? 'background: #ea580c; color: white; border: 1px solid #c2410c;' :
+                                currentTheme === 'blueLight' ? 'background: #3b82f6; color: white; border: 1px solid #2563eb;' :
+                                currentTheme === 'blueDark' ? 'background: #2563eb; color: white; border: 1px solid #1d4ed8;' :
+                                'background: #3b82f6; color: white;') : 
+                                (currentTheme === 'xp' ? 'background: white; color: black; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' :
+                                currentTheme === 'macos' ? 'background: white; color: black; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' :
+                                currentTheme === 'neobrutal' ? 'background: white; color: black; border: 2px solid black; box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);' :
+                                currentTheme === 'nintendo' ? 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;' :
+                                currentTheme === 'orange' ? 'background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa;' :
+                                currentTheme === 'orangeDark' ? 'background: #9a3412; color: #fed7aa; border: 1px solid #7c2d12;' :
+                                currentTheme === 'blueLight' ? 'background: white; color: #1e40af; border: 1px solid #bfdbfe;' :
+                                currentTheme === 'blueDark' ? 'background: #1e40af; color: #bfdbfe; border: 1px solid #1e3a8a;' :
+                                'background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb;')
                             }
                         `;
-                        msgDiv.textContent = msg.content;
-                        messagesContainer.appendChild(msgDiv);
+                        bubble.textContent = msg.content;
+                        messageDiv.appendChild(bubble);
+                        messagesContainer.appendChild(messageDiv);
                     });
+
                     if (isLoading) {
                         const loadingDiv = document.createElement('div');
-                        loadingDiv.className = 'findex-bubble ai';
-                        loadingDiv.style.cssText = `
-                            margin: 0 auto 0 0;
-                            max-width: 85%;
-                            padding: 12px 16px;
-                            border-radius: 18px;
-                            font-size: 14px;
-                            margin-bottom: 12px;
-                            background: white;
-                            color: #374151;
-                            border: 1px solid #e5e7eb;
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                        `;
+                        loadingDiv.style.cssText = 'display: flex; justify-content: flex-start;';
                         loadingDiv.innerHTML = `
-                            <span style="color: #6b7280; font-size: 12px;">Thinking...</span>
-                            <div style="display: flex; gap: 2px;">
-                                <div style="width: 4px; height: 4px; background: #6b7280; border-radius: 50%; animation: bounce 0.5s infinite;"></div>
-                                <div style="width: 4px; height: 4px; background: #6b7280; border-radius: 50%; animation: bounce 0.5s 0.1s infinite;"></div>
-                                <div style="width: 4px; height: 4px; background: #6b7280; border-radius: 50%; animation: bounce 0.5s 0.2s infinite;"></div>
+                            <div style="max-width: 85%; padding: 12px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '16px'}; font-size: 14px; display: flex; align-items: center; gap: 8px; ${currentTheme === 'xp' ? 'background: white; color: black; border: 2px solid; border-top-color: #f3f4f6; border-left-color: #f3f4f6; border-right-color: black; border-bottom-color: black;' : currentTheme === 'macos' ? 'background: white; color: black; border: 2px solid; border-top-color: white; border-left-color: white; border-bottom-color: #6e6e6e; border-right-color: #6e6e6e;' : currentTheme === 'neobrutal' ? 'background: white; color: black; border: 2px solid black; box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);' : currentTheme === 'nintendo' ? 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;' : currentTheme === 'orange' ? 'background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa;' : currentTheme === 'orangeDark' ? 'background: #9a3412; color: #fed7aa; border: 1px solid #7c2d12;' : currentTheme === 'blueLight' ? 'background: white; color: #1e40af; border: 1px solid #bfdbfe;' : currentTheme === 'blueDark' ? 'background: #1e40af; color: #bfdbfe; border: 1px solid #1e3a8a;' : 'background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb;'}">
+                                <div style="display: flex; gap: 4px;">
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; animation: bounce 0.5s ease infinite;"></div>
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; animation: bounce 0.5s 0.1s ease infinite;"></div>
+                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0.5; animation: bounce 0.5s 0.2s ease infinite;"></div>
+                                </div>
+                                <span style="opacity: 0.75; font-size: 12px;">Thinking...</span>
                             </div>
                         `;
                         messagesContainer.appendChild(loadingDiv);
                     }
                 }
+                
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
+
             renderMessages();
 
-            // Chat form
-            const chatForm = sidebarContent.querySelector('#findex-chat-form');
-            const chatInput = sidebarContent.querySelector('#findex-chat-input');
+            // Chat form handling
             chatForm.onsubmit = async (e) => {
                 e.preventDefault();
                 const message = chatInput.value.trim();
@@ -405,6 +639,7 @@
                     chatHistory.push({ id: nextMessageId++, role: 'user', content: message });
                     chatInput.value = '';
                     isLoading = true;
+                    sendButton.disabled = true;
                     renderMessages();
 
                     const isYouTubeVideo =
@@ -440,25 +675,34 @@
                             if (data.answer && data.answer.trim() === 'Data not available.') {
                                 addBotMessageNoHistory('Data not available. Would you like to perform a web search to try to answer this question?');
                                 isLoading = false;
+                                sendButton.disabled = false;
                                 renderMessages();
                                 // Add Yes/No buttons
-                                const messagesContainer = document.querySelector('#findex-messages');
-                                if (messagesContainer) {
+                                const currentMessagesContainer = document.querySelector('#findex-messages');
+                                if (currentMessagesContainer) {
                                     const promptDiv = document.createElement('div');
-                                    promptDiv.style.cssText = 'margin: 0 auto 0 0; max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; margin-bottom: 12px; background: #f5f7fa; color: #374151; border: 1px solid #e5e7eb; display: flex; gap: 8px; align-items: center;';
+                                    promptDiv.style.cssText = 'display: flex; justify-content: flex-start; margin-top: 8px;';
+                                    const buttonContainer = document.createElement('div');
+                                    buttonContainer.style.cssText = `max-width: 85%; padding: 12px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '16px'}; display: flex; gap: 8px; align-items: center; ${currentTheme === 'neobrutal' ? 'background: #fef3c7; border: 2px solid black;' : 'background: #f9fafb; border: 1px solid #e5e7eb;'}`;
+                                    
                                     const yesBtn = document.createElement('button');
                                     yesBtn.textContent = 'Yes';
-                                    yesBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #4a90e2; color: #fff; cursor: pointer; font-size: 14px;';
+                                    yesBtn.style.cssText = `padding: 6px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; border: none; background: #3b82f6; color: white; cursor: pointer; font-size: 14px;`;
+                                    
                                     const noBtn = document.createElement('button');
                                     noBtn.textContent = 'No';
-                                    noBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #e5e7eb; color: #374151; cursor: pointer; font-size: 14px;';
-                                    promptDiv.appendChild(yesBtn);
-                                    promptDiv.appendChild(noBtn);
-                                    messagesContainer.appendChild(promptDiv);
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                    noBtn.style.cssText = `padding: 6px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; border: none; background: #e5e7eb; color: #374151; cursor: pointer; font-size: 14px;`;
+                                    
+                                    buttonContainer.appendChild(yesBtn);
+                                    buttonContainer.appendChild(noBtn);
+                                    promptDiv.appendChild(buttonContainer);
+                                    currentMessagesContainer.appendChild(promptDiv);
+                                    currentMessagesContainer.scrollTop = currentMessagesContainer.scrollHeight;
+                                    
                                     yesBtn.onclick = async () => {
                                         promptDiv.remove();
                                         isLoading = true;
+                                        sendButton.disabled = true;
                                         renderMessages();
                                         try {
                                             const crawllerResp = await fetch('http://localhost:5454/crawller', {
@@ -476,6 +720,7 @@
                                             addBotMessage('Error contacting backend (web search): ' + err.message);
                                         } finally {
                                             isLoading = false;
+                                            sendButton.disabled = false;
                                             renderMessages();
                                         }
                                     };
@@ -488,11 +733,13 @@
                             } else {
                                 addBotMessage(data.answer || 'No answer received.');
                                 isLoading = false;
+                                sendButton.disabled = false;
                                 renderMessages();
                             }
                         } catch (err) {
                             addBotMessage('Error contacting backend: ' + err.message);
                             isLoading = false;
+                            sendButton.disabled = false;
                             renderMessages();
                         }
                     } else {
@@ -512,25 +759,34 @@
                             if (data.answer && data.answer.trim() === 'Data not available.') {
                                 addBotMessageNoHistory('Data not available. Would you like to perform a web search to try to answer this question?');
                                 isLoading = false;
+                                sendButton.disabled = false;
                                 renderMessages();
                                 // Add Yes/No buttons
-                                const messagesContainer = document.querySelector('#findex-messages');
-                                if (messagesContainer) {
+                                const currentMessagesContainer = document.querySelector('#findex-messages');
+                                if (currentMessagesContainer) {
                                     const promptDiv = document.createElement('div');
-                                    promptDiv.style.cssText = 'margin: 0 auto 0 0; max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; margin-bottom: 12px; background: #f5f7fa; color: #374151; border: 1px solid #e5e7eb; display: flex; gap: 8px; align-items: center;';
+                                    promptDiv.style.cssText = 'display: flex; justify-content: flex-start; margin-top: 8px;';
+                                    const buttonContainer = document.createElement('div');
+                                    buttonContainer.style.cssText = `max-width: 85%; padding: 12px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '16px'}; display: flex; gap: 8px; align-items: center; ${currentTheme === 'neobrutal' ? 'background: #fef3c7; border: 2px solid black;' : 'background: #f9fafb; border: 1px solid #e5e7eb;'}`;
+                                    
                                     const yesBtn = document.createElement('button');
                                     yesBtn.textContent = 'Yes';
-                                    yesBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #4a90e2; color: #fff; cursor: pointer; font-size: 14px;';
+                                    yesBtn.style.cssText = `padding: 6px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; border: none; background: #3b82f6; color: white; cursor: pointer; font-size: 14px;`;
+                                    
                                     const noBtn = document.createElement('button');
                                     noBtn.textContent = 'No';
-                                    noBtn.style.cssText = 'padding: 6px 16px; border-radius: 8px; border: none; background: #e5e7eb; color: #374151; cursor: pointer; font-size: 14px;';
-                                    promptDiv.appendChild(yesBtn);
-                                    promptDiv.appendChild(noBtn);
-                                    messagesContainer.appendChild(promptDiv);
-                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                    noBtn.style.cssText = `padding: 6px 16px; border-radius: ${currentTheme === 'xp' || currentTheme === 'macos' ? '0' : '8px'}; border: none; background: #e5e7eb; color: #374151; cursor: pointer; font-size: 14px;`;
+                                    
+                                    buttonContainer.appendChild(yesBtn);
+                                    buttonContainer.appendChild(noBtn);
+                                    promptDiv.appendChild(buttonContainer);
+                                    currentMessagesContainer.appendChild(promptDiv);
+                                    currentMessagesContainer.scrollTop = currentMessagesContainer.scrollHeight;
+                                    
                                     yesBtn.onclick = async () => {
                                         promptDiv.remove();
                                         isLoading = true;
+                                        sendButton.disabled = true;
                                         renderMessages();
                                         try {
                                             const crawllerResp = await fetch('http://localhost:5454/crawller', {
@@ -548,6 +804,7 @@
                                             addBotMessage('Error contacting backend (web search): ' + err.message);
                                         } finally {
                                             isLoading = false;
+                                            sendButton.disabled = false;
                                             renderMessages();
                                         }
                                     };
@@ -560,11 +817,13 @@
                             } else {
                                 addBotMessage(data.answer || 'No answer received.');
                                 isLoading = false;
+                                sendButton.disabled = false;
                                 renderMessages();
                             }
                         } catch (err) {
                             addBotMessage('Error contacting backend: ' + err.message);
                             isLoading = false;
+                            sendButton.disabled = false;
                             renderMessages();
                         }
                     }
@@ -573,18 +832,155 @@
 
             // Input focus effects
             chatInput.addEventListener('focus', () => {
-                chatInput.style.borderColor = '#4a90e2';
-                chatInput.style.boxShadow = '0 0 0 3px rgba(74, 144, 226, 0.1)';
+                if (currentTheme === 'default') {
+                    chatInput.style.borderColor = '#3b82f6';
+                    chatInput.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                }
             });
             chatInput.addEventListener('blur', () => {
-                chatInput.style.borderColor = '#e2e8f0';
-                chatInput.style.boxShadow = 'none';
+                if (currentTheme === 'default') {
+                    chatInput.style.borderColor = '#d1d5db';
+                    chatInput.style.boxShadow = 'none';
+                }
             });
 
-            // --- Apply theme ---
-            applyTheme(sidebarContent, currentTheme);
+            // Enable/disable input based on context
+            const isYouTubeContext = window.location.hostname === 'www.youtube.com' || window.location.hostname === 'youtube.com';
+            if (isYouTubeContext) {
+                chatInput.disabled = false;
+                chatInput.placeholder = 'Ask about this video...';
+                sendButton.disabled = false;
+                statusText.textContent = 'Ready to help';
+            } else {
+                chatInput.disabled = false; // Enable for demo/development
+                chatInput.placeholder = 'Ask about this website...';
+                sendButton.disabled = false;
+                statusText.textContent = 'Demo mode';
+            }
+
+            // Update video info if available
+            if (videoData) {
+                videoInfo.style.display = 'block';
+                videoTitle.textContent = videoData.title;
+                videoUploader.textContent = videoData.uploader;
+                if (videoData.duration > 0) {
+                    videoDuration.textContent = formatDuration(videoData.duration);
+                } else {
+                    videoDuration.parentElement.style.display = 'none';
+                }
+                if (videoData.view_count > 0) {
+                    videoViews.textContent = formatViews(videoData.view_count);
+                } else {
+                    videoViews.parentElement.style.display = 'none';
+                }
+                if (videoData.transcript) {
+                    transcriptBadge.style.display = 'block';
+                    transcriptLength.textContent = videoData.transcript.length;
+                } else {
+                    transcriptBadge.style.display = 'none';
+                }
+            }
         }
         document.body.appendChild(sidebarContainer);
+    }
+
+    // Additional helper functions for video info and theme management
+    function updateVideoInfo(data) {
+        if (!data) {
+            if (videoData) {
+                const videoInfoElement = document.querySelector('#findex-video-info');
+                if (videoInfoElement) videoInfoElement.style.display = 'none';
+            }
+            videoData = null;
+            return;
+        }
+        
+        videoData = data;
+        const videoInfoElement = document.querySelector('#findex-video-info');
+        if (videoInfoElement) {
+            videoInfoElement.style.display = 'block';
+            
+            const titleElement = document.querySelector('#findex-video-title');
+            const uploaderElement = document.querySelector('#findex-video-uploader');
+            const durationElement = document.querySelector('#findex-video-duration');
+            const viewsElement = document.querySelector('#findex-video-views');
+            const transcriptBadgeElement = document.querySelector('#findex-transcript-badge');
+            const transcriptLengthElement = document.querySelector('#findex-transcript-length');
+            
+            if (titleElement) titleElement.textContent = data.title;
+            if (uploaderElement) uploaderElement.textContent = data.uploader;
+            
+            if (durationElement && data.duration > 0) {
+                durationElement.textContent = formatDuration(data.duration);
+                durationElement.parentElement.style.display = 'flex';
+            } else if (durationElement) {
+                durationElement.parentElement.style.display = 'none';
+            }
+            
+            if (viewsElement && data.view_count > 0) {
+                viewsElement.textContent = formatViews(data.view_count);
+                viewsElement.parentElement.style.display = 'flex';
+            } else if (viewsElement) {
+                viewsElement.parentElement.style.display = 'none';
+            }
+            
+            if (transcriptBadgeElement && transcriptLengthElement) {
+                if (data.transcript) {
+                    transcriptBadgeElement.style.display = 'block';
+                    transcriptLengthElement.textContent = data.transcript.length;
+                } else {
+                    transcriptBadgeElement.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        saveTheme(theme);
+        renderSidebar();
+    }
+
+    function addMessage(content, type = 'ai') {
+        messages.push({ type, content });
+        if (type === 'user') {
+            chatHistory.push({ id: nextMessageId++, role: 'user', content });
+        } else {
+            chatHistory.push({ id: nextMessageId++, role: 'bot', content });
+        }
+        
+        // Re-render messages if sidebar is currently visible
+        const messagesContainer = document.querySelector('#findex-messages');
+        if (messagesContainer) {
+            const renderFunction = document.querySelector('#findex-sidebar')?.renderMessages;
+            if (renderFunction) renderFunction();
+        }
+    }
+
+    function setLoading(loading) {
+        isLoading = loading;
+        const sendButton = document.querySelector('#findex-chat-form button[type="submit"]');
+        const chatInput = document.querySelector('#findex-chat-input');
+        
+        if (sendButton) sendButton.disabled = loading;
+        if (chatInput) chatInput.disabled = loading;
+        
+        // Re-render messages to show/hide loading indicator
+        const messagesContainer = document.querySelector('#findex-messages');
+        if (messagesContainer) {
+            const renderFunction = document.querySelector('#findex-sidebar')?.renderMessages;
+            if (renderFunction) renderFunction();
+        }
+    }
+
+    function clearMessages() {
+        messages = [];
+        chatHistory = [];
+        const messagesContainer = document.querySelector('#findex-messages');
+        if (messagesContainer) {
+            const renderFunction = document.querySelector('#findex-sidebar')?.renderMessages;
+            if (renderFunction) renderFunction();
+        }
     }
 
     // Listen for messages from background script
@@ -595,32 +991,45 @@
         }
     });
 
-    // Add keyframes for loading dots and button hover effects
-    if (!document.getElementById('findex-sidebar-style')) {
-        const style = document.createElement('style');
-        style.id = 'findex-sidebar-style';
-        style.textContent = `
-            @keyframes bounce { 
-                0%, 100% { transform: translateY(0); } 
-                50% { transform: translateY(-4px); } 
-            }
-            .findex-settings-btn:hover, .findex-search-btn:hover, .findex-refresh-btn:hover, .findex-close-btn:hover {
-                background: rgba(255,255,255,0.2) !important;
-            }
-            .findex-send-btn:hover {
-                transform: scale(1.05);
-                box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
-            }
-            .findex-floating-btn:hover {
-                transform: translateY(-50%) scale(1.1);
-                box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
-            }
-        `;
-        document.head.appendChild(style);
-    }
+    // Listen for messages from parent window (for iframe communication)
+    window.addEventListener('message', (event) => {
+        const { type, data } = event.data;
 
-    // For dev: expose renderSidebar
+        switch (type) {
+            case 'setVideoData':
+                updateVideoInfo(data);
+                break;
+            case 'addMessage':
+                addMessage(data.content, data.type);
+                break;
+            case 'setLoading':
+                setLoading(data.loading);
+                break;
+            case 'clear':
+                clearMessages();
+                updateVideoInfo(null);
+                break;
+            case 'setTheme':
+                setTheme(data.theme);
+                break;
+            case 'openSearch':
+                // Trigger search functionality
+                const searchButton = document.querySelector('#findex-search-button');
+                if (searchButton) searchButton.click();
+                break;
+        }
+    });
+
+    // For dev: expose useful functions
     window.findexRenderSidebar = renderSidebar;
+    window.findexSetTheme = setTheme;
+    window.findexAddMessage = addMessage;
+    window.findexSetLoading = setLoading;
+    window.findexClearMessages = clearMessages;
+    window.findexUpdateVideoInfo = updateVideoInfo;
+
+    // Initialize Tailwind CSS on script load
+    injectTailwindCSS();
 
     console.log('Findex sidebar content script loaded');
 })(); 
