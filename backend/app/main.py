@@ -6,6 +6,7 @@ from app.routes.ask import router as ask_router
 from app.routes.health import router as health_router
 from app.routes.website import router as website_router
 from app.routes.crawller import router as crawller_router
+from app.routes.git_crawl import router as git_crawl_router
 from app.core import get_logger, BACKEND_HOST, BACKEND_PORT
 
 logger = get_logger(__name__)
@@ -55,6 +56,11 @@ backend.include_router(
     crawller_router,
     prefix="/crawller",
     tags=["crawller"],
+)
+backend.include_router(
+    git_crawl_router,
+    prefix="/git-crawl",
+    tags=["git-crawl"],
 )
 
 
