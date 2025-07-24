@@ -1,5 +1,11 @@
-from gitingest import ingest
+try:
+    from gitingest import ingest_async
+    HAS_INGEST_ASYNC = True
+except ImportError:
+    from gitingest import ingest
+    HAS_INGEST_ASYNC = False
 from pydantic import HttpUrl, BaseModel
+import asyncio
 
 
 class InjestedContent(BaseModel):
@@ -8,14 +14,15 @@ class InjestedContent(BaseModel):
     content: str
 
 
-def convert_github_repo_to_markdown(repo_link: HttpUrl) -> InjestedContent:
+async def convert_github_repo_to_markdown(repo_link: HttpUrl) -> InjestedContent:
     """
     Convert a GitHub repository to a markdown file.
     """
-
-    summary, tree, content = ingest(
-        str(repo_link),
-    )
+    if HAS_INGEST_ASYNC:
+        summary, tree, content = await ingest_async(str(repo_link))
+    else:
+        # fallback for sync ingest (not recommended for async frameworks)
+        summary, tree, content = ingest(str(repo_link))
 
     return InjestedContent(
         tree=tree,
@@ -28,7 +35,8 @@ if __name__ == "__main__":
     from pathlib import Path
 
     repo_link = HttpUrl("https://github.com/tashifkhan/Findex")
-    result = convert_github_repo_to_markdown(repo_link)
+    # For testing, run the async function in the main block
+    result = asyncio.run(convert_github_repo_to_markdown(repo_link))
     print(
         result.tree,
         result.summary,

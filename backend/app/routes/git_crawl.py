@@ -3,7 +3,6 @@ from pydantic import HttpUrl
 from app.core import get_logger
 from app.prompts.github import main_chain, prompt_template_str
 from app.github_crawler import convert_github_repo_to_markdown
-from langchain_core.runnables import RunnableLambda, RunnableParallel
 from app.webcrawler.search_agent import web_search_pipeline
 
 router = APIRouter()
@@ -18,13 +17,13 @@ async def generate_github_answer(
     """Generate answer using GitHub repository information and prompt"""
     try:
 
-        content_obj = convert_github_repo_to_markdown(url)
+        content_obj = await convert_github_repo_to_markdown(url)
 
         response = main_chain.invoke(
             {
                 "summary": content_obj.summary,
                 "tree": content_obj.tree,
-                "content": content_obj.content,
+                "text": content_obj.content,  
                 "question": question,
                 "chat_history": chat_history if chat_history else "",
             }
