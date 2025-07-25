@@ -3,7 +3,6 @@ from pydantic import HttpUrl
 from app.core import get_logger
 from app.prompts.github import main_chain
 from app.github_crawler import convert_github_repo_to_markdown
-from app.webcrawler.search_agent import web_search_pipeline
 from app.models.requests.github import GitHubRequest
 from app.models.response.gihub import GitHubResponse
 
