@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import HttpUrl
 from app.core import get_logger
-from app.prompts.github import main_chain, prompt_template_str
+from app.prompts.github import main_chain
 from app.github_crawler import convert_github_repo_to_markdown
 from app.webcrawler.search_agent import web_search_pipeline
+from app.models.requests.github import GitHubRequest
+from app.models.response.gihub import GitHubResponse
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -23,7 +25,7 @@ async def generate_github_answer(
             {
                 "summary": content_obj.summary,
                 "tree": content_obj.tree,
-                "text": content_obj.content,  
+                "text": content_obj.content,
                 "question": question,
                 "chat_history": chat_history if chat_history else "",
             }
@@ -39,11 +41,11 @@ async def generate_github_answer(
         return f"I apologize, but I encountered an error processing your question about the GitHub repository. Please try again."
 
 
-@router.post("/", response_model=dict)
-async def github_crawler(request: dict):
+@router.post("/", response_model=GitHubResponse)
+async def github_crawler(request: GitHubRequest):
     try:
-        question = request.get("question")
-        chat_history = request.get("chat_history", [])
+        question = request.question
+        chat_history = request.chat_history
 
         if not question:
             raise HTTPException(
@@ -51,7 +53,7 @@ async def github_crawler(request: dict):
                 detail="question is required",
             )
 
-        url = request.get("url")
+        url = request.url
         if not url:
             raise HTTPException(
                 status_code=400,
