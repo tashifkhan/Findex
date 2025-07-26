@@ -1,10 +1,17 @@
-from app.agents.github import github_agent
-from app.agents.websearch import websearch_agent
-from app.agents.webite import website_agent
-from app.agents.youtube import youtube_agent
+from .github import github_agent
+from .websearch import websearch_agent
+from .webite import website_agent
+from .youtube import youtube_agent
 
-from langgraph.prebuilt import create_react_agent
-
+from typing import Annotated, Sequence
+from typing_extensions import TypedDict
+from langchain_core.messages import BaseMessage
+from langgraph.graph.message import add_messages
+from langgraph.graph import START,END, StateGraph
+from .node_functions import agent
+from app.core.llm import LargeLanguageModel
+from langgraph.prebuilt import ToolNode
+from langgraph.prebuilt import tools_condition
 
 tools = [
     github_agent,
@@ -13,8 +20,36 @@ tools = [
     youtube_agent,
 ]
 
+llm = LargeLanguageModel()
 
-from app.core.llm import LargeLanguageModel
+class AgentState(TypedDict):
+    messages: Annotated[Sequence[BaseMessage], add_messages]
 
-agent = LargeLanguageModel()
-agent_with_tools = (agent.client).bind_tools(tools)
+class GraphBuilder:
+
+    def buildgraph(self):
+        
+        workflow = StateGraph(AgentState)
+        workflow.add_node("agent", agent)
+        workflow.add_node("retrieve", ToolNode(tools))
+
+        workflow.add_edge(START, "agent")
+
+        workflow.add_conditional_edges(
+            "agent",
+            tools_condition,
+            {
+                "tools": "retrieve",  
+                END: END,             
+            }
+        )
+
+        workflow.add_edge("retrieve", "agent")  
+
+        graph = workflow.compile()
+        return graph
+    
+    def __call__(self):
+        return self.buildgraph()
+    
+
