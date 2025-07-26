@@ -14,9 +14,9 @@ class LargeLanguageModel:
             raise ValueError("API key must be provided for the LLM.")
 
         if provideer == "google":
-            from langchain_google_genai import GoogleGenerativeAI
+            from langchain_google_genai import ChatGoogleGenerativeAI
 
-            self.client = GoogleGenerativeAI(
+            self.client = ChatGoogleGenerativeAI(
                 model=model_name,
                 api_key=api_key,
                 temperature=temperature,
