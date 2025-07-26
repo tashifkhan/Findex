@@ -2,7 +2,6 @@ from langchain_core.tools import tool
 from pydantic import HttpUrl
 from app.routes.ask import generate_answer as get_youtube_answer
 
-
 @tool
 async def youtube_agent(url: HttpUrl, question: str) -> str:
     """
