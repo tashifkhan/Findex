@@ -1,5 +1,5 @@
-from app.agents.agent import agent
+from app.agents.agent import agent_with_tools
 
 __all__ = [
-    "agent",
+    "agent_with_tools",
 ]
