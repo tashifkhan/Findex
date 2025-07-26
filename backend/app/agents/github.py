@@ -1,4 +1,4 @@
-from langchain_community.tools import tool
+from langchain_core.tools import tool
 from pydantic import HttpUrl
 from app.routes.git_crawl import generate_github_answer
 

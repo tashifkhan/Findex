@@ -16,6 +16,7 @@ async def generate_answer(
 ) -> str:
     """Generate answer using video information and YouTube chat prompt"""
     try:
+        print(f"Generating answer for question: {question} with URL: {url}")
         response = youtube_chain.invoke(
             {
                 "url": url,
@@ -23,6 +24,8 @@ async def generate_answer(
                 "chat_history": chat_history,
             }
         )
+
+        print(f"Response from YouTube chain: {response}")
 
         if isinstance(response, str):
             return response

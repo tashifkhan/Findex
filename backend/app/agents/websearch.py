@@ -1,4 +1,4 @@
-from langchain_community.tools import tool
+from langchain_core.tools import tool
 from app.routes.crawller import generate_crawler_answer
 
 
