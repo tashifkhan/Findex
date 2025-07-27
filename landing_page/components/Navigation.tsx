@@ -37,6 +37,13 @@ export default function Navigation() {
 
 					{/* Desktop Navigation */}
 					<div className="hidden md:flex items-center space-x-8">
+						<Link
+							href="/chat"
+							className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+						>
+							<Search className="w-4 h-4" />
+							<span>Chat</span>
+						</Link>
 						<a
 							href="/docs"
 							className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
@@ -96,6 +103,13 @@ export default function Navigation() {
 								WebkitBackdropFilter: "blur(16px)",
 							}}
 						>
+							<Link
+								href="/chat"
+								className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"
+							>
+								<Search className="w-4 h-4" />
+								<span>Chat</span>
+							</Link>
 							<a
 								href="/docs"
 								className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors px-3 py-2 rounded-md"

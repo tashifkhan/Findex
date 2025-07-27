@@ -1,4 +1,4 @@
-import Documentation from "../../components/Documentation";
+import Documentation from "../../components/docs/Documentation";
 
 export default function DocsPage() {
 	return <Documentation />;

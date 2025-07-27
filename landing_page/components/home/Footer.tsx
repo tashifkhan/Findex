@@ -12,7 +12,7 @@ import {
 	Sun,
 	Moon,
 } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
+import { useTheme } from "../ThemeProvider";
 
 export default function Footer() {
 	const { theme, toggleTheme } = useTheme();

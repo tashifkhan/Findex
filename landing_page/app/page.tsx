@@ -1,11 +1,11 @@
-import Hero from "../components/Hero";
-import HowItWorks from "../components/HowItWorks";
-import Features from "../components/Features";
+import Hero from "../components/home/Hero";
+import HowItWorks from "../components/home/HowItWorks";
+import Features from "../components/home/Features";
 import UseCases from "../components/UseCases";
-import Demo from "../components/Demo";
-import Documentation from "../components/Documentation";
+import Demo from "../components/home/Demo";
+import Documentation from "../components/docs/Documentation";
 // import Testimonials from "../components/Testimonials";
-import Footer from "../components/Footer";
+import Footer from "../components/home/Footer";
 
 export default function Home() {
 	return (
@@ -15,7 +15,7 @@ export default function Home() {
 			<UseCases />
 			<Features />
 			<Demo />
-			<Documentation />
+			{/* <Documentation /> */}
 			{/* <Testimonials /> */}
 			<Footer />
 		</main>
