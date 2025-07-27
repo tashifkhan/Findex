@@ -189,7 +189,7 @@ export function SettingsModal({
 		});
 	};
 
-	const updateSetting = (key: keyof Settings, value: any) => {
+	const updateSetting = (key: keyof Settings, value: string) => {
 		setLocalSettings((prev) => ({ ...prev, [key]: value }));
 	};
 

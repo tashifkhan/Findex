@@ -1,11 +1,11 @@
 "use client";
 
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "../ui/button";
 import { useTheme } from "../ThemeProvider";
 
 export function ThemeToggle() {
-	const { theme, toggleTheme } = useTheme();
+	const { toggleTheme } = useTheme();
 
 	return (
 		<Button variant="ghost" size="sm" onClick={toggleTheme}>

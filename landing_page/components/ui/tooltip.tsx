@@ -1,10 +1,6 @@
 import * as React from "react";
 
 // Simple tooltip implementation
-interface TooltipProps {
-	children: React.ReactNode;
-	content?: string;
-}
 
 const TooltipProvider = ({ children }: { children: React.ReactNode }) => {
 	return <>{children}</>;

@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-	Settings,
-	Upload,
-	Link,
 	FileText,
-	ChevronDown,
 	Bot,
 	Globe,
 	Github,
@@ -15,14 +11,12 @@ import {
 	X,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
 interface Agent {
 	id: string;
 	name: string;
 	requiresUrl: boolean;
-	icon: React.ComponentType<any>;
+	icon: React.ComponentType<{ className?: string }>;
 	color: string;
 	description: string;
 }
@@ -85,12 +79,7 @@ const AGENTS: Agent[] = [
 	},
 ];
 
-export function AgentSelector({
-	agent,
-	url,
-	onAgentChange,
-	onUrlChange,
-}: AgentSelectorProps) {
+export function AgentSelector({ agent, onAgentChange }: AgentSelectorProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const selectedAgent = AGENTS.find((a) => a.id === agent) || AGENTS[0];
 	const IconComponent = selectedAgent.icon;
@@ -230,7 +219,7 @@ export function AgentSelector({
 													</div>
 													{agentOption.requiresUrl && (
 														<div className="flex items-center gap-1 mt-1">
-															<Link className="w-3 h-3 text-white/50" />
+															<Globe className="w-3 h-3 text-white/50" />
 															<span className="text-xs text-white/50">
 																Requires URL
 															</span>

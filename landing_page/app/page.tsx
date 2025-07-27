@@ -3,7 +3,7 @@ import HowItWorks from "../components/home/HowItWorks";
 import Features from "../components/home/Features";
 import UseCases from "../components/UseCases";
 import Demo from "../components/home/Demo";
-import Documentation from "../components/docs/Documentation";
+// import Documentation from "../components/docs/Documentation";
 // import Testimonials from "../components/Testimonials";
 import Footer from "../components/home/Footer";
 

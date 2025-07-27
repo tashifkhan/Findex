@@ -1,16 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import {
-	Send,
-	Bot,
-	User,
-	Copy,
-	Loader2,
-	Link,
-	FileText,
-	Upload,
-} from "lucide-react";
+import { Send, Bot, User, Copy, Loader2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
@@ -87,7 +78,7 @@ export function ChatInterface({
 
 		try {
 			await onSendMessage(message, currentAgent, currentUrl);
-		} catch (error) {
+		} catch {
 			toast({
 				title: "Error",
 				description: "Failed to send message. Please try again.",
@@ -110,7 +101,7 @@ export function ChatInterface({
 				title: "Copied",
 				description: "Message copied to clipboard",
 			});
-		} catch (error) {
+		} catch {
 			toast({
 				title: "Error",
 				description: "Failed to copy message",

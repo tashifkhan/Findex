@@ -37,6 +37,23 @@ const ChatApp = memo(function ChatApp() {
 		}
 	}, [threads.length, createNewThread]);
 
+	// Throttle function for performance
+	const throttle = useCallback(
+		<T extends (...args: unknown[]) => void>(func: T, limit: number) => {
+			let inThrottle = false;
+			return function (this: unknown, ...args: Parameters<T>) {
+				if (!inThrottle) {
+					func.apply(this, args);
+					inThrottle = true;
+					setTimeout(() => {
+						inThrottle = false;
+					}, limit);
+				}
+			};
+		},
+		[]
+	);
+
 	// Mobile scroll optimization - hide header on scroll down, show on scroll up
 	useEffect(() => {
 		if (!isMobile) return;
@@ -54,7 +71,7 @@ const ChatApp = memo(function ChatApp() {
 		const throttledHandleScroll = throttle(handleScroll, 10);
 		window.addEventListener("scroll", throttledHandleScroll, { passive: true });
 		return () => window.removeEventListener("scroll", throttledHandleScroll);
-	}, [lastScrollY, isMobile]);
+	}, [lastScrollY, isMobile, throttle]);
 
 	// Close sidebar when clicking outside (mobile)
 	useEffect(() => {
@@ -73,18 +90,6 @@ const ChatApp = memo(function ChatApp() {
 		document.addEventListener("click", handleClickOutside);
 		return () => document.removeEventListener("click", handleClickOutside);
 	}, [sidebarOpen, isMobile]);
-
-	// Throttle function for performance
-	const throttle = useCallback((func: Function, limit: number) => {
-		let inThrottle: boolean;
-		return function (this: any, ...args: any[]) {
-			if (!inThrottle) {
-				func.apply(this, args);
-				inThrottle = true;
-				setTimeout(() => (inThrottle = false), limit);
-			}
-		};
-	}, []);
 
 	// Get current messages with memoization for performance
 	const activeThread = useMemo(
@@ -165,7 +170,7 @@ const ChatApp = memo(function ChatApp() {
 
 				addMessage(currentThreadId, aiMessage);
 				return aiMessage.content;
-			} catch (error) {
+			} catch {
 				// Fallback for demo purposes
 				const aiResponse = `I understand you're asking about "${content}". This would normally be processed by the ${agent} agent${
 					url ? ` using ${url}` : ""
@@ -196,7 +201,7 @@ const ChatApp = memo(function ChatApp() {
 				setIsLoading(false);
 			}
 		},
-		[activeThreadId, createNewThread, addMessage, settings, toast, isMobile]
+		[activeThreadId, createNewThread, addMessage, settings, toast]
 	);
 
 	const handleNewChat = useCallback(() => {
