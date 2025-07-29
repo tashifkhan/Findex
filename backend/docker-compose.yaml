@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: findex-backend
+    ports:
+      - "5454:5454"
+    environment:
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=5454
+      - FLASK_ENV=production
+      - FLASK_DEBUG=false
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    networks:
+      - findex-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5454/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  findex-network:
+    driver: bridge
