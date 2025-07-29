@@ -224,30 +224,34 @@ export function ChatInterface({
 										WebkitBackdropFilter: "blur(16px)",
 									}}
 								>
-									<div className="text-sm font-medium mb-2 flex items-center gap-2 text-white">
-										{message.sender === "user" ? "You" : "FindexAI"}
-										{message.agent && message.sender === "ai" && (
-											<span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/80">
-												{message.agent}
-											</span>
-										)}
-									</div>
+									{message.sender === "ai" && (
+										<div className="text-sm font-medium mb-2 flex items-center gap-2 text-white">
+											FindexAI
+											{message.agent && (
+												<span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/80">
+													{message.agent}
+												</span>
+											)}
+										</div>
+									)}
 									<div className="text-sm leading-relaxed text-white">
 										{formatMessage(message.content)}
 									</div>
-									<div className="flex items-center justify-between mt-3">
-										<time className="text-xs opacity-60">
-											{message.timestamp.toLocaleTimeString()}
-										</time>
-										<Button
-											variant="ghost"
-											size="sm"
-											onClick={() => copyToClipboard(message.content)}
-											className="h-8 w-8 p-0 opacity-60 hover:opacity-100 rounded-lg hover:bg-white/20"
-										>
-											<Copy className="w-4 h-4" />
-										</Button>
-									</div>
+									{message.sender === "ai" && (
+										<div className="flex items-center justify-between mt-3">
+											<time className="text-xs opacity-60">
+												{message.timestamp.toLocaleTimeString()}
+											</time>
+											<Button
+												variant="ghost"
+												size="sm"
+												onClick={() => copyToClipboard(message.content)}
+												className="h-8 w-8 p-0 opacity-60 hover:opacity-100 rounded-lg hover:bg-white/20"
+											>
+												<Copy className="w-4 h-4" />
+											</Button>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
