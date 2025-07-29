@@ -277,7 +277,7 @@ const ChatApp = memo(function ChatApp() {
 				{/* Mobile Sidebar Overlay */}
 				{isMobile && sidebarOpen && (
 					<div
-						className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+						className="fixed top-16 left-0 right-0 bottom-0 bg-black/50 z-40 backdrop-blur-sm"
 						onClick={() => setSidebarOpen(false)}
 					/>
 				)}
@@ -286,7 +286,7 @@ const ChatApp = memo(function ChatApp() {
 				{isMobile && (
 					<div
 						data-sidebar
-						className={`fixed top-0 left-0 h-full w-80 z-50 transform transition-transform duration-300 ease-in-out ${
+						className={`fixed top-16 left-0 h-[calc(100vh-64px)] w-80 z-50 transform transition-transform duration-300 ease-in-out ${
 							sidebarOpen ? "translate-x-0" : "-translate-x-full"
 						}`}
 						style={{
@@ -311,8 +311,10 @@ const ChatApp = memo(function ChatApp() {
 
 				{/* Chat Container */}
 				<div
-					className={`relative z-10 h-screen flex flex-col ${
-						isMobile ? "mobile-chat-container" : "pt-20 px-4 max-w-7xl mx-auto"
+					className={`relative z-10 flex flex-col ${
+						isMobile
+							? "mobile-chat-container h-[calc(100vh-64px)] mt-16"
+							: "pt-20 px-4 max-w-7xl mx-auto h-screen"
 					}`}
 				>
 					{isMobile ? (
@@ -324,7 +326,7 @@ const ChatApp = memo(function ChatApp() {
 									headerVisible ? "translate-y-0" : "-translate-y-full"
 								} ${
 									headerVisible ? "relative" : "absolute top-0 left-0 right-0"
-								} z-30`}
+								} z-20`}
 								style={{
 									background: "rgba(15, 23, 35, 0.95)",
 									backdropFilter: "blur(20px)",
