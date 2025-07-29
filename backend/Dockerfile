@@ -34,9 +34,5 @@ ENV PYTHONPATH=/app
 ENV BACKEND_HOST=0.0.0.0
 ENV BACKEND_PORT=5454
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5454/health || exit 1
-
 # Run the application
 CMD ["uv", "run", "python", "main.py"]
