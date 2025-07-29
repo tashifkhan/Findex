@@ -25,6 +25,8 @@ async def generate_answer(
         else:
             final_output = str(output)
 
+        print(final_output)
+
         return final_output
 
     except Exception as e:
