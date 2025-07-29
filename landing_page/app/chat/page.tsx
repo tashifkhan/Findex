@@ -6,12 +6,14 @@ import { ChatSidebar } from "../../components/chat/ChatSidebar";
 import { SidebarContent } from "../../components/chat/ChatSidebar";
 import { SettingsModal } from "../../components/chat/SettingsModal";
 import { ThemeToggle } from "../../components/chat/ThemeToggle";
+import { BackendStatus } from "../../components/chat/BackendStatus";
 import { useChatStorage, Message } from "../../hooks/useChatStorage";
 import { useIsMobile } from "../../hooks/use-mobile";
 import { useToast } from "../../hooks/use-toast";
 import { Toaster } from "../../components/ui/toaster";
 import { Sonner } from "../../components/ui/sonner";
 import { TooltipProvider } from "../../components/ui/tooltip";
+import { BACKEND_CONFIG, AGENT_TYPES, AgentType } from "../../lib/config";
 
 const ChatApp = memo(function ChatApp() {
 	const [isLoading, setIsLoading] = useState(false);
@@ -127,57 +129,103 @@ const ChatApp = memo(function ChatApp() {
 			setIsLoading(true);
 
 			try {
+				// Prepare chat history for the request
+				const chatHistory = messages.map((msg) => ({
+					role: msg.sender === "user" ? "user" : "assistant",
+					content: msg.content,
+				}));
+
+				// Determine the endpoint based on agent type
+				let endpoint = "";
+				let requestBody: any = {};
+
+				switch (agent.toLowerCase() as AgentType) {
+					case AGENT_TYPES.REACT:
+						endpoint = BACKEND_CONFIG.ENDPOINTS.REACT_AGENT;
+						requestBody = {
+							question: content,
+							chat_history: chatHistory,
+						};
+						break;
+					case AGENT_TYPES.YOUTUBE:
+						if (!url) {
+							throw new Error("URL is required for YouTube agent");
+						}
+						endpoint = BACKEND_CONFIG.ENDPOINTS.YOUTUBE;
+						requestBody = {
+							url: url,
+							question: content,
+							chat_history: chatHistory,
+						};
+						break;
+					case AGENT_TYPES.GITHUB:
+						if (!url) {
+							throw new Error("URL is required for GitHub agent");
+						}
+						endpoint = BACKEND_CONFIG.ENDPOINTS.GITHUB;
+						requestBody = {
+							url: url,
+							question: content,
+							chat_history: chatHistory,
+						};
+						break;
+					case AGENT_TYPES.WEBSEARCH:
+						endpoint = BACKEND_CONFIG.ENDPOINTS.WEBSEARCH;
+						requestBody = {
+							question: content,
+							chat_history: chatHistory,
+						};
+						break;
+					case AGENT_TYPES.WEBSITE:
+						if (!url) {
+							throw new Error("URL is required for Website agent");
+						}
+						endpoint = BACKEND_CONFIG.ENDPOINTS.WEBSITE;
+						requestBody = {
+							url: url,
+							question: content,
+							chat_history: chatHistory,
+						};
+						break;
+					case AGENT_TYPES.DOCS:
+						// Note: /docs endpoint is under construction
+						throw new Error(
+							"Documentation agent is currently under construction. Please try another agent."
+						);
+					default:
+						throw new Error(`Unknown agent type: ${agent}`);
+				}
+
 				// Make API call to your FindexAI backend
-				const response = await fetch("/api/chat", {
+				const response = await fetch(`${BACKEND_CONFIG.BASE_URL}${endpoint}`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						message: content,
-						agent,
-						url,
-						settings: {
-							provider: settings.provider,
-							model: settings.model,
-							apiKey:
-								settings.apiKeys[
-									settings.provider as keyof typeof settings.apiKeys
-								],
-						},
-					}),
+					body: JSON.stringify(requestBody),
 				});
 
 				if (!response.ok) {
-					throw new Error("Failed to get AI response");
+					const errorData = await response.json().catch(() => ({}));
+					throw new Error(
+						errorData.detail ||
+							`HTTP ${response.status}: ${response.statusText}`
+					);
 				}
 
 				const data = await response.json();
 
-				const aiMessage: Message = {
-					id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-ai`,
-					sender: "ai",
-					content:
-						data.response ||
-						`I understand you're asking about "${content}". This would normally be processed by the ${agent} agent${
-							url ? ` using ${url}` : ""
-						} and return a comprehensive response based on the ${
-							settings.provider
-						} ${settings.model} model.`,
-					timestamp: new Date(),
-					agent,
-					url,
-				};
-
-				addMessage(currentThreadId, aiMessage);
-				return aiMessage.content;
-			} catch {
-				// Fallback for demo purposes
-				const aiResponse = `I understand you're asking about "${content}". This would normally be processed by the ${agent} agent${
-					url ? ` using ${url}` : ""
-				} and return a comprehensive response based on the ${
-					settings.provider
-				} ${settings.model} model.`;
+				// Extract the answer based on the response structure
+				let aiResponse = "";
+				if (data.answer) {
+					aiResponse = data.answer;
+				} else if (data.content) {
+					aiResponse = data.content;
+				} else if (data.response) {
+					aiResponse = data.response;
+				} else {
+					aiResponse = "Received response but couldn't extract the answer.";
+				}
 
 				const aiMessage: Message = {
 					id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-ai`,
@@ -189,20 +237,36 @@ const ChatApp = memo(function ChatApp() {
 				};
 
 				addMessage(currentThreadId, aiMessage);
+				return aiResponse;
+			} catch (error) {
+				console.error("Error sending message:", error);
+
+				const errorMessage =
+					error instanceof Error ? error.message : "An unknown error occurred";
+
+				const aiMessage: Message = {
+					id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-ai`,
+					sender: "ai",
+					content: `I apologize, but I encountered an error: ${errorMessage}`,
+					timestamp: new Date(),
+					agent,
+					url,
+				};
+
+				addMessage(currentThreadId, aiMessage);
 
 				toast({
-					title: "Demo Mode",
-					description:
-						"This is a demo response. Connect your API keys in settings for real AI responses.",
-					variant: "default",
+					title: "Error",
+					description: errorMessage,
+					variant: "destructive",
 				});
 
-				return aiResponse;
+				return aiMessage.content;
 			} finally {
 				setIsLoading(false);
 			}
 		},
-		[activeThreadId, createNewThread, addMessage, settings, toast]
+		[activeThreadId, createNewThread, addMessage, messages, toast]
 	);
 
 	const handleNewChat = useCallback(() => {
@@ -369,6 +433,7 @@ const ChatApp = memo(function ChatApp() {
 									</div>
 
 									<div className="flex items-center gap-2">
+										<BackendStatus className="hidden sm:flex" />
 										<SettingsModal
 											settings={settings}
 											onSettingsChange={setSettings}
@@ -465,6 +530,7 @@ const ChatApp = memo(function ChatApp() {
 										</div>
 
 										<div className="flex items-center gap-3">
+											<BackendStatus />
 											<SettingsModal
 												settings={settings}
 												onSettingsChange={setSettings}

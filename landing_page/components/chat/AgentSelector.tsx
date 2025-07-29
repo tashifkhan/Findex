@@ -54,20 +54,20 @@ const AGENTS: Agent[] = [
 		description: "Explore GitHub repositories and code",
 	},
 	{
-		id: "website",
-		name: "Website",
-		requiresUrl: true,
+		id: "websearch",
+		name: "Web Search",
+		requiresUrl: false,
 		icon: Globe,
-		color: "from-green-500 to-emerald-500",
-		description: "Crawl and analyze websites",
+		color: "from-purple-500 to-violet-500",
+		description: "Search the web for information",
 	},
 	{
 		id: "web-scroller",
 		name: "Web Scroller",
 		requiresUrl: true,
 		icon: FileCode,
-		color: "from-purple-500 to-violet-500",
-		description: "Advanced web content extraction",
+		color: "from-green-500 to-emerald-500",
+		description: "Crawl and analyze specific websites",
 	},
 	{
 		id: "docs",
@@ -75,7 +75,7 @@ const AGENTS: Agent[] = [
 		requiresUrl: false,
 		icon: FileText,
 		color: "from-orange-500 to-amber-500",
-		description: "Process and analyze documents",
+		description: "Process and analyze documents (Under Construction)",
 	},
 ];
 
