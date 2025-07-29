@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     container_name: findex-backend
     ports:
@@ -12,7 +12,7 @@ services:
       - FLASK_ENV=production
       - FLASK_DEBUG=false
     env_file:
-      - ./backend/.env
+      - ./.env
     restart: unless-stopped
     networks:
       - findex-network
