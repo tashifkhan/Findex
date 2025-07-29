@@ -15,6 +15,38 @@ import { Sonner } from "../../components/ui/sonner";
 import { TooltipProvider } from "../../components/ui/tooltip";
 import { BACKEND_CONFIG, AGENT_TYPES, AgentType } from "../../lib/config";
 
+// Define request body types for each agent
+interface ReactAgentRequest {
+	question: string;
+	chat_history: { role: string; content: string }[];
+}
+interface WebsearchRequest {
+	question: string;
+	chat_history: { role: string; content: string }[];
+}
+interface YouTubeRequest {
+	url: string;
+	question: string;
+	chat_history: { role: string; content: string }[];
+}
+interface GitHubRequest {
+	url: string;
+	question: string;
+	chat_history: { role: string; content: string }[];
+}
+interface WebsiteRequest {
+	url: string;
+	question: string;
+	chat_history: { role: string; content: string }[];
+}
+
+type AgentRequestBody =
+	| ReactAgentRequest
+	| WebsearchRequest
+	| YouTubeRequest
+	| GitHubRequest
+	| WebsiteRequest;
+
 const ChatApp = memo(function ChatApp() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -137,7 +169,7 @@ const ChatApp = memo(function ChatApp() {
 
 				// Determine the endpoint based on agent type
 				let endpoint = "";
-				let requestBody: any = {};
+				let requestBody: AgentRequestBody | undefined;
 
 				switch (agent.toLowerCase() as AgentType) {
 					case AGENT_TYPES.REACT:
