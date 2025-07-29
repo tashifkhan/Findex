@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.core import get_logger
 from app.agents.agent import GraphBuilder
-from app.models.response.crawller import CrawlerResponse
+from app.models.response.crawller import CrawllerResponse
 from app.models.requests.crawller import CrawlerRequest
 
 
@@ -32,7 +32,7 @@ async def generate_answer(
         return f"I apologize, but I encountered an error processing your question. Please try again."
 
 
-@router.post("/", response_model=CrawlerResponse)
+@router.post("/", response_model=CrawllerResponse)
 async def agent_bhai(request: CrawlerRequest):
     try:
         question = request.question
