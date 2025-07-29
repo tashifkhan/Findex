@@ -219,16 +219,26 @@ export function SettingsModal({
 			{/* Modal Overlay */}
 			{isOpen && (
 				<div
-					className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+					className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4"
+					style={{
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						position: "fixed",
+					}}
 					onClick={() => setIsOpen(false)}
 				>
 					<div
-						className="w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-lg"
+						className="w-full max-w-md max-h-[80vh] overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-lg transform transition-all duration-200 mx-4"
 						style={{
 							background: "rgba(15, 23, 35, 0.95)",
 							border: "1px solid rgba(255,255,255,0.1)",
 							backdropFilter: "blur(20px)",
 							WebkitBackdropFilter: "blur(20px)",
+							margin: "auto",
+							position: "relative",
+							maxWidth: "calc(100vw - 2rem)",
 						}}
 						onClick={(e) => e.stopPropagation()}
 					>
@@ -261,7 +271,7 @@ export function SettingsModal({
 						</div>
 
 						{/* Content */}
-						<div className="p-6 overflow-y-auto max-h-[calc(85vh-160px)] space-y-6">
+						<div className="p-6 overflow-y-auto max-h-[calc(80vh-160px)] space-y-6">
 							{/* Provider Selection */}
 							<div className="space-y-3">
 								<Label className="text-sm font-medium text-white/80">
