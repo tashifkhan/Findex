@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Search, Menu } from "lucide-react";
 import { ChatInterface } from "../../components/chat/ChatInterface";
 import { ChatSidebar } from "../../components/chat/ChatSidebar";
+import { SidebarContent } from "../../components/chat/ChatSidebar";
 import { SettingsModal } from "../../components/chat/SettingsModal";
 import { ThemeToggle } from "../../components/chat/ThemeToggle";
 import { useChatStorage, Message } from "../../hooks/useChatStorage";
@@ -297,13 +298,12 @@ const ChatApp = memo(function ChatApp() {
 						}}
 					>
 						<div className="h-full overflow-hidden">
-							<ChatSidebar
+							<SidebarContent
 								threads={transformedThreads}
 								activeThreadId={activeThreadId}
 								onSelectThread={handleSelectThread}
 								onNewChat={handleNewChat}
 								onDeleteThread={deleteThread}
-								isMobile={true}
 							/>
 						</div>
 					</div>

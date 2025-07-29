@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, MessageSquare, Trash2, Menu, X, Bot } from "lucide-react";
+import { Plus, MessageSquare, Trash2, Bot } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface ChatThread {
@@ -18,16 +17,15 @@ interface ChatSidebarProps {
 	onSelectThread: (threadId: string) => void;
 	onNewChat: () => void;
 	onDeleteThread: (threadId: string) => void;
-	isMobile?: boolean;
 }
 
-function SidebarContent({
+export function SidebarContent({
 	threads,
 	activeThreadId,
 	onSelectThread,
 	onNewChat,
 	onDeleteThread,
-}: Omit<ChatSidebarProps, "isMobile">) {
+}: ChatSidebarProps) {
 	return (
 		<div className="flex flex-col h-full">
 			{/* Header */}
@@ -146,41 +144,6 @@ function SidebarContent({
 }
 
 export function ChatSidebar(props: ChatSidebarProps) {
-	const [isOpen, setIsOpen] = useState(false);
-
-	if (props.isMobile) {
-		return (
-			<div>
-				<Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
-					<Menu className="w-4 h-4" />
-				</Button>
-				{isOpen && (
-					<div
-						className="fixed inset-0 z-50 bg-black/50"
-						onClick={() => setIsOpen(false)}
-					>
-						<div
-							className="fixed left-0 top-0 h-full w-80 bg-background border-r"
-							onClick={(e) => e.stopPropagation()}
-						>
-							<div className="flex items-center justify-between p-4 border-b">
-								<h2 className="font-semibold">Chat History</h2>
-								<Button
-									variant="ghost"
-									size="sm"
-									onClick={() => setIsOpen(false)}
-								>
-									<X className="w-4 h-4" />
-								</Button>
-							</div>
-							<SidebarContent {...props} />
-						</div>
-					</div>
-				)}
-			</div>
-		);
-	}
-
 	return (
 		<div className="w-80 h-full border-r bg-background">
 			<SidebarContent {...props} />
