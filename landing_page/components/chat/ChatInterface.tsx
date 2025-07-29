@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Copy, Loader2, Upload } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
@@ -111,12 +113,89 @@ export function ChatInterface({
 	};
 
 	const formatMessage = (content: string) => {
-		// Basic formatting
-		return content.split("\n").map((line, index) => (
-			<div key={index} className="leading-relaxed">
-				{line || <br />}
-			</div>
-		));
+		return (
+			<ReactMarkdown
+				remarkPlugins={[remarkGfm]}
+				components={{
+					// Custom styling for different markdown elements
+					h1: ({ children }) => (
+						<h1 className="text-xl font-bold mb-3 text-white">{children}</h1>
+					),
+					h2: ({ children }) => (
+						<h2 className="text-lg font-bold mb-2 text-white">{children}</h2>
+					),
+					h3: ({ children }) => (
+						<h3 className="text-base font-bold mb-2 text-white">{children}</h3>
+					),
+					p: ({ children }) => (
+						<p className="mb-2 leading-relaxed text-white">{children}</p>
+					),
+					ul: ({ children }) => (
+						<ul className="list-disc list-inside mb-2 space-y-1 text-white">
+							{children}
+						</ul>
+					),
+					ol: ({ children }) => (
+						<ol className="list-decimal list-inside mb-2 space-y-1 text-white">
+							{children}
+						</ol>
+					),
+					li: ({ children }) => <li className="text-white">{children}</li>,
+					code: ({ children, className }) => {
+						const isInline = !className;
+						return isInline ? (
+							<code className="bg-white/10 px-1 py-0.5 rounded text-sm font-mono text-white">
+								{children}
+							</code>
+						) : (
+							<pre className="bg-white/10 p-3 rounded-lg overflow-x-auto mb-3">
+								<code className="text-sm font-mono text-white">{children}</code>
+							</pre>
+						);
+					},
+					blockquote: ({ children }) => (
+						<blockquote className="border-l-4 border-white/30 pl-4 italic text-white/80 mb-3">
+							{children}
+						</blockquote>
+					),
+					a: ({ children, href }) => (
+						<a
+							href={href}
+							className="text-blue-400 hover:text-blue-300 underline"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{children}
+						</a>
+					),
+					strong: ({ children }) => (
+						<strong className="font-bold text-white">{children}</strong>
+					),
+					em: ({ children }) => (
+						<em className="italic text-white">{children}</em>
+					),
+					table: ({ children }) => (
+						<div className="overflow-x-auto mb-3">
+							<table className="min-w-full border border-white/20 rounded-lg">
+								{children}
+							</table>
+						</div>
+					),
+					th: ({ children }) => (
+						<th className="border border-white/20 px-3 py-2 text-left font-bold text-white bg-white/10">
+							{children}
+						</th>
+					),
+					td: ({ children }) => (
+						<td className="border border-white/20 px-3 py-2 text-white">
+							{children}
+						</td>
+					),
+				}}
+			>
+				{content}
+			</ReactMarkdown>
+		);
 	};
 
 	return (
