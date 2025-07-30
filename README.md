@@ -14,7 +14,7 @@ FindexAI transforms the humble browser-search shortcut into a full-blown, AI-pow
    • **Model-agnostic Backend** - Plug in OpenAI, Anthropic, local LLMs, or your own API keys  
    • **Chat History & User Authentication** - SQLite-powered persistence (coming soon)  
    • **Fully Modular Architecture** - FastAPI backend and React-based browser extension (Chrome & Firefox)
-  • **Live Demo** - Try our reactive agent at [findex.tashif.codes/chat](https://findex.tashif.codes/chat)
+- **Live Demo** - Try our reactive agent at [findex.tashif.codes/chat](https://findex.tashif.codes/chat)
 
 ## Why FindexAI?
 
