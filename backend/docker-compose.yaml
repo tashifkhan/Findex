@@ -16,8 +16,12 @@ services:
       - ./.env
     restart: unless-stopped
     networks:
-      - findex-network
+          - findex-network
+          - nginxproxyman_network  
 
 networks:
   findex-network:
     driver: bridge
+  nginxproxyman_network:       
+    external: true
+    name: nginx-proxy-manager_nginxproxyman
