@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: findex-backend:latest
     container_name: findex-backend
     ports:
       - "5454:5454"
