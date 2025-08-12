@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import Navigation from "../components/Navigation";
+import PWAHandler from "../components/PWAHandler";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -21,6 +22,14 @@ export const metadata: Metadata = {
 	keywords:
 		"AI search, browser extension, semantic search, YouTube transcripts, web search, productivity, knowledge workers",
 	authors: [{ name: "FindexAI Team" }],
+	manifest: "/manifest.json",
+	themeColor: "#1e40af",
+	viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+	appleWebApp: {
+		capable: true,
+		statusBarStyle: "default",
+		title: "FindexAI",
+	},
 	openGraph: {
 		title: "FindexAI - Your Ctrl + F on Steroids",
 		description:
@@ -52,9 +61,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<head>
+				<link rel="manifest" href="/manifest.json" />
+				<meta name="theme-color" content="#1e40af" />
+				<meta name="apple-mobile-web-app-capable" content="yes" />
+				<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+				<meta name="apple-mobile-web-app-title" content="FindexAI" />
+				<link rel="apple-touch-icon" href="/icon-192x192.svg" />
+				<meta name="mobile-web-app-capable" content="yes" />
+			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
+				<PWAHandler />
 				<ThemeProvider>
 					<Navigation />
 					{children}

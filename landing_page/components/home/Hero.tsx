@@ -170,6 +170,14 @@ export default function Hero() {
 							Install for Firefox
 							<Download className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
 						</a>
+						<button
+							id="install-pwa-button"
+							className="group hidden items-center gap-3 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+							style={{ background: "var(--accent-teal)" }}
+						>
+							<Download className="w-6 h-6" />
+							Install PWA
+						</button>
 					</div>
 					{/* Secondary CTA */}
 					<div className="flex flex-col items-center gap-4">
