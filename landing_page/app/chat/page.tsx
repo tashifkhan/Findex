@@ -15,38 +15,6 @@ import { Sonner } from "../../components/ui/sonner";
 import { TooltipProvider } from "../../components/ui/tooltip";
 import { BACKEND_CONFIG, AGENT_TYPES, AgentType } from "../../lib/config";
 
-// Define request body types for each agent
-interface ReactAgentRequest {
-	question: string;
-	chat_history: { role: string; content: string }[];
-}
-interface WebsearchRequest {
-	question: string;
-	chat_history: { role: string; content: string }[];
-}
-interface YouTubeRequest {
-	url: string;
-	question: string;
-	chat_history: { role: string; content: string }[];
-}
-interface GitHubRequest {
-	url: string;
-	question: string;
-	chat_history: { role: string; content: string }[];
-}
-interface WebsiteRequest {
-	url: string;
-	question: string;
-	chat_history: { role: string; content: string }[];
-}
-
-type AgentRequestBody =
-	| ReactAgentRequest
-	| WebsearchRequest
-	| YouTubeRequest
-	| GitHubRequest
-	| WebsiteRequest;
-
 const ChatApp = memo(function ChatApp() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -59,6 +27,7 @@ const ChatApp = memo(function ChatApp() {
 		threads,
 		activeThreadId,
 		settings,
+		getActiveThread,
 		createNewThread,
 		addMessage,
 		deleteThread,
@@ -162,102 +131,52 @@ const ChatApp = memo(function ChatApp() {
 
 			try {
 				// Prepare chat history for the request
-				const chatHistory = messages.map((msg) => ({
-					role: msg.sender === "user" ? "user" : "assistant",
-					content: msg.content,
-				}));
+				// Get the current thread's messages excluding the just-added user message
+				const currentThread = getActiveThread();
+				const currentThreadMessages = currentThread?.messages || [];
+				const chatHistory = currentThreadMessages
+					.slice(0, -1) // Exclude the current user message that was just added
+					.map((msg: Message) => ({
+						role: msg.sender === "user" ? "user" : "assistant",
+						content: msg.content,
+					}));
 
-				// Determine the endpoint based on agent type
-				let endpoint = "";
-				let requestBody: AgentRequestBody | undefined;
+				console.log(
+					`Sending request with ${chatHistory.length} messages in chat history`
+				);
 
-				switch (agent.toLowerCase() as AgentType) {
-					case AGENT_TYPES.REACT:
-						endpoint = BACKEND_CONFIG.ENDPOINTS.REACT_AGENT;
-						requestBody = {
-							question: content,
-							chat_history: chatHistory,
-						};
-						break;
-					case AGENT_TYPES.YOUTUBE:
-						if (!url) {
-							throw new Error("URL is required for YouTube agent");
-						}
-						endpoint = BACKEND_CONFIG.ENDPOINTS.YOUTUBE;
-						requestBody = {
-							url: url,
-							question: content,
-							chat_history: chatHistory,
-						};
-						break;
-					case AGENT_TYPES.GITHUB:
-						if (!url) {
-							throw new Error("URL is required for GitHub agent");
-						}
-						endpoint = BACKEND_CONFIG.ENDPOINTS.GITHUB;
-						requestBody = {
-							url: url,
-							question: content,
-							chat_history: chatHistory,
-						};
-						break;
-					case AGENT_TYPES.WEBSEARCH:
-						endpoint = BACKEND_CONFIG.ENDPOINTS.WEBSEARCH;
-						requestBody = {
-							question: content,
-							chat_history: chatHistory,
-						};
-						break;
-					case AGENT_TYPES.WEBSITE:
-						if (!url) {
-							throw new Error("URL is required for Website agent");
-						}
-						endpoint = BACKEND_CONFIG.ENDPOINTS.WEBSITE;
-						requestBody = {
-							url: url,
-							question: content,
-							chat_history: chatHistory,
-						};
-						break;
-					case AGENT_TYPES.DOCS:
-						// Note: /docs endpoint is under construction
-						throw new Error(
-							"Documentation agent is currently under construction. Please try another agent."
-						);
-					default:
-						throw new Error(`Unknown agent type: ${agent}`);
-				}
+				// Use the new Next.js API route - all agents go through single endpoint
+				const requestBody = {
+					agent: agent.toLowerCase(),
+					question: content,
+					url: url,
+					chat_history: chatHistory,
+				};
 
-				// Make API call to your FindexAI backend
-				const response = await fetch(`${BACKEND_CONFIG.BASE_URL}${endpoint}`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(requestBody),
-				});
+				// Make API call to Next.js API route (which calls your Python backend)
+				const response = await fetch(
+					`${BACKEND_CONFIG.BASE_URL}${BACKEND_CONFIG.ENDPOINTS.CHAT}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(requestBody),
+					}
+				);
 
 				if (!response.ok) {
 					const errorData = await response.json().catch(() => ({}));
 					throw new Error(
-						errorData.detail ||
-							`HTTP ${response.status}: ${response.statusText}`
+						errorData.error || `HTTP ${response.status}: ${response.statusText}`
 					);
 				}
 
 				const data = await response.json();
 
-				// Extract the answer based on the response structure
-				let aiResponse = "";
-				if (data.answer) {
-					aiResponse = data.answer;
-				} else if (data.content) {
-					aiResponse = data.content;
-				} else if (data.response) {
-					aiResponse = data.response;
-				} else {
-					aiResponse = "Received response but couldn't extract the answer.";
-				}
+				// Extract the answer from the response
+				const aiResponse =
+					data.answer || "Received response but couldn't extract the answer.";
 
 				const aiMessage: Message = {
 					id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-ai`,
@@ -298,7 +217,7 @@ const ChatApp = memo(function ChatApp() {
 				setIsLoading(false);
 			}
 		},
-		[activeThreadId, createNewThread, addMessage, messages, toast]
+		[activeThreadId, getActiveThread, createNewThread, addMessage, toast]
 	);
 
 	const handleNewChat = useCallback(() => {
