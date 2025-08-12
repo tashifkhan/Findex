@@ -19,28 +19,31 @@ export default function Demo() {
 			description:
 				"Watch how FindexAI understands context and provides intelligent answers instead of just keyword matches.",
 			thumbnail: "/demo-semantic.png",
-			gifUrl: "/demo-semantic.gif",
+			videoUrl:
+				"https://drive.google.com/file/d/10YAkEOtMh-O0E4ovfvKkX-r-K-WAkiCk/preview",
 		},
 		{
 			title: "YouTube Transcript Search",
 			description:
 				"Search through YouTube video content using natural language queries to find specific moments.",
 			thumbnail: "/demo-youtube.png",
-			gifUrl: "/demo-youtube.gif",
+			videoUrl:
+				"https://drive.google.com/file/d/1UcH4ZfAp7qoTVwo5_p6rhw5CKGklsIc7/preview",
 		},
 		{
 			title: "Multi-Agent Web Search",
 			description:
 				"See how multiple AI agents work together to search the web and provide comprehensive answers.",
 			thumbnail: "/demo-websearch.png",
-			gifUrl: "/demo-websearch.gif",
+			videoUrl:
+				"https://drive.google.com/file/d/1RKlDqS_XBXd5h9u0vriPmNlgr1TgDHTZ/preview",
 		},
 		{
 			title: "Custom LLM Integration",
 			description:
 				"Configure your own API keys and choose between different language models for personalized results.",
 			thumbnail: "/demo-config.png",
-			gifUrl: "/demo-config.gif",
+			videoUrl: null, // No video for this demo yet
 		},
 	];
 
@@ -100,26 +103,37 @@ export default function Demo() {
 						}}
 					>
 						{/* Demo Content */}
-						<div className="relative aspect-video bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-							{/* Placeholder for actual demo video/gif */}
-							<div className="text-center p-8">
-								<div
-									className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
-									style={{ background: "var(--accent-gradient)" }}
-								>
-									<Play className="w-12 h-12 text-white ml-1" />
+						<div className="relative aspect-video bg-gradient-to-br from-gray-700 to-gray-800">
+							{demos[currentDemo].videoUrl ? (
+								<iframe
+									src={demos[currentDemo].videoUrl}
+									className="w-full h-full"
+									allow="autoplay"
+									allowFullScreen
+									style={{ border: "none" }}
+								/>
+							) : (
+								<div className="flex items-center justify-center h-full">
+									<div className="text-center p-8">
+										<div
+											className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+											style={{ background: "var(--accent-gradient)" }}
+										>
+											<Play className="w-12 h-12 text-white ml-1" />
+										</div>
+										<h3 className="text-2xl font-bold text-white mb-4">
+											{demos[currentDemo].title}
+										</h3>
+										<p className="text-gray-300 max-w-md mx-auto">
+											{demos[currentDemo].description}
+										</p>
+										<div className="mt-6 text-sm text-gray-400">
+											<Play className="inline w-4 h-4 mr-1" /> Interactive demo
+											coming soon!
+										</div>
+									</div>
 								</div>
-								<h3 className="text-2xl font-bold text-white mb-4">
-									{demos[currentDemo].title}
-								</h3>
-								<p className="text-gray-300 max-w-md mx-auto">
-									{demos[currentDemo].description}
-								</p>
-								<div className="mt-6 text-sm text-gray-400">
-									<Play className="inline w-4 h-4 mr-1" /> Interactive demo
-									coming soon!
-								</div>
-							</div>
+							)}
 						</div>
 
 						{/* Navigation Controls */}
