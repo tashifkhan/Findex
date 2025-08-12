@@ -17,9 +17,14 @@ async def generate_website_answer(
     chat_history: list,
 ) -> str:
     try:
-        markdown_page_info = markdown_fetcher(url)
-        print(f"Markdown page info: {markdown_page_info}")
+        # logger.info(f"Processing website URL: {url}")
+        # logger.info(f"Question: {question}")
 
+        markdown_page_info = markdown_fetcher(url)
+        # logger.info(
+        #     f"Markdown page info length: {len(markdown_page_info) if markdown_page_info else 0}"
+        # )
+        print(f"Markdown page info: {markdown_page_info}")
 
         chat_history_str = ""
         if chat_history:
