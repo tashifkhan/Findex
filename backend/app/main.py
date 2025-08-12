@@ -21,7 +21,12 @@ backend = FastAPI(
 #  cors
 backend.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://findex.tashif.codes",
+        "https://tashif.codes",
+        "https://*.tashif.codes",
+        "https://*.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
