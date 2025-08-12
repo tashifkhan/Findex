@@ -13,7 +13,7 @@ import { useToast } from "../../hooks/use-toast";
 import { Toaster } from "../../components/ui/toaster";
 import { Sonner } from "../../components/ui/sonner";
 import { TooltipProvider } from "../../components/ui/tooltip";
-import { BACKEND_CONFIG, AGENT_TYPES, AgentType } from "../../lib/config";
+import { BACKEND_CONFIG } from "../../lib/config";
 
 const ChatApp = memo(function ChatApp() {
 	const [isLoading, setIsLoading] = useState(false);

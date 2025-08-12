@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const BACKEND_BASE_URL = process.env.BACKEND_URL || 'https://findex-backend.tashif.codes';
 

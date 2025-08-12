@@ -63,7 +63,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare request body based on your Python backend models
-    let requestBody: any = {
+    const requestBody: {
+      question: string;
+      chat_history: Array<{ role: string; content: string }>;
+      url?: string;
+    } = {
       question,
       chat_history: chat_history || []
     };
