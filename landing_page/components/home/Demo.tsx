@@ -57,6 +57,7 @@ export default function Demo() {
 
 	return (
 		<section
+			id="demo-section"
 			className="relative py-20 text-white overflow-hidden"
 			style={{
 				background:

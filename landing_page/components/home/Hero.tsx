@@ -211,10 +211,10 @@ export default function Hero() {
 							<span>Free & Open Source</span>
 						</div>
 					</div>
-					{/* Hero Demo Placeholder */}
+					{/* Hero Demo Preview */}
 					<div className="mt-16 max-w-4xl mx-auto">
 						<div
-							className="rounded-xl p-8 text-center"
+							className="rounded-xl p-8 text-center cursor-pointer group transition-all duration-300 hover:scale-[1.02]"
 							style={{
 								background: "rgba(20, 30, 40, 0.35)",
 								border: "1px solid rgba(255,255,255,0.18)",
@@ -223,15 +223,36 @@ export default function Hero() {
 								WebkitBackdropFilter: "blur(16px)",
 								boxShadow: "0 4px 32px 0 rgba(0,0,0,0.12)",
 							}}
+							onClick={() => {
+								const demoSection = document.getElementById("demo-section");
+								if (demoSection) {
+									demoSection.scrollIntoView({ behavior: "smooth" });
+								}
+							}}
 						>
-							<div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 mb-4">
-								<p className="text-gray-300 mb-4">
-									<Github className="w-6 h-6" /> Demo video coming soon!
+							<div className="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 mb-4 group-hover:from-gray-600 group-hover:to-gray-700 transition-all duration-300">
+								<p className="text-gray-300 mb-4 flex items-center justify-center gap-2">
+									<Github className="w-6 h-6" /> Watch Demo Videos
 								</p>
 								<p className="text-sm text-gray-400">
 									See FindexAI in action: Ctrl+Shift+F → Ask questions → Get
 									instant AI-powered answers
 								</p>
+								<div className="mt-4 flex items-center justify-center gap-2">
+									<button
+										onClick={(e) => {
+											e.stopPropagation();
+											window.open("/chat", "_blank");
+										}}
+										className="px-6 py-3 text-sm text-white rounded-full transition-all duration-300 hover:scale-105 shadow-lg"
+										style={{
+											background:
+												"linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%)",
+										}}
+									>
+										Try Web Version
+									</button>
+								</div>
 							</div>
 							<p className="text-sm text-gray-400">
 								Extension sidebar preview with semantic search in action
