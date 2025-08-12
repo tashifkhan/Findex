@@ -6,53 +6,57 @@ from langchain_core.runnables import RunnableLambda, RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
+
+# RAG imports commented out - using plain text instead
+# from langchain_huggingface import HuggingFaceEmbeddings
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain_community.vectorstores import Chroma
 
 llm = LargeLanguageModel()
 parser = StrOutputParser()
 
 
-def format_docs(retrieved_docs):
-    return "\n".join(doc.page_content for doc in retrieved_docs)
+# RAG functions commented out - using plain text approach
+# def format_docs(retrieved_docs):
+#     return "\n".join(doc.page_content for doc in retrieved_docs)
 
 
-def create_chunks(text):
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    text_chunks = splitter.split_text(text)
-    doc_chunks = [Document(page_content=chunk) for chunk in text_chunks]
-    return doc_chunks
+# def create_chunks(text):
+#     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+#     text_chunks = splitter.split_text(text)
+#     doc_chunks = [Document(page_content=chunk) for chunk in text_chunks]
+#     return doc_chunks
 
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 
-def embedding_generation(chunks):
-    vector_store = Chroma.from_documents(documents=chunks, embedding=embeddings)
-    return vector_store
+# def embedding_generation(chunks):
+#     vector_store = Chroma.from_documents(documents=chunks, embedding=embeddings)
+#     return vector_store
 
 
-text_to_vectorstore = RunnableLambda(create_chunks) | RunnableLambda(
-    embedding_generation
-)
+# RAG chain components commented out - using plain text instead
+# text_to_vectorstore = RunnableLambda(create_chunks) | RunnableLambda(
+#     embedding_generation
+# )
 
-parallel_chain = RunnableParallel(
-    {
-        "vector_store": RunnableLambda(lambda d: d["text"]) | text_to_vectorstore,
-        "question": RunnableLambda(lambda d: d["question"]),
-    }
-)
+# parallel_chain = RunnableParallel(
+#     {
+#         "vector_store": RunnableLambda(lambda d: d["text"]) | text_to_vectorstore,
+#         "question": RunnableLambda(lambda d: d["question"]),
+#     }
+# )
 
-main_chain = (
-    parallel_chain
-    | RunnableLambda(
-        lambda d: d["vector_store"]
-        .as_retriever(search_type="mmr", search_kwargs={"k": 3})
-        .invoke(d["question"])
-    )
-    | RunnableLambda(format_docs)
-)
+# main_chain = (
+#     parallel_chain
+#     | RunnableLambda(
+#         lambda d: d["vector_store"]
+#         .as_retriever(search_type="mmr", search_kwargs={"k": 3})
+#         .invoke(d["question"])
+#     )
+#     | RunnableLambda(format_docs)
+# )
 
 prompt_template_str = """
 System:
@@ -113,15 +117,25 @@ prompt = PromptTemplate(
     ],
 )
 
-main_chain2 = RunnableParallel(
+# RAG-based chain commented out - using simple plain text chain
+# main_chain2 = RunnableParallel(
+#     {
+#         "context": main_chain,
+#         "question": RunnableLambda(lambda d: d["question"]),
+#         "chat_history": RunnableLambda(lambda d: d.get("chat_history", "")),
+#     }
+# )
+
+# Simple plain text chain instead of RAG
+simple_chain = RunnableParallel(
     {
-        "context": main_chain,
+        "context": RunnableLambda(lambda d: d["text"]),
         "question": RunnableLambda(lambda d: d["question"]),
         "chat_history": RunnableLambda(lambda d: d.get("chat_history", "")),
     }
 )
 
-text_chain = main_chain2 | prompt | llm.client | parser
+text_chain = simple_chain | prompt | llm.client | parser
 
 
 def get_chain():
@@ -134,26 +148,37 @@ def get_answer(
     text,
     chat_history="",
 ):
-    # 1. Chunk the text
-    chunks = create_chunks(text)
-    # 2. Create the vector store
-    vector_store = embedding_generation(chunks)
-    try:
-        # 3. Retrieve relevant docs
-        retrieved_docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 3}).invoke(question)
-        # 4. Format docs
-        context = format_docs(retrieved_docs)
-        # 5. Prepare prompt
-        prompt_input = {
-            "context": context,
-            "question": question,
-            "chat_history": str(chat_history),
-        }
-        # 6. Generate answer
-        answer = prompt | llm.client | parser
-        return answer.invoke(prompt_input)
-    
-    finally:
-        # 7. Delete the vector DB
-        if hasattr(vector_store, "delete_collection"):
-            vector_store.delete_collection()
+    # Simple plain text approach - no RAG/chunking/embedding
+    prompt_input = {
+        "context": text,
+        "question": question,
+        "chat_history": str(chat_history),
+    }
+    # Generate answer using the simple chain
+    answer = prompt | llm.client | parser
+    return answer.invoke(prompt_input)
+
+    # RAG implementation commented out
+    # # 1. Chunk the text
+    # chunks = create_chunks(text)
+    # # 2. Create the vector store
+    # vector_store = embedding_generation(chunks)
+    # try:
+    #     # 3. Retrieve relevant docs
+    #     retrieved_docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 3}).invoke(question)
+    #     # 4. Format docs
+    #     context = format_docs(retrieved_docs)
+    #     # 5. Prepare prompt
+    #     prompt_input = {
+    #         "context": context,
+    #         "question": question,
+    #         "chat_history": str(chat_history),
+    #     }
+    #     # 6. Generate answer
+    #     answer = prompt | llm.client | parser
+    #     return answer.invoke(prompt_input)
+
+    # finally:
+    #     # 7. Delete the vector DB
+    #     if hasattr(vector_store, "delete_collection"):
+    #         vector_store.delete_collection()

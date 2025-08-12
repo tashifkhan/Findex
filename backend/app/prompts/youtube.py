@@ -1,11 +1,14 @@
 from langchain.prompts import PromptTemplate
 from app.core.llm import LargeLanguageModel
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+# RAG imports commented out - using plain text instead
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_community.vectorstores import Chroma
+
+# from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import PromptTemplate
-from langchain_huggingface import HuggingFaceEmbeddings
+
+# from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain.schema.runnable import (
     RunnableLambda,
@@ -40,8 +43,9 @@ llm = LargeLanguageModel()
 parser = StrOutputParser()
 
 
-def format_docs(retrieved_docs):
-    return "\n".join(doc.page_content for doc in retrieved_docs)
+# RAG functions commented out - using plain text approach
+# def format_docs(retrieved_docs):
+#     return "\n".join(doc.page_content for doc in retrieved_docs)
 
 
 def fetch_transcript(video_url):
@@ -77,53 +81,60 @@ def fetch_transcript(video_url):
     return cleaned_transcript
 
 
-def create_chunks(transcript):
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    text_chunks = splitter.split_text(transcript)
-
-    doc_chunks = [Document(page_content=chunk) for chunk in text_chunks]
-    return doc_chunks
-
-
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# RAG functions commented out - using plain text approach
+# def create_chunks(transcript):
+#     splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+#     text_chunks = splitter.split_text(transcript)
+#
+#     doc_chunks = [Document(page_content=chunk) for chunk in text_chunks]
+#     return doc_chunks
 
 
-def embedding_generation(chunks):
-    vector_store = Chroma.from_documents(documents=chunks, embedding=embeddings)
-    return vector_store
+# embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 
-branch_chain = RunnableBranch(
-    (lambda x: x is None or x.strip() == "", RunnablePassthrough()),  # type: ignore
-    RunnableLambda(create_chunks) | RunnableLambda(embedding_generation),
-)
-initial_chain = RunnableLambda(fetch_transcript) | branch_chain
-
-url_to_retriever_chain = RunnableLambda(lambda d: d["url"]) | initial_chain
+# def embedding_generation(chunks):
+#     vector_store = Chroma.from_documents(documents=chunks, embedding=embeddings)
+#     return vector_store
 
 
-parallel_chain = RunnableParallel(
-    {
-        "vector_store": (url_to_retriever_chain),
-        "question": RunnableLambda(lambda d: d["question"]),
-    }
-)
+# RAG chain commented out - using simple text processing
+# branch_chain = RunnableBranch(
+#     (lambda x: x is None or x.strip() == "", RunnablePassthrough()),  # type: ignore
+#     RunnableLambda(create_chunks) | RunnableLambda(embedding_generation),
+# )
+# initial_chain = RunnableLambda(fetch_transcript) | branch_chain
+
+# url_to_retriever_chain = RunnableLambda(lambda d: d["url"]) | initial_chain
+
+
+# RAG parallel chain commented out - using simple text processing
+# parallel_chain = RunnableParallel(
+#     {
+#         "vector_store": (url_to_retriever_chain),
+#         "question": RunnableLambda(lambda d: d["question"]),
+#     }
+# )
 
 
 def get_context(d):
-    """Get context from vector store or return empty string if no transcript available"""
-    vector_store = d["vector_store"]
+    """Get context from transcript or return empty string if no transcript available"""
+    # RAG processing commented out - using direct transcript
+    url = d.get("url", "")
+    transcript = fetch_transcript(url) if url else ""
+    return transcript  # Return direct transcript text
 
-    if hasattr(vector_store, "as_retriever"):
-        retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 2})
-        retrieved_docs = retriever.invoke(d["question"])
-        return format_docs(retrieved_docs)
+    # RAG code commented out
+    # if hasattr(vector_store, "as_retriever"):
+    #     retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 2})
+    #     retrieved_docs = retriever.invoke(d["question"])
+    #     return format_docs(retrieved_docs)
+    # else:
+    #     return "No transcript available for this video."
 
-    else:
-        return "No transcript available for this video."
 
-
-main_chain = parallel_chain | RunnableLambda(get_context)  # | prompt | llm | parser
+# RAG main chain commented out - using simple processing
+# main_chain = parallel_chain | RunnableLambda(get_context)
 
 prompt_templet_string = """
 System:
@@ -180,7 +191,7 @@ prompt = PromptTemplate(
 
 main_chain2 = RunnableParallel(
     {
-        "context": main_chain,
+        "context": RunnableLambda(get_context),  # Direct transcript processing
         "question": RunnableLambda(lambda d: d["question"]),
         "chat_history": RunnableLambda(lambda d: d.get("chat_history", "")),
     }
